@@ -25,12 +25,28 @@ git submodule update --init --recursive
 
 #### freetype 빌드
 
+**크로스 빌드 (기본)**:
 ```bash
 chmod +x build_freetype.sh
 ./build_freetype.sh
 ```
 
-빌드된 라이브러리는 `install/freetype/` 디렉토리에 설치됩니다.
+다음 타겟 아키텍처에 대해 크로스 빌드를 수행하며, 각 타겟마다 **공유 라이브러리**와 **정적 라이브러리**를 모두 빌드합니다:
+- `aarch64-linux-gnu`
+- `riscv64-linux-gnu`
+- `x86_64-linux-gnu`
+- `i386-linux-gnu`
+
+**네이티브 빌드만**:
+```bash
+./build_freetype.sh --native
+# 또는
+./build_freetype.sh -n
+```
+
+현재 시스템 아키텍처에 대해서만 네이티브 빌드를 수행합니다.
+
+빌드된 라이브러리는 각 타겟별로 `install/freetype/<target>/` 디렉토리에 설치되며, 공유 라이브러리와 정적 라이브러리가 모두 포함됩니다.
 
 ## GitHub Actions
 
@@ -48,8 +64,16 @@ autobuild_libraries/
 │   └── freetype/
 ├── build/                   # 빌드 중간 파일들 (gitignore)
 │   └── freetype/
+│       ├── <target>-shared/
+│       ├── <target>-static/
+│       ├── aarch64-linux-gnu-shared/
+│       ├── aarch64-linux-gnu-static/
+│       └── ...
 ├── install/                 # 빌드된 라이브러리 설치 위치 (gitignore)
 │   └── freetype/
+│       ├── <target>/
+│       ├── aarch64-linux-gnu/
+│       └── ...
 ├── .github/
 │   └── workflows/
 │       └── build.yml        # GitHub Actions 워크플로우
