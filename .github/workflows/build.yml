@@ -107,9 +107,8 @@ jobs:
         files: |
           libraries-${VERSION}.tar.gz
           libraries-${VERSION}.zip
-        generate_release_notes: true
-        draft: false
-        prerelease: false
+        tag_name: ${{ steps.extract_version_name.outputs.version }} 
+        release_name: ${{ steps.extract_version_name.outputs.version }} 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
