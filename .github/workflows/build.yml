@@ -10,6 +10,61 @@ permissions:
   contents: write
 
 jobs:
+  build-libraries-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup build environment
+      run: |
+        # Install CMake
+        choco install cmake -y
+        
+        # Install LLVM/Clang
+        choco install llvm -y
+
+    - name: Build libz (native)
+      shell: bash
+      run: |
+        chmod +x build_libz.sh
+        ./build_libz.sh --native
+
+    - name: Build bzip2 (native)
+      shell: bash
+      run: |
+        chmod +x build_bzip2.sh
+        ./build_bzip2.sh --native
+
+    - name: Build brotli (native)
+      shell: bash
+      run: |
+        chmod +x build_brotli.sh
+        ./build_brotli.sh --native
+
+    - name: Build harfbuzz (native)
+      shell: bash
+      run: |
+        chmod +x build_harfbuzz.sh
+        ./build_harfbuzz.sh --native
+
+    - name: Build freetype (native)
+      shell: bash
+      run: |
+        chmod +x build_freetype.sh
+        ./build_freetype.sh --native
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: libraries-windows
+        path: |
+          install/**
+        retention-days: 7
+
   build-libraries-cross:
     runs-on: ubuntu-latest
     
@@ -95,16 +150,35 @@ jobs:
           install/**
         retention-days: 7
 
+  create-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build-libraries-cross, build-libraries-windows]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+
     - name: Create Release Archive
-      if: startsWith(github.ref, 'refs/tags/v')
       run: |
         VERSION=${GITHUB_REF#refs/tags/v}
-        tar -czf libraries-${VERSION}.tar.gz install/
-        zip -r libraries-${VERSION}.zip install/
+        mkdir -p release
+        cp -r artifacts/libraries-cross-compiled release/linux
+        cp -r artifacts/libraries-windows release/windows
+        
+        cd release
+        tar -czf ../libraries-${VERSION}.tar.gz .
+        zip -r ../libraries-${VERSION}.zip .
+        cd ..
+        
         echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
     - name: Create Release
-      if: startsWith(github.ref, 'refs/tags/v')
       uses: softprops/action-gh-release@v2.5.0
       with:
         files: |
