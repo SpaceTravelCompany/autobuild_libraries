@@ -57,6 +57,12 @@ jobs:
 
         sudo apt-get update || true
 
+    - name: Build libz (cross-compile)
+      shell: bash
+      run: |
+        chmod +x build_libz.sh
+        ./build_libz.sh
+
     - name: Build freetype (cross-compile)
       shell: bash
       run: |
@@ -66,8 +72,8 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: freetype-cross-compiled
+        name: libraries-cross-compiled
         path: |
-          install/freetype/**
+          install/**
         retention-days: 7
 

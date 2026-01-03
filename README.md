@@ -4,6 +4,7 @@
 
 ## 지원하는 라이브러리
 
+- **libz (zlib)**: 데이터 압축 라이브러리입니다.
 - **freetype**: FreeType은 자유 소프트웨어로, 폰트 렌더링 라이브러리입니다.
 
 ## 시작하기
@@ -23,7 +24,28 @@ git submodule update --init --recursive
 
 ### 2. 라이브러리 빌드
 
+#### libz (zlib) 빌드
+
+**크로스 빌드 (기본)**:
+```bash
+chmod +x build_libz.sh
+./build_libz.sh
+```
+
+**네이티브 빌드만**:
+```bash
+./build_libz.sh --native
+# 또는
+./build_libz.sh -n
+```
+
+빌드된 라이브러리는 `install/libz/<target>/` 디렉토리에 설치됩니다.
+
 #### freetype 빌드
+
+**주의**: freetype 빌드 전에 libz를 먼저 빌드해야 합니다.
+
+**크로스 빌드 (기본)**:
 
 **크로스 빌드 (기본)**:
 ```bash
@@ -61,6 +83,7 @@ chmod +x build_freetype.sh
 ```
 autobuild_libraries/
 ├── libs/                    # Git submodule로 관리되는 라이브러리 소스
+│   ├── zlib/
 │   └── freetype/
 ├── build/                   # 빌드 중간 파일들 (gitignore)
 │   └── freetype/
@@ -77,6 +100,7 @@ autobuild_libraries/
 ├── .github/
 │   └── workflows/
 │       └── build.yml        # GitHub Actions 워크플로우
+├── build_libz.sh            # libz 빌드 스크립트
 ├── build_freetype.sh        # freetype 빌드 스크립트
 ├── setup_submodules.sh      # Submodule 설정 스크립트
 └── README.md

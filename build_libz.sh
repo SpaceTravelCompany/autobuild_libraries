@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-# freetype 크로스 빌드 스크립트
+# libz (zlib) 크로스 빌드 스크립트
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FREETYPE_DIR="${SCRIPT_DIR}/libs/freetype"
+ZLIB_DIR="${SCRIPT_DIR}/libs/zlib"
 
 # 네이티브 빌드 옵션 확인
 NATIVE_ONLY=false
@@ -26,9 +26,9 @@ else
     )
 fi
 
-# freetype 디렉토리 확인
-if [ ! -d "${FREETYPE_DIR}" ]; then
-    echo "Error: freetype submodule이 없습니다. 'git submodule update --init --recursive'를 실행하세요."
+# zlib 디렉토리 확인
+if [ ! -d "${ZLIB_DIR}" ]; then
+    echo "Error: zlib submodule이 없습니다. 'git submodule update --init --recursive'를 실행하세요."
     exit 1
 fi
 
@@ -42,8 +42,8 @@ build_target() {
     echo "빌드 중: ${TARGET} (${BUILD_TYPE})"
     echo "----------------------------------------"
     
-    BUILD_DIR="${SCRIPT_DIR}/build/freetype/${TARGET}-${BUILD_TYPE}"
-    INSTALL_DIR="${SCRIPT_DIR}/install/freetype/${TARGET}"
+    BUILD_DIR="${SCRIPT_DIR}/build/libz/${TARGET}-${BUILD_TYPE}"
+    INSTALL_DIR="${SCRIPT_DIR}/install/libz/${TARGET}"
     
     # 빌드 디렉토리 생성
     mkdir -p "${BUILD_DIR}"
@@ -51,30 +51,13 @@ build_target() {
     
     cd "${BUILD_DIR}"
     
-    # 크로스 빌드 시 PKG_CONFIG 설정
-    if [ "$TARGET" != "native" ]; then
-        # 각 타겟 아키텍처에 맞는 pkg-config 경로 설정
-        ZLIB_LIB_DIR="${SCRIPT_DIR}/install/libz/${TARGET}/lib"
-        ZLIB_PKG_DIR="${SCRIPT_DIR}/install/libz/${TARGET}/lib/pkgconfig"
-        
-        export PKG_CONFIG_LIBDIR="${ZLIB_LIB_DIR}"
-        export PKG_CONFIG_PATH="${ZLIB_PKG_DIR}"
-        
-        echo "PKG_CONFIG_LIBDIR: ${PKG_CONFIG_LIBDIR}"
-        echo "PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}"
-    fi
-    
     # CMake 설정
     CMAKE_ARGS=(
-        "${FREETYPE_DIR}"
+        "${ZLIB_DIR}"
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
         -DBUILD_SHARED_LIBS="${BUILD_SHARED}"
-        -DFT_DISABLE_ZLIB=OFF
-        -DFT_DISABLE_BZIP2=OFF
-        -DFT_DISABLE_PNG=ON
-        -DFT_DISABLE_HARFBUZZ=OFF
     )
     
     # 크로스 컴파일 설정
@@ -101,7 +84,7 @@ build_target() {
     # 설치
     cmake --install .
     
-    echo "freetype 빌드 완료 (${TARGET}, ${BUILD_TYPE}): ${INSTALL_DIR}"
+    echo "libz 빌드 완료 (${TARGET}, ${BUILD_TYPE}): ${INSTALL_DIR}"
     echo ""
 }
 
