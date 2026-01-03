@@ -51,14 +51,15 @@ build_target() {
     
     cd "${BUILD_DIR}"
     
-    # 크로스 빌드 시 LD_LIBRARY_PATH 설정
+    # 크로스 빌드 시 PKG_CONFIG 설정
     if [ "$TARGET" != "native" ]; then
-        # 각 타겟 아키텍처에 맞는 라이브러리 경로 추가
-        export LD_LIBRARY_PATH="/usr/lib/${TARGET}:${LD_LIBRARY_PATH}"
-        export LD_LIBRARY_PATH="/usr/${TARGET}/lib:${LD_LIBRARY_PATH}"
-        export LD_LIBRARY_PATH="/usr/${TARGET}/lib64:${LD_LIBRARY_PATH}"
+        # 각 타겟 아키텍처에 맞는 pkg-config 경로 설정
+        export PKG_CONFIG_LIBDIR="/usr/lib/${TARGET}/pkgconfig:/usr/${TARGET}/lib/pkgconfig:/usr/${TARGET}/lib64/pkgconfig"
+        export PKG_CONFIG_PATH="/usr/lib/${TARGET}/pkgconfig:/usr/${TARGET}/lib/pkgconfig:/usr/${TARGET}/lib64/pkgconfig"
+        export PKG_CONFIG_SYSROOT_DIR=/
         
-        echo "LD_LIBRARY_PATH: ${LD_LIBRARY_PATH}"
+        echo "PKG_CONFIG_LIBDIR: ${PKG_CONFIG_LIBDIR}"
+        echo "PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}"
     fi
     
     # CMake 설정
