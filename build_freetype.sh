@@ -85,6 +85,7 @@ build_target() {
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
         -DBUILD_SHARED_LIBS="${BUILD_SHARED}"
+        -DFT_DYNAMIC_HARFBUZZ=FALSE
         -DFT_DISABLE_ZLIB=OFF
         -DFT_DISABLE_BZIP2=OFF
         -DFT_DISABLE_PNG=ON
@@ -113,8 +114,8 @@ build_target() {
     fi
     if [ -d "${HARFBUZZ_LIB_DIR}" ]; then
         CMAKE_ARGS+=(
-            -DHARFBUZZ_LIBRARIES="${HARFBUZZ_LIB_DIR}/libharfbuzz.a"
-            -DHARFBUZZ_INCLUDE_DIR="${SCRIPT_DIR}/install/harfbuzz/${TARGET}/include"
+            -DHarfBuzz_LIBRARIES="${HARFBUZZ_LIB_DIR}/libharfbuzz.a"
+            -DHarfBuzz_INCLUDE_DIR="${SCRIPT_DIR}/install/harfbuzz/${TARGET}/include"
         )
     fi
     
