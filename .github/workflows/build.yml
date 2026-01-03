@@ -19,13 +19,11 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Setup build environment
-      run: |
-        # Install CMake
-        choco install cmake -y
-        
-        # Install LLVM/Clang
-        choco install llvm -y
+    - name: Set up Clang
+      uses: egor-tensin/setup-clang@v2
+      with:
+        version: latest
+        platform: x64
 
     - name: Build libz (native)
       shell: bash
@@ -74,6 +72,12 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Set up Clang
+      uses: egor-tensin/setup-clang@v2
+      with:
+        version: latest
+        platform: x64
+
     - name: Setup build environment
       run: |
         # 멀티아키텍처 지원 활성화
@@ -81,21 +85,6 @@ jobs:
         sudo dpkg --add-architecture riscv64
         sudo dpkg --add-architecture i386
         sudo apt-get update || true
-
-        # 기본 패키지 설치
-        sudo apt-get install -y \
-          build-essential \
-          cmake
-
-        # LLVM/Clang 20 설치
-        sudo apt-get install -y \
-          clang-20 \
-          lldb-20 \
-          lld-20
-        
-        # clang-20, clang++-20을 clang, clang++로 심볼릭 링크 생성
-        sudo ln -sf /usr/bin/clang-20 /usr/bin/clang
-        sudo ln -sf /usr/bin/clang++-20 /usr/bin/clang++
         
         # aarch64 크로스 컴파일 라이브러리
         sudo apt-get install -y \
