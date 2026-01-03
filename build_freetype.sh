@@ -56,7 +56,6 @@ build_target() {
         # 각 타겟 아키텍처에 맞는 pkg-config 경로 설정
         export PKG_CONFIG_LIBDIR="/usr/lib/${TARGET}/pkgconfig:/usr/${TARGET}/lib/pkgconfig:/usr/${TARGET}/lib64/pkgconfig"
         export PKG_CONFIG_PATH="/usr/lib/${TARGET}/pkgconfig:/usr/${TARGET}/lib/pkgconfig:/usr/${TARGET}/lib64/pkgconfig"
-        export PKG_CONFIG_SYSROOT_DIR=/
         
         echo "PKG_CONFIG_LIBDIR: ${PKG_CONFIG_LIBDIR}"
         echo "PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}"
