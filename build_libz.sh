@@ -73,6 +73,11 @@ build_target() {
         CMAKE_ARGS+=(
             -DCMAKE_C_COMPILER=clang
         )
+    else
+        # Windows에서는 MSVC 사용, /MT 플래그 추가
+        CMAKE_ARGS+=(
+            -DCMAKE_C_FLAGS="/MT"
+        )
     fi
     
     cmake "${CMAKE_ARGS[@]}"
