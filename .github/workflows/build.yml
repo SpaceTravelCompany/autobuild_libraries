@@ -22,6 +22,16 @@ jobs:
     - name: Setup MSVC
       uses: microsoft/setup-msbuild@v2
 
+    - name: Patch brotli CMakeLists.txt for Windows
+      shell: bash
+      run: |
+        BROTLI_CMAKE="libs/brotli/CMakeLists.txt"
+        if [ -f "${BROTLI_CMAKE}" ]; then
+          # CHECK_LIBRARY_EXISTS를 set으로 대체
+          sed -i 's/CHECK_LIBRARY_EXISTS(m log2 "" HAVE_LIB_M)/set(HAVE_LIB_M FALSE)/g' "${BROTLI_CMAKE}"
+          echo "brotli CMakeLists.txt 패치 완료"
+        fi
+
     - name: Build libz (native)
       shell: bash
       run: |

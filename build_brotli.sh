@@ -35,14 +35,12 @@ fi
 # 빌드 함수
 build_target() {
     local TARGET=$1
-    local BUILD_TYPE=$2  # "shared" or "static"
-    local BUILD_SHARED=$3  # "ON" or "OFF"
     
     echo "----------------------------------------"
-    echo "빌드 중: ${TARGET} (${BUILD_TYPE})"
+    echo "빌드 중: ${TARGET}"
     echo "----------------------------------------"
     
-    BUILD_DIR="${SCRIPT_DIR}/build/brotli/${TARGET}-${BUILD_TYPE}"
+    BUILD_DIR="${SCRIPT_DIR}/build/brotli/${TARGET}"
     INSTALL_DIR="${SCRIPT_DIR}/install/brotli/${TARGET}"
     
     # 빌드 디렉토리 생성
@@ -57,7 +55,7 @@ build_target() {
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
-        -DBUILD_SHARED_LIBS="${BUILD_SHARED}"
+        -DBROTLI_BUILD_FOR_PACKAGE=ON
         -DBROTLI_DISABLE_TESTS=ON
     )
     
@@ -86,7 +84,7 @@ build_target() {
     # 설치
     cmake --install .
     
-    echo "brotli 빌드 완료 (${TARGET}, ${BUILD_TYPE}): ${INSTALL_DIR}"
+    echo "brotli 빌드 완료 (${TARGET}): ${INSTALL_DIR}"
     echo ""
 }
 
@@ -96,11 +94,7 @@ for TARGET in "${TARGETS[@]}"; do
     echo "타겟: ${TARGET}"
     echo "=========================================="
     
-    # 공유 라이브러리 빌드
-    build_target "${TARGET}" "shared" "ON"
-    
-    # 정적 라이브러리 빌드
-    build_target "${TARGET}" "static" "OFF"
+    build_target "${TARGET}"
 done
 
 echo "=========================================="
