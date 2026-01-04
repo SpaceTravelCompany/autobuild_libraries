@@ -2,15 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-include(OpusFilePackageVersion)
-get_package_version(PACKAGE_VERSION PROJECT_VERSION)
-string(REPLACE "." ";" PROJECT_VERSION_LIST ${PROJECT_VERSION})
-list(GET PROJECT_VERSION_LIST 0 PROJECT_VERSION_MAJOR)
-list(GET PROJECT_VERSION_LIST 1 PROJECT_VERSION_MINOR)
-
-
 project(OpusFile
-  VERSION ${PROJECT_VERSION}
   LANGUAGES C
 )
 
@@ -46,11 +38,6 @@ add_library(opusfile
   "${CMAKE_CURRENT_SOURCE_DIR}/src/stream.c"
 )
 add_library(OpusFile::opusfile ALIAS opusfile)
-set_target_properties(opusfile PROPERTIES
-  PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/opusfile.h"
-  VERSION ${PROJECT_VERSION}
-  SOVERSION ${PROJECT_VERSION_MAJOR}
-)
 include_directories(../libogg/include
 ../opus/include)
 target_include_directories(opusfile
@@ -137,11 +124,6 @@ if(NOT OP_DISABLE_HTTP)
       "${CMAKE_CURRENT_SOURCE_DIR}/src/winerrno.h"
     )
   endif()
-  set_target_properties(opusurl PROPERTIES
-    PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/opusfile.h"
-    VERSION ${PROJECT_VERSION}
-    SOVERSION ${PROJECT_VERSION_MAJOR}
-  )
   target_include_directories(opusurl
     PRIVATE
       "${CMAKE_CURRENT_SOURCE_DIR}/include"
@@ -291,15 +273,9 @@ configure_package_config_file(
   INSTALL_DESTINATION
     "${CMAKE_INSTALL_LIBDIR}/cmake/opusfile"
 )
-write_basic_package_version_file(
-  "OpusFileConfigVersion.cmake"
-  VERSION "${PACKAGE_VERSION}"
-  COMPATIBILITY AnyNewerVersion
-)
 install(
   FILES
     "${CMAKE_CURRENT_BINARY_DIR}/OpusFileConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/OpusFileConfigVersion.cmake"
   DESTINATION
     "${CMAKE_INSTALL_LIBDIR}/cmake/opusfile"
 )
