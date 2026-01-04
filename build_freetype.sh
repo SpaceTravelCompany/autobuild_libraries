@@ -72,25 +72,46 @@ build_target() {
     )
     
     # 의존성 라이브러리 경로 추가
-    if [ -d "${ZLIB_LIB_DIR}" ]; then
-        CMAKE_ARGS+=(
-            -DZLIB_LIBRARY="${ZLIB_LIB_DIR}/libz.so"
-            -DZLIB_INCLUDE_DIR="${SCRIPT_DIR}/install/libz/${TARGET}/include"
-        )
+    if [ "${OS}" != "Windows_NT" ] && [ -z "${MSYSTEM}" ]; then
+        if [ -d "${ZLIB_LIB_DIR}" ]; then
+            CMAKE_ARGS+=(
+                -DZLIB_LIBRARY="${ZLIB_LIB_DIR}/libz.so"
+                -DZLIB_INCLUDE_DIR="${SCRIPT_DIR}/install/libz/${TARGET}/include"
+            )
+        fi
+        if [ -d "${BZIP2_LIB_DIR}" ]; then
+            CMAKE_ARGS+=(
+                -DBZIP2_LIBRARIES="${BZIP2_LIB_DIR}/libbz2_static.a"
+                -DBZIP2_INCLUDE_DIR="${SCRIPT_DIR}/install/bzip2/${TARGET}/include"
+            )
+        fi
+        if [ -d "${BROTLI_LIB_DIR}" ]; then
+            CMAKE_ARGS+=(
+                -DBROTLIDEC_LIBRARIES="${BROTLI_LIB_DIR}/libbrotlidec-static.a"
+                -DBROTLIDEC_INCLUDE_DIRS="${SCRIPT_DIR}/install/brotli/${TARGET}/include"
+            )
+        fi
+    else
+        if [ -d "${ZLIB_LIB_DIR}" ]; then
+            CMAKE_ARGS+=(
+                -DZLIB_LIBRARY="${ZLIB_LIB_DIR}/zs.lib"
+                -DZLIB_INCLUDE_DIR="${SCRIPT_DIR}/install/libz/${TARGET}/include"
+            )
+        fi
+        if [ -d "${BZIP2_LIB_DIR}" ]; then
+            CMAKE_ARGS+=(
+                -DBZIP2_LIBRARIES="${BZIP2_LIB_DIR}/bz2_static.lib"
+                -DBZIP2_INCLUDE_DIR="${SCRIPT_DIR}/install/bzip2/${TARGET}/include"
+            )
+        fi
+        if [ -d "${BROTLI_LIB_DIR}" ]; then
+            CMAKE_ARGS+=(
+                -DBROTLIDEC_LIBRARIES="${BROTLI_LIB_DIR}/brotlidec-static.lib"
+                -DBROTLIDEC_INCLUDE_DIRS="${SCRIPT_DIR}/install/brotli/${TARGET}/include"
+            )
+        fi
     fi
-    if [ -d "${BZIP2_LIB_DIR}" ]; then
-        CMAKE_ARGS+=(
-            -DBZIP2_LIBRARIES="${BZIP2_LIB_DIR}/libbz2_static.a"
-            -DBZIP2_INCLUDE_DIR="${SCRIPT_DIR}/install/bzip2/${TARGET}/include"
-        )
-    fi
-    if [ -d "${BROTLI_LIB_DIR}" ]; then
-        CMAKE_ARGS+=(
-            -DBROTLIDEC_LIBRARIES="${BROTLI_LIB_DIR}/libbrotlidec.a"
-            -DBROTLIDEC_INCLUDE_DIRS="${SCRIPT_DIR}/install/brotli/${TARGET}/include"
-        )
-    fi
-    
+
     # 크로스 컴파일 설정
     # Windows가 아닐 때만 clang 설정 (Windows에서는 MSVC 사용)
     if [ "$TARGET" != "native" ]; then
