@@ -30,7 +30,7 @@ Built libraries are installed in the `install/libz/<target>/` directory.
 
 etc...
 
-**Note**: Build libz, bzip2, brotli, and harfbuzz before building freetype.
+**Note**: Build libz, bzip2, and brotli before building freetype.
 
 
 Cross-compilation is performed for the following target architectures, building both **shared libraries** and **static libraries** for each target:
