@@ -13,7 +13,7 @@ set(LT_CURRENT  1)
 set(LT_REVISION 9)
 set(LT_AGE      0)
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 include(Version)
 include(SymLink)
 
