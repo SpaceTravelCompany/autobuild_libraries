@@ -74,7 +74,7 @@ build_target() {
 
     # 의존성 라이브러리 경로 설정
     VORBIS_INCLUDE_DIR="${SCRIPT_DIR}/install/vorbis/${TARGET}/include"
-    OPUSFILE_INCLUDE_DIR="${SCRIPT_DIR}/install/opusfile/${TARGET}/include/opus"
+    OPUSFILE_INCLUDE_DIR="${SCRIPT_DIR}/libs/opusfile/include"
     OGG_INCLUDE_DIR="${SCRIPT_DIR}/install/ogg/${TARGET}/include"
     OPUS_INCLUDE_DIR="${SCRIPT_DIR}/install/opus/${TARGET}/include/opus"
 
@@ -98,11 +98,11 @@ build_target() {
         ar r libminiaudio.a miniaudio.o miniaudio_libopus.o miniaudio_libvorbis.o
         cp libminiaudio.a "${INSTALL_DIR}/lib/libminiaudio.a"
     elif [ "${OS}" == "Windows_NT" ] || [ -n "${MSYSTEM}" ]; then
-        cl /c /O2 /MT miniaudio.c miniaudio_libopus.c miniaudio_libvorbis.c \
-        /I"${OGG_INCLUDE_DIR}" \
-        /I"${OPUS_INCLUDE_DIR}" \
-        /I"${VORBIS_INCLUDE_DIR}" \
-        /I"${OPUSFILE_INCLUDE_DIR}"
+        cl -c -O2 -MT miniaudio.c miniaudio_libopus.c miniaudio_libvorbis.c \
+        -I"${OGG_INCLUDE_DIR}" \
+        -I"${OPUS_INCLUDE_DIR}" \
+        -I"${VORBIS_INCLUDE_DIR}" \
+        -I"${OPUSFILE_INCLUDE_DIR}"
         lib /OUT:libminiaudio.lib miniaudio.obj miniaudio_libopus.obj miniaudio_libvorbis.obj
         cp libminiaudio.lib "${INSTALL_DIR}/lib/libminiaudio.lib"
     elif [ "$TARGET" != "native" ]; then
