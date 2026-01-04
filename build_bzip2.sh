@@ -32,6 +32,14 @@ if [ ! -d "${BZIP2_DIR}" ]; then
     exit 1
 fi
 
+# bzip2 CMakeLists.txt 패치: cmake_minimum_required를 3.12에서 3.15로 변경
+BZIP2_CMAKE="${BZIP2_DIR}/CMakeLists.txt"
+if [ -f "${BZIP2_CMAKE}" ]; then
+    sed -i 's/cmake_minimum_required(VERSION 3.12)/cmake_minimum_required(VERSION 3.15)/g' "${BZIP2_CMAKE}"
+    echo "bzip2 CMakeLists.txt 패치 완료"
+fi
+
+
 # 빌드 함수
 build_target() {
     local TARGET=$1

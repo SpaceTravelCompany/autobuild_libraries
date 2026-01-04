@@ -57,7 +57,6 @@ build_target() {
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
         -DBROTLI_BUILD_FOR_PACKAGE=ON
         -DBROTLI_DISABLE_TESTS=ON
-        -DBUILD_SHARED_LIBS=OFF
     )
     
     # 크로스 컴파일 설정
