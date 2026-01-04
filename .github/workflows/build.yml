@@ -52,7 +52,7 @@ jobs:
           install/**
         retention-days: 7
 
-  build-libraries-cross:
+  build-libraries-cross-linux:
     runs-on: ubuntu-latest
     
     steps:
@@ -118,6 +118,62 @@ jobs:
       run: |
         chmod +x build_freetype.sh
         ./build_freetype.sh
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: libraries-cross-compiled
+        path: |
+          install/**
+        retention-days: 7
+
+    build-libraries-cross-android:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup build environment
+      run: |
+        sudo apt-get update || true
+
+        # 기본 패키지 설치
+        sudo apt-get install -y \
+          build-essential \
+
+        # LLVM/Clang 20 설치
+        sudo apt-get install -y \
+          clang-20 \
+          lldb-20 \
+          lld-20
+
+        sudo ln -sf /usr/bin/clang-20 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-20 /usr/bin/clang++
+
+    - name: Build libz (cross-compile)
+      shell: bash
+      run: |
+        chmod +x build_libz.sh
+        ./build_libz.sh -android
+
+    - name: Build bzip2 (cross-compile)
+      shell: bash
+      run: |
+        chmod +x build_bzip2.sh
+        ./build_bzip2.sh -android
+
+    - name: Build brotli (cross-compile)
+      shell: bash
+      run: |
+        chmod +x build_brotli.sh
+        ./build_brotli.sh -android
+
+    - name: Build freetype (cross-compile)
+      shell: bash
+      run: |
+        chmod +x build_freetype.sh
+        ./build_freetype.sh -android
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4

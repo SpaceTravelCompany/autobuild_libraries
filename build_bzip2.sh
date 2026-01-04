@@ -12,17 +12,40 @@ if [ "$1" == "--native" ] || [ "$1" == "-n" ]; then
     echo "네이티브 빌드 모드로 실행합니다."
 fi
 
+NDK_TOOLCHAIN_DIR="${SCRIPT_DIR}/ndk/29.0.14206865/toolchains/llvm/prebuilt/linux-x86_64/"
+NDK_API_LEVEL="35"
+
+ANDROID_ONLY=false
+if [ "$1" == "--android" ] || [ "$1" == "-a" ]; then
+    ANDROID_ONLY=true
+    echo "Android 빌드 모드로 실행합니다."
+fi
+
+ANDROIDS=()
+
 # 빌드할 타겟 아키텍처 목록
 if [ "$NATIVE_ONLY" = true ]; then
     # 네이티브 빌드만 (현재 시스템 아키텍처)
     TARGETS=("native")
 else
-    # 크로스 빌드
     TARGETS=(
         "aarch64-linux-gnu"
         "riscv64-linux-gnu"
         "x86_64-linux-gnu"
-        "i386-linux-gnu"
+    )
+    ANDROIDS=(
+        "aarch64-linux-android35"
+        "riscv64-linux-android35"
+        "x86_64-linux-android35"
+        "i686-linux-android35"
+        "armv7a-linux-androideabi35"
+    )
+    ANDROID_ARCH=(
+        "aarch64-linux-android"
+        "riscv64-linux-android"
+        "x86_64-linux-android"
+        "i686-linux-android"
+        "arm-linux-androideabi"
     )
 fi
 
@@ -35,6 +58,7 @@ fi
 # 빌드 함수
 build_target() {
     local TARGET=$1
+    local ANDROID_ARCH=$2
     
     echo "----------------------------------------"
     echo "빌드 중: ${TARGET}"
@@ -57,26 +81,45 @@ build_target() {
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
         -DENABLE_LIB_ONLY=OFF
         -DENABLE_DEBUG=OFF
-        -DENABLE_SHARED_LIB=ON
-        -DENABLE_STATIC_LIB=ON
         -DENABLE_APP=OFF
     )
-    
-    # 크로스 컴파일 설정
-    # Windows가 아닐 때만 clang 설정 (Windows에서는 MSVC 사용)
-    if [ "$TARGET" != "native" ]; then
+
+    if [ "$ANDROID_ONLY" = true ]; then
+        CCFLAGS="--target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
+        -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include \
+        -L${NDK_TOOLCHAIN_DIR}/sysroot/usr/lib/${ANDROID_ARCH} \
+        -L${NDK_TOOLCHAIN_DIR}/sysroot/usr/lib/${ANDROID_ARCH}/35 \
+        -lc -lm -ldl -llog -landroid"
+
+        if [ "$TARGET" == "aarch64-linux-android35" ]; then
+            CCFLAGS+=" -Wl,-z,max-page-size=16384"   
+        fi
+
         CMAKE_ARGS+=(
+            -DCMAKE_C_COMPILER=clang
+            -DCMAKE_C_FLAGS="${CCFLAGS}"
+            -DENABLE_SHARED_LIB=OFF
+            -DENABLE_STATIC_LIB=ON
+        )
+    elif [ "$TARGET" != "native" ]; then
+        CMAKE_ARGS+=(
+            -DENABLE_SHARED_LIB=ON
+            -DENABLE_STATIC_LIB=ON
             -DCMAKE_C_COMPILER=clang
             -DCMAKE_C_FLAGS="--target=${TARGET}"
         )
     elif [ "${OS}" != "Windows_NT" ] && [ -z "${MSYSTEM}" ]; then
         # Windows가 아닐 때만 clang 설정
         CMAKE_ARGS+=(
+            -DENABLE_SHARED_LIB=ON
+            -DENABLE_STATIC_LIB=ON
             -DCMAKE_C_COMPILER=clang
         )
     else
         # Windows에서는 MSVC 사용, /MT 플래그 추가
         CMAKE_ARGS+=(
+            -DENABLE_SHARED_LIB=ON
+            -DENABLE_STATIC_LIB=ON
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
     fi
@@ -94,14 +137,24 @@ build_target() {
 }
 
 # 각 타겟에 대해 빌드
-for TARGET in "${TARGETS[@]}"; do
-    echo "=========================================="
-    echo "타겟: ${TARGET}"
-    echo "=========================================="
-    
-    # 라이브러리 빌드
-    build_target "${TARGET}"
-done
+if [ "$ANDROID_ONLY" = true ]; then
+    for i in "${!ANDROIDS[@]}"; do
+        TARGET="${ANDROIDS[$i]}"
+        echo "=========================================="
+        echo "타겟: ${TARGET} ${ANDROID_ARCH[$i]}"
+        echo "=========================================="
+        
+        build_target "${TARGET}" "${ANDROID_ARCH[$i]}"
+    done
+else
+    for TARGET in "${TARGETS[@]}"; do
+        echo "=========================================="
+        echo "타겟: ${TARGET}"
+        echo "=========================================="
+        
+        build_target "${TARGET}" ""
+    done
+fi
 
 echo "=========================================="
 echo "모든 타겟 빌드 완료!"
