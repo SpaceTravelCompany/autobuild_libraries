@@ -142,10 +142,10 @@ if (BUILD_WEBSITE AND NOT OPENEXR_IS_SUBPROJECT)
   add_subdirectory(website)
 endif()
 
-if (OPENEXR_BUILD_LIBS AND NOT OPENEXR_IS_SUBPROJECT)
-  # Even if not building the website, still make sure the website example code compiles.
-  add_subdirectory(website/src)
-endif()
+# if (OPENEXR_BUILD_LIBS AND NOT OPENEXR_IS_SUBPROJECT)
+#   # Even if not building the website, still make sure the website example code compiles.
+#   add_subdirectory(website/src)
+# endif()
 
 if (OPENEXR_BUILD_PYTHON AND OPENEXR_BUILD_LIBS AND NOT OPENEXR_IS_SUBPROJECT)
   add_subdirectory(src/wrappers/python)

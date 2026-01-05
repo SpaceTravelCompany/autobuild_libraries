@@ -42,8 +42,8 @@ build_target() {
         -DOPENEXR_BUILD_EXAMPLES=OFF
         -DBUILD_WEBSITE=OFF
         -DOPENEXR_BUILD_PYTHON=OFF
-        -DOPENEXR_USE_INTERNAL_DEFLATE=ON
-        -DBUILD_SHARED_LIBS="${BUILD_SHARED_STATIC}"
+        -DOPENEXR_FORCE_INTERNAL_DEFLATE=ON
+        -DOPENEXR_FORCE_INTERNAL_OPENJPH=ON
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
@@ -53,7 +53,7 @@ build_target() {
         -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include/c++/v1/${ANDROID_ARCH} \
         -L${NDK_TOOLCHAIN_DIR}/sysroot/usr/lib/${ANDROID_ARCH} \
         -L${NDK_TOOLCHAIN_DIR}/sysroot/usr/lib/${ANDROID_ARCH}/35 \
-        -lc -lm -ldl -llog -landroid"
+        -lc -lm -ldl -llog -lc++_static -lc++abi -landroid"
 
         if [ "$TARGET" == "aarch64-linux-android35" ]; then
             CCFLAGS+=" -Wl,-z,max-page-size=16384"   

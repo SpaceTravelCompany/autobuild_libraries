@@ -21,7 +21,7 @@ LINUX_TARGETS=(
 
 # Windows 빌드 타겟 목록
 WINDOWS_TARGETS=(
-    "native"
+    "native-windows"
 )
 
 # Android 타겟 목록
