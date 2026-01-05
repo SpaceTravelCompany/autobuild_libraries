@@ -66,7 +66,7 @@ build_target() {
             -DCMAKE_C_FLAGS="${CCFLAGS}"
             -DBUILD_SHARED_LIBS=OFF
         )
-    elif [ "$TARGET" != "native" ]; then
+    elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="--target=${TARGET}"
             -DBUILD_SHARED_LIBS=${BUILD_SHARED_STATIC}

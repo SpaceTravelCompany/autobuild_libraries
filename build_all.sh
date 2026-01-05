@@ -11,6 +11,10 @@ echo ""
 # 빌드 인자
 BUILD_ARG="$1"
 
+
+# 13. openexr 빌드
+"${SCRIPT_DIR}/build_openexr.sh" "${BUILD_ARG}"
+
 # 1. libz 빌드 (독립)
 "${SCRIPT_DIR}/build_libz.sh" "${BUILD_ARG}"
 
@@ -46,9 +50,6 @@ BUILD_ARG="$1"
 
 # 12. lua 빌드(본인 용도로 수정)
 "${SCRIPT_DIR}/build_lua.sh" "${BUILD_ARG}" "-s"
-
-# 13. openexr 빌드
-"${SCRIPT_DIR}/build_openexr.sh" "${BUILD_ARG}"
 
 echo ""
 echo "=========================================="

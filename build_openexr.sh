@@ -44,6 +44,7 @@ build_target() {
         -DOPENEXR_BUILD_PYTHON=OFF
         -DOPENEXR_FORCE_INTERNAL_DEFLATE=ON
         -DOPENEXR_FORCE_INTERNAL_OPENJPH=ON
+        -DOPENEXR_FORCE_INTERNAL_IMATH=ON
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
@@ -64,7 +65,7 @@ build_target() {
             -DCMAKE_CXX_FLAGS="${CCFLAGS}"
             -DBUILD_SHARED_LIBS=OFF
         )
-    elif [ "$TARGET" != "native" ]; then
+    elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="--target=${TARGET}"
             -DCMAKE_CXX_FLAGS="--target=${TARGET}"
@@ -76,7 +77,7 @@ build_target() {
         )
     fi
     
-    if [ "${OS}" == "Windows_NT" ]; then
+    if [ "$WINDOWS_ONLY" = true ]; then
         # Windows에서는 MSVC 사용, /MT 플래그 추가
         CMAKE_ARGS+=(
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
