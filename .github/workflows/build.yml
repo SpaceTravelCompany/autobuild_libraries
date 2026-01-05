@@ -20,27 +20,20 @@ jobs:
     - name: Setup MSVC
       uses: microsoft/setup-msbuild@v2
 
-    - name: Configure build for amd64
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: amd64
-
-    - name: Build all for amd64
-      shell: bash
-      run: |
-        chmod +x build_all.sh
-        ./build_all.sh -w64
-
-    - name: Configure build for ARM64
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: amd64_arm64
-
-    - name: Build all for ARM64
-      shell: bash
-      run: |
-        chmod +x build_all.sh
-        ./build_all.sh -wa64
+    strategy:
+      matrix:
+        arch:
+          - amd64
+          - amd64_arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
+      - name: Build all
+        run: |
+          chmod +x build_all.sh
+          ./build_all.sh -windows_${{ matrix.arch }}
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
