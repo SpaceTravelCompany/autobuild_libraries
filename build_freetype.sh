@@ -133,22 +133,14 @@ build_target() {
             fi
         fi
 
-        # 크로스 컴파일 설정
-        # Windows가 아닐 때만 clang 설정 (Windows에서는 MSVC 사용)
-        if [ "$TARGET" != "native" ]; then
-            if [ "${OS}" == "Windows_NT" ]; then
-                CMAKE_ARGS+=(
-                    -DCMAKE_C_FLAGS="-MACHINE:${TARGET}"
-                )
-            else
-                CMAKE_ARGS+=(
-                    -DCMAKE_C_FLAGS="--target=${TARGET}"
-                )
-            fi
+        if [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
+            CMAKE_ARGS+=(
+                -DCMAKE_C_FLAGS="--target=${TARGET}"
+            )
         fi
     fi
 
-    if [ "${OS}" == "Windows_NT" ]; then
+    if [ "$WINDOWS_ONLY" = true ]; then
         # Windows에서는 MSVC 사용, /MT 플래그 추가
         CMAKE_ARGS+=(
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
@@ -183,7 +175,7 @@ if [ "$ANDROID_ONLY" = true ]; then
         # Android일 때는 static만 빌드
         build_target "${TARGET}" "static" "OFF" "${ANDROID_ARCH[$i]}"
     done
-elif [ "${OS}" == "Windows_NT" ] || [ -n "${MSYSTEM}" ]; then
+elif [ "$WINDOWS_ONLY" = true ]; then
     # Windows 환경에서는 WINDOWS_TARGETS 사용
     for TARGET in "${WINDOWS_TARGETS[@]}"; do
         echo "=========================================="

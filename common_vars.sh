@@ -10,6 +10,7 @@ NDK_API_LEVEL="35"
 # 빌드 모드 플래그 (명령줄 인자로 설정됨)
 NATIVE_ONLY=false
 ANDROID_ONLY=false
+WINDOWS_ONLY=false
 
 # Linux 빌드 타겟 목록
 LINUX_TARGETS=(
@@ -48,12 +49,17 @@ parse_build_args() {
         NATIVE_ONLY=true
         echo "네이티브 빌드 모드로 실행합니다."
         LINUX_TARGETS=("native")
-        WINDOWS_TARGETS=("native")
-        ANDROIDS=()
-        ANDROID_ARCH=()
     elif [ "$1" == "--android" ] || [ "$1" == "-a" ]; then
         ANDROID_ONLY=true
         echo "Android 빌드 모드로 실행합니다."
+    elif [ "$1" == "--windows_x64" ] || [ "$1" == "-w64" ]; then
+        echo "Windows x64 빌드 모드로 실행합니다."
+        WINDOWS_TARGETS=("x64")
+        WINDOWS_ONLY=true
+    elif [ "$1" == "--windows_arm64" ] || [ "$1" == "-wa64" ]; then
+        echo "Windows ARM64 빌드 모드로 실행합니다."
+        WINDOWS_TARGETS=("ARM64")
+        WINDOWS_ONLY=true
     elif [ -n "$1" ]; then
         echo "오류: 알 수 없는 플래그: $1" >&2
         echo "사용 가능한 플래그: --native (-n), --android (-a)" >&2

@@ -37,7 +37,6 @@ build_target() {
     OPUS_INCLUDE_DIR="${SCRIPT_DIR}/install/opus/${TARGET}/include/opus"
 
     if [ "$ANDROID_ONLY" = true ]; then
-        # Android 빌드
         CCFLAGS="--target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
         -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include \
         -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include/c++/v1 \
@@ -55,16 +54,7 @@ build_target() {
         clang -c miniaudio.c miniaudio_libopus.c miniaudio_libvorbis.c ${CCFLAGS}
         ar r libminiaudio.a miniaudio.o miniaudio_libopus.o miniaudio_libvorbis.o
         cp libminiaudio.a "${INSTALL_DIR}/lib/libminiaudio.a"
-    elif [ "${OS}" == "Windows_NT" ] || [ -n "${MSYSTEM}" ]; then
-        cl -c -O2 -MT miniaudio.c miniaudio_libopus.c miniaudio_libvorbis.c \
-        -I"${OGG_INCLUDE_DIR}" \
-        -I"${OPUS_INCLUDE_DIR}" \
-        -I"${VORBIS_INCLUDE_DIR}" \
-        -I"${OPUSFILE_INCLUDE_DIR}"
-        lib /OUT:libminiaudio.lib miniaudio.obj miniaudio_libopus.obj miniaudio_libvorbis.obj
-        cp libminiaudio.lib "${INSTALL_DIR}/lib/libminiaudio.lib"
-    elif [ "$TARGET" != "native" ]; then
-        # 크로스 컴파일 (Linux)
+    elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         clang -c miniaudio.c miniaudio_libopus.c miniaudio_libvorbis.c \
         -I"${OGG_INCLUDE_DIR}" \
         -I"${OPUS_INCLUDE_DIR}" \
@@ -73,8 +63,15 @@ build_target() {
         -fPIC -O3 --target=${TARGET}
         ar r libminiaudio.a miniaudio.o miniaudio_libopus.o miniaudio_libvorbis.o
         cp libminiaudio.a "${INSTALL_DIR}/lib/libminiaudio.a"
+    elif [ "$WINDOWS_ONLY" = true ]; then
+        cl -c -O2 -MT miniaudio.c miniaudio_libopus.c miniaudio_libvorbis.c \
+        -I"${OGG_INCLUDE_DIR}" \
+        -I"${OPUS_INCLUDE_DIR}" \
+        -I"${VORBIS_INCLUDE_DIR}" \
+        -I"${OPUSFILE_INCLUDE_DIR}"
+        lib /OUT:libminiaudio.lib miniaudio.obj miniaudio_libopus.obj miniaudio_libvorbis.obj
+        cp libminiaudio.lib "${INSTALL_DIR}/lib/libminiaudio.lib"
     else
-        # 네이티브 빌드 (Linux)
         clang -c miniaudio.c miniaudio_libopus.c miniaudio_libvorbis.c \
         -I"${OGG_INCLUDE_DIR}" \
         -I"${OPUS_INCLUDE_DIR}" \
@@ -103,7 +100,7 @@ if [ "$ANDROID_ONLY" = true ]; then
         
         build_target "${TARGET}" "${ANDROID_ARCH[$i]}"
     done
-elif [ "${OS}" == "Windows_NT" ] || [ -n "${MSYSTEM}" ]; then
+elif [ "$WINDOWS_ONLY" = true ]; then
     # Windows 환경에서는 WINDOWS_TARGETS 사용
     for TARGET in "${WINDOWS_TARGETS[@]}"; do
         echo "=========================================="

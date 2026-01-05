@@ -53,26 +53,20 @@ build_target() {
             -DCMAKE_C_FLAGS="${CCFLAGS}"
             -DBUILD_SHARED_LIBS=OFF
         )
-    elif [ "$TARGET" != "native" ]; then
+    elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         CMAKE_ARGS+=(
             -DBROTLI_BUILD_FOR_PACKAGE=ON
         )
-         if [ "${OS}" == "Windows_NT" ]; then
-             CMAKE_ARGS+=(
-                -DCMAKE_C_FLAGS="-MACHINE:${TARGET}"
-            )
-        else
-            CMAKE_ARGS+=(
-                -DCMAKE_C_FLAGS="--target=${TARGET}"
-            )
-        fi
+        CMAKE_ARGS+=(
+            -DCMAKE_C_FLAGS="--target=${TARGET}"
+        )
     else
         CMAKE_ARGS+=(
             -DBROTLI_BUILD_FOR_PACKAGE=ON
         )
     fi
     
-    if [ "${OS}" == "Windows_NT" ]; then
+    if [ "$WINDOWS_ONLY" = true ]; then
         # Windows에서는 MSVC 사용, /MT 플래그 추가
         CMAKE_ARGS+=(
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
@@ -106,7 +100,7 @@ if [ "$ANDROID_ONLY" = true ]; then
         
         build_target "${TARGET}" "${ANDROID_ARCH[$i]}"
     done
-elif [ "${OS}" == "Windows_NT" ] || [ -n "${MSYSTEM}" ]; then
+elif [ "$WINDOWS_ONLY" = true ]; then
     # Windows 환경에서는 WINDOWS_TARGETS 사용
     for TARGET in "${WINDOWS_TARGETS[@]}"; do
         echo "=========================================="
