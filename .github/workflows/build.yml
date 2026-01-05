@@ -23,59 +23,59 @@ jobs:
     - name: Setup MSVC Dev Cmd
       uses: ilammy/msvc-dev-cmd@v1.13.0
 
-    - name: Build libz (native)
+    - name: Build libz 
       shell: bash
       run: |
         chmod +x build_libz.sh
-        ./build_libz.sh --native
+        ./build_libz.sh
 
-    - name: Build bzip2 (native)
+    - name: Build bzip2 
       shell: bash
       run: |
         chmod +x build_bzip2.sh
-        ./build_bzip2.sh --native
+        ./build_bzip2.sh
 
-    - name: Build brotli (native)
+    - name: Build brotli 
       shell: bash
       run: |
         chmod +x build_brotli.sh
-        ./build_brotli.sh --native
+        ./build_brotli.sh
 
-    - name: Build freetype (native)
+    - name: Build freetype 
       shell: bash
       run: |
         chmod +x build_freetype.sh
-        ./build_freetype.sh --native
+        ./build_freetype.sh
 
-    - name: Build ogg (native)
+    - name: Build ogg 
       shell: bash
       run: |
         chmod +x build_ogg.sh
-        ./build_ogg.sh --native
+        ./build_ogg.sh
 
-    - name: Build opus (native)
+    - name: Build opus 
       shell: bash
       run: |
         chmod +x build_opus.sh
-        ./build_opus.sh --native
+        ./build_opus.sh
 
-    - name: Build vorbis (native)
+    - name: Build vorbis 
       shell: bash
       run: |
         chmod +x build_vorbis.sh
-        ./build_vorbis.sh --native
+        ./build_vorbis.sh
 
-    - name: Build opusfile (native)
+    - name: Build opusfile 
       shell: bash
       run: |
         chmod +x build_opusfile.sh
-        ./build_opusfile.sh --native
+        ./build_opusfile.sh
 
-    - name: Build miniaudio (native)
+    - name: Build miniaudio 
       shell: bash
       run: |
         chmod +x build_miniaudio.sh
-        ./build_miniaudio.sh --native
+        ./build_miniaudio.sh
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
