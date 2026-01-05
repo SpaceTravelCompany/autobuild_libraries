@@ -41,6 +41,9 @@ BUILD_ARG="$1"
 # 10. webp 빌드
 "${SCRIPT_DIR}/build_webp.sh" "${BUILD_ARG}"
 
+# 11. lua 빌드
+"${SCRIPT_DIR}/build_lua.sh" "${BUILD_ARG}"
+
 echo ""
 echo "=========================================="
 echo "모든 라이브러리 빌드 완료!"

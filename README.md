@@ -22,6 +22,9 @@ A project for automatically building multiple libraries with cross-compilation s
 - **opusfile**: High-level Opus file API library (depends on libogg and opus).
 - **miniaudio**: Single-file audio playback and capture library (references all audio libraries).
 
+### Misc
+- **lua**: Script Programming language
+
 ## Getting Started
 
 #### Building libz (zlib)
