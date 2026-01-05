@@ -12,9 +12,13 @@ FREETYPE_DIR="${SCRIPT_DIR}/libs/freetype"
 build_target() {
     local TARGET=$1
     local BUILD_TYPE=$2  # "shared" or "static"
-    local BUILD_SHARED=$3  # "ON" or "OFF"
-    local ANDROID_ARCH=$4
+    local ANDROID_ARCH=$3
     
+    BUILD_SHARED_STATIC="OFF"
+    if [ "$BUILD_TYPE" = "shared" ]; then
+        BUILD_SHARED_STATIC="ON" 
+    fi
+
     echo "----------------------------------------"
     echo "빌드 중: ${TARGET} (${BUILD_TYPE})"
     echo "----------------------------------------"
@@ -39,7 +43,6 @@ build_target() {
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
-        -DBUILD_SHARED_LIBS="${BUILD_SHARED}"
         -DFT_DYNAMIC_HARFBUZZ=FALSE
         -DFT_DISABLE_ZLIB=OFF
         -DFT_DISABLE_BZIP2=OFF
@@ -138,15 +141,16 @@ build_target() {
                 -DCMAKE_C_FLAGS="--target=${TARGET}"
             )
         fi
+        CMAKE_ARGS+=(
+            -DBUILD_SHARED_LIBS=${BUILD_SHARED_STATIC}
+        )
     fi
 
     if [ "$WINDOWS_ONLY" = true ]; then
-        # Windows에서는 MSVC 사용, /MT 플래그 추가
         CMAKE_ARGS+=(
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
     else
-        # Windows가 아닐 때만 clang 설정
         CMAKE_ARGS+=(
             -DCMAKE_C_COMPILER=clang
         )
@@ -173,7 +177,7 @@ if [ "$ANDROID_ONLY" = true ]; then
         echo "=========================================="
         
         # Android일 때는 static만 빌드
-        build_target "${TARGET}" "static" "OFF" "${ANDROID_ARCH[$i]}"
+        build_target "${TARGET}" "static" "${ANDROID_ARCH[$i]}"
     done
 elif [ "$WINDOWS_ONLY" = true ]; then
     # Windows 환경에서는 WINDOWS_TARGETS 사용
@@ -183,10 +187,10 @@ elif [ "$WINDOWS_ONLY" = true ]; then
         echo "=========================================="
         
         # 공유 라이브러리 빌드
-        build_target "${TARGET}" "shared" "ON" ""
+        build_target "${TARGET}" "shared" ""
         
         # 정적 라이브러리 빌드
-        build_target "${TARGET}" "static" "OFF" ""
+        build_target "${TARGET}" "static" ""
     done
 else
     # Linux 환경에서는 LINUX_TARGETS 사용
@@ -196,10 +200,10 @@ else
         echo "=========================================="
         
         # 공유 라이브러리 빌드
-        build_target "${TARGET}" "shared" "ON" ""
+        build_target "${TARGET}" "shared" ""
         
         # 정적 라이브러리 빌드
-        build_target "${TARGET}" "static" "OFF" ""
+        build_target "${TARGET}" "static" ""
     done
 fi
 

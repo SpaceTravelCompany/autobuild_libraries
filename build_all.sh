@@ -8,7 +8,7 @@ echo "모든 라이브러리 빌드 시작"
 echo "=========================================="
 echo ""
 
-# 빌드 인자 (--native, --android 등)
+# 빌드 인자
 BUILD_ARG="$1"
 
 # 1. libz 빌드 (독립)
@@ -37,6 +37,9 @@ BUILD_ARG="$1"
 
 # 9. miniaudio 빌드 (vorbis, opusfile, ogg, opus 의존)
 "${SCRIPT_DIR}/build_miniaudio.sh" "${BUILD_ARG}"
+
+# 10. webp 빌드
+"${SCRIPT_DIR}/build_webp.sh" "${BUILD_ARG}"
 
 echo ""
 echo "=========================================="

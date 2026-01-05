@@ -12,6 +12,9 @@ A project for automatically building multiple libraries with cross-compilation s
 ### Font Libraries
 - **freetype**: Font library.
 
+### Image Libraries
+- **libwebp**: WebP image format library.
+
 ### Audio Libraries
 - **libogg**: Ogg container format library.
 - **opus**: Opus audio codec library.
@@ -45,23 +48,6 @@ etc...
 - Build libogg before building libvorbis.
 - Build libogg and opus before building opusfile.
 - Build all audio libraries (ogg, opus, vorbis, opusfile) before using miniaudio.
-
-## Build Order
-
-### Compression Libraries
-1. `./build_libz.sh`
-2. `./build_bzip2.sh`
-3. `./build_brotli.sh`
-
-### Font Libraries
-4. `./build_freetype.sh` (requires: libz, bzip2, brotli)
-
-### Audio Libraries
-5. `./build_ogg.sh`
-6. `./build_opus.sh`
-7. `./build_vorbis.sh` (requires: ogg)
-8. `./build_opusfile.sh` (requires: ogg, opus)
-9. `./build_miniaudio.sh` (references: ogg, opus, vorbis, opusfile)
 
 ## Build Options
 
