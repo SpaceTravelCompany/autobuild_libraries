@@ -13,7 +13,8 @@ A project for automatically building multiple libraries with cross-compilation s
 - **freetype**: Font library.
 
 ### Image Libraries
-- **libwebp**: WebP image format library.
+- **libwebp**: WebP image encoding/decoding library.
+- **openexr**: openexr image encoding/decoding library.
 
 ### Audio Libraries
 - **libogg**: Ogg container format library.
