@@ -221,9 +221,10 @@ openexr_define_library(OpenEXR
     ImfWav.h
     ImfXdr.h
   DEPENDENCIES
-    OpenEXR::Imath
     OpenEXR::Config
     OpenEXR::Iex
     OpenEXR::IlmThread
     OpenEXR::OpenEXRCore
   )
+
+target_link_libraries(OpenEXR PUBLIC Imath)

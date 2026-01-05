@@ -3,7 +3,9 @@
 
 message(STATUS "Building OpenEXR libraries")
 
-add_subdirectory( Imath )
+add_library(Imath STATIC IMPORTED)
+set_target_properties(Imath PROPERTIES IMPORTED_LOCATION ${IMATH_LIB})
+set_target_properties(Imath PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${IMATH_INCLUDE})
 
 add_subdirectory( Iex )
 add_subdirectory( IlmThread )

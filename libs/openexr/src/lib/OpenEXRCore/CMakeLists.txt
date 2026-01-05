@@ -112,7 +112,6 @@ openexr_define_library(OpenEXRCore
     ${OPENEXR_EXTRA_MATH_LIB}
 
   DEPENDENCIES
-    OpenEXR::Imath
   )
 
 if (DEFINED EXR_DEFLATE_LIB)
@@ -172,3 +171,4 @@ else()
 
 endif()
 
+target_link_libraries(OpenEXRCore PUBLIC Imath)

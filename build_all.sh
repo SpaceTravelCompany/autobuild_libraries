@@ -11,23 +11,25 @@ echo ""
 # 빌드 인자
 BUILD_ARG="$1"
 
+# 13. Imath 빌드
+"${SCRIPT_DIR}/build_Imath.sh" "${BUILD_ARG}"
 
-# 13. openexr 빌드
+# 14. openexr 빌드 (Imath 의존)
 "${SCRIPT_DIR}/build_openexr.sh" "${BUILD_ARG}"
 
-# 1. libz 빌드 (독립)
+# 1. libz 빌드
 "${SCRIPT_DIR}/build_libz.sh" "${BUILD_ARG}"
 
-# 2. bzip2 빌드 (독립)
+# 2. bzip2 빌드
 "${SCRIPT_DIR}/build_bzip2.sh" "${BUILD_ARG}"
 
-# 3. brotli 빌드 (독립)
+# 3. brotli 빌드
 "${SCRIPT_DIR}/build_brotli.sh" "${BUILD_ARG}"
 
-# 4. ogg 빌드 (독립)
+# 4. ogg 빌드
 "${SCRIPT_DIR}/build_ogg.sh" "${BUILD_ARG}"
 
-# 5. opus 빌드 (독립)
+# 5. opus 빌드
 "${SCRIPT_DIR}/build_opus.sh" "${BUILD_ARG}"
 
 # 6. freetype 빌드 (libz, bzip2, brotli 의존)

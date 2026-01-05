@@ -5,30 +5,20 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common_vars.sh"
 parse_build_args "$1"
 
-OPENEXR_DIR="${SCRIPT_DIR}/libs/openexr"
+OPENEXR_DIR="${SCRIPT_DIR}/libs/Imath"
 
 # 빌드 함수
 build_target() {
     local TARGET=$1
-    local BUILD_TYPE=$2  # "shared" or "static"
-    local ANDROID_ARCH=$3
+    local ANDROID_ARCH=$2
     
-    BUILD_SHARED_STATIC="OFF"
-    if [ "$BUILD_TYPE" = "shared" ]; then
-        BUILD_SHARED_STATIC="ON" 
-    fi
     
     echo "----------------------------------------"
-    echo "빌드 중: ${TARGET} (${BUILD_TYPE})"
+    echo "빌드 중: ${TARGET}"
     echo "----------------------------------------"
     
-    BUILD_DIR="${SCRIPT_DIR}/build/openexr/${TARGET}-${BUILD_TYPE}"
-    INSTALL_DIR="${SCRIPT_DIR}/install/openexr/${TARGET}-${BUILD_TYPE}"
-    IMATH_INCLUDE="${SCRIPT_DIR}/install/Imath/${TARGET}/include/Imath"
-    IMATH_INSTALL_LIB="${SCRIPT_DIR}/install/Imath/${TARGET}/lib/libImath-3_2.a"
-    if [ "$WINDOWS_ONLY" = true ]; then
-        IMATH_INSTALL_LIB="${SCRIPT_DIR}/install/Imath/${TARGET}/lib/Imath-3_2.lib"
-    fi
+    BUILD_DIR="${SCRIPT_DIR}/build/Imath/${TARGET}"
+    INSTALL_DIR="${SCRIPT_DIR}/install/Imath/${TARGET}"
     
     # 빌드 디렉토리 생성
     mkdir -p "${BUILD_DIR}"
@@ -42,16 +32,11 @@ build_target() {
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
-        -DOPENEXR_BUILD_TOOLS=OFF
+        -DBUILD_SHARED_LIBS=OFF
         -DBUILD_TESTING=OFF
-        -DOPENEXR_BUILD_EXAMPLES=OFF
         -DBUILD_WEBSITE=OFF
-        -DOPENEXR_BUILD_PYTHON=OFF
-        -DOPENEXR_FORCE_INTERNAL_DEFLATE=ON
-        -DOPENEXR_FORCE_INTERNAL_OPENJPH=ON
-        -DOPENEXR_FORCE_INTERNAL_IMATH=ON
-        -DIMATH_LIB="${IMATH_INSTALL_LIB}"
-        -DIMATH_INCLUDE="${IMATH_INCLUDE}"
+        -DPYTHON=OFF
+        -DPYBIND11=OFF
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
@@ -70,17 +55,11 @@ build_target() {
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="${CCFLAGS}"
             -DCMAKE_CXX_FLAGS="${CCFLAGS}"
-            -DBUILD_SHARED_LIBS=OFF
         )
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="--target=${TARGET}"
             -DCMAKE_CXX_FLAGS="--target=${TARGET}"
-            -DBUILD_SHARED_LIBS="${BUILD_SHARED_STATIC}"
-        )
-    else
-        CMAKE_ARGS+=(
-            -DBUILD_SHARED_LIBS="${BUILD_SHARED_STATIC}"
         )
     fi
     
@@ -105,7 +84,7 @@ build_target() {
     # 설치
     cmake --install .
     
-    echo "openexr 빌드 완료 (${TARGET}, ${BUILD_TYPE}): ${INSTALL_DIR}"
+    echo "Imath 빌드 완료 (${TARGET}): ${INSTALL_DIR}"
     echo ""
 }
 
@@ -118,7 +97,7 @@ if [ "$ANDROID_ONLY" = true ]; then
         echo "=========================================="
         
         # Android일 때는 static만 빌드
-        build_target "${TARGET}" "static" "${ANDROID_ARCH[$i]}"
+        build_target "${TARGET}" "${ANDROID_ARCH[$i]}"
     done
 elif [ "$WINDOWS_ONLY" = true ]; then
     # Windows 환경에서는 WINDOWS_TARGETS 사용
@@ -127,11 +106,8 @@ elif [ "$WINDOWS_ONLY" = true ]; then
         echo "타겟: ${TARGET}"
         echo "=========================================="
         
-        # 공유 라이브러리 빌드
-        build_target "${TARGET}" "shared" ""
-        
         # 정적 라이브러리 빌드
-        build_target "${TARGET}" "static" ""
+        build_target "${TARGET}" ""
     done
 else
     # Linux 환경에서는 LINUX_TARGETS 사용
@@ -140,10 +116,7 @@ else
         echo "타겟: ${TARGET}"
         echo "=========================================="
         
-        # 공유 라이브러리 빌드
-        build_target "${TARGET}" "shared" ""
-        
         # 정적 라이브러리 빌드
-        build_target "${TARGET}" "static" ""
+        build_target "${TARGET}" ""
     done
 fi
