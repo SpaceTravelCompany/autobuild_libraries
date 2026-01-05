@@ -44,6 +44,9 @@ BUILD_ARG="$1"
 # 11. lua 빌드
 "${SCRIPT_DIR}/build_lua.sh" "${BUILD_ARG}"
 
+# 12. lua 빌드(본인 용도로 수정)
+"${SCRIPT_DIR}/build_lua.sh" "${BUILD_ARG}" "-s"
+
 echo ""
 echo "=========================================="
 echo "모든 라이브러리 빌드 완료!"

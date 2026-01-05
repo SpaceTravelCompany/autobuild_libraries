@@ -6,6 +6,15 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common_vars.sh"
 parse_build_args "$1"
 
+# LUA_SEONGJUN 플래그 설정
+LUA_SEONGJUN_FLAG=""
+lua_seongjun() {
+    if [ "$1" == "-s" ]; then
+        LUA_SEONGJUN_FLAG="-DLUA_SEONGJUN"
+    fi
+}
+lua_seongjun "$2"
+
 LUA_DIR="${SCRIPT_DIR}/libs/lua/src"
 
 # CORE 소스 파일 목록
@@ -22,10 +31,13 @@ build_target() {
     local ANDROID_ARCH=$2
     
     echo "----------------------------------------"
-    echo "빌드 중: ${TARGET}"
+    echo "빌드 중: ${TARGET} ${LUA_SEONGJUN_FLAG}"
     echo "----------------------------------------"
     
     INSTALL_DIR="${SCRIPT_DIR}/install/lua/${TARGET}"
+    if [ "$LUA_SEONGJUN_FLAG" == "-DLUA_SEONGJUN" ]; then
+        INSTALL_DIR="${SCRIPT_DIR}/install/lua_seongjun/${TARGET}"   
+    fi
     
     # 설치 디렉토리 생성
     mkdir -p "${INSTALL_DIR}"
@@ -46,7 +58,7 @@ build_target() {
         -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include \
         -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include/c++/v1 \
         -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include/c++/v1/${ANDROID_ARCH} \
-        -DLUA_USE_LINUX \
+        ${LUA_SEONGJUN_FLAG} \
         -fPIC -O2 -Wall -Wextra -lc -lm -ldl -llog -landroid"
 
         if [ "$TARGET" == "aarch64-linux-android35" ]; then
@@ -68,7 +80,7 @@ build_target() {
         cp liblua.a "${INSTALL_DIR}/lib/liblua.a"
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         # 크로스 컴파일 (Linux)
-        CCFLAGS="-DLUA_USE_LINUX -fPIC -O2 -Wall -Wextra --target=${TARGET}"
+        CCFLAGS="${LUA_SEONGJUN_FLAG} -fPIC -O2 -Wall -Wextra --target=${TARGET}"
         
         # 모든 소스 파일 컴파일
         for file in ${BASE_SRC}; do
@@ -85,7 +97,7 @@ build_target() {
         cp liblua.a "${INSTALL_DIR}/lib/liblua.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
         # Windows 빌드
-        CCFLAGS="-DLUA_BUILD_AS_DLL -O2 -MT"
+        CCFLAGS="${LUA_SEONGJUN_FLAG} -O2 -MT"
         
         # 모든 소스 파일 컴파일
         for file in ${BASE_SRC}; do
@@ -101,7 +113,7 @@ build_target() {
         cp liblua.lib "${INSTALL_DIR}/lib/liblua.lib"
     else
         # 네이티브 빌드 (Linux)
-        CCFLAGS="-DLUA_USE_LINUX -fPIC -O2 -Wall -Wextra"
+        CCFLAGS="-DLUA_USE_LINUX ${LUA_SEONGJUN_FLAG} -fPIC -O2 -Wall -Wextra"
         
         # 모든 소스 파일 컴파일
         for file in ${BASE_SRC}; do

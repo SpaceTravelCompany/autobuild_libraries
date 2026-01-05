@@ -335,9 +335,13 @@ typedef unsigned long l_uint32;
 ** ===================================================================
 */
 
+#ifdef LUA_SEONGJUN
+extern size_t lua_writestring(const void* ptr, size_t size);
+#else
 /* print a string */
 #if !defined(lua_writestring)
 #define lua_writestring(s,l)   fwrite((s), sizeof(char), (l), stdout)
+#endif
 #endif
 
 /* print a newline and flush the output */
@@ -345,10 +349,15 @@ typedef unsigned long l_uint32;
 #define lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
 #endif
 
+#ifdef LUA_SEONGJUN
+//setting this function because original lua_writestringerror implementation is all single %s.
+extern void lua_writestringerror(const char *fmt, const char *str);
+#else
 /* print an error message */
 #if !defined(lua_writestringerror)
 #define lua_writestringerror(s,p) \
         (fprintf(stderr, (s), (p)), fflush(stderr))
+#endif
 #endif
 
 /* }================================================================== */
