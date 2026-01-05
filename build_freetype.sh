@@ -138,7 +138,7 @@ build_target() {
         if [ "$TARGET" != "native" ]; then
             if [ "${OS}" == "Windows_NT" ]; then
                 CMAKE_ARGS+=(
-                    -DCMAKE_C_FLAGS="-arch ${TARGET}"
+                    -DCMAKE_C_FLAGS="-MACHINE:${TARGET}"
                 )
             else
                 CMAKE_ARGS+=(

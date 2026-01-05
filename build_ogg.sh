@@ -55,7 +55,7 @@ build_target() {
     elif [ "$TARGET" != "native" ]; then
         if [ "${OS}" == "Windows_NT" ]; then
             CMAKE_ARGS+=(
-                -DCMAKE_C_FLAGS="-arch ${TARGET}"
+                -DCMAKE_C_FLAGS="-MACHINE:${TARGET}"
             )
         else
             CMAKE_ARGS+=(
@@ -117,7 +117,3 @@ else
         build_target "${TARGET}" ""
     done
 fi
-
-echo "=========================================="
-echo "모든 타겟 빌드 완료!"
-echo "=========================================="

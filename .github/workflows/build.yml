@@ -23,59 +23,11 @@ jobs:
     - name: Setup MSVC Dev Cmd
       uses: ilammy/msvc-dev-cmd@v1.13.0
 
-    - name: Build libz 
+    - name: Build all 
       shell: bash
       run: |
-        chmod +x build_libz.sh
-        ./build_libz.sh
-
-    - name: Build bzip2 
-      shell: bash
-      run: |
-        chmod +x build_bzip2.sh
-        ./build_bzip2.sh
-
-    - name: Build brotli 
-      shell: bash
-      run: |
-        chmod +x build_brotli.sh
-        ./build_brotli.sh
-
-    - name: Build freetype 
-      shell: bash
-      run: |
-        chmod +x build_freetype.sh
-        ./build_freetype.sh
-
-    - name: Build ogg 
-      shell: bash
-      run: |
-        chmod +x build_ogg.sh
-        ./build_ogg.sh
-
-    - name: Build opus 
-      shell: bash
-      run: |
-        chmod +x build_opus.sh
-        ./build_opus.sh
-
-    - name: Build vorbis 
-      shell: bash
-      run: |
-        chmod +x build_vorbis.sh
-        ./build_vorbis.sh
-
-    - name: Build opusfile 
-      shell: bash
-      run: |
-        chmod +x build_opusfile.sh
-        ./build_opusfile.sh
-
-    - name: Build miniaudio 
-      shell: bash
-      run: |
-        chmod +x build_miniaudio.sh
-        ./build_miniaudio.sh
+        chmod +x build_all.sh
+        ./build_all.sh
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -85,7 +37,7 @@ jobs:
           install/**
         retention-days: 7
 
-  build-libraries-cross-linux:
+  build-libraries-linux:
     runs-on: ubuntu-latest
     
     steps:
@@ -122,69 +74,21 @@ jobs:
           gcc-riscv64-linux-gnu \
           g++-riscv64-linux-gnu
 
-    - name: Build libz (cross-compile)
+    - name: Build all 
       shell: bash
       run: |
-        chmod +x build_libz.sh
-        ./build_libz.sh
-
-    - name: Build bzip2 (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_bzip2.sh
-        ./build_bzip2.sh
-
-    - name: Build brotli (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_brotli.sh
-        ./build_brotli.sh
-
-    - name: Build freetype (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_freetype.sh
-        ./build_freetype.sh
-
-    - name: Build ogg (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_ogg.sh
-        ./build_ogg.sh
-
-    - name: Build opus (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_opus.sh
-        ./build_opus.sh
-
-    - name: Build vorbis (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_vorbis.sh
-        ./build_vorbis.sh
-
-    - name: Build opusfile (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_opusfile.sh
-        ./build_opusfile.sh
-
-    - name: Build miniaudio (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_miniaudio.sh
-        ./build_miniaudio.sh
+        chmod +x build_all.sh
+        ./build_all.sh
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: libraries-cross-compiled-linux
+        name: libraries-compiled-linux
         path: |
           install/**
         retention-days: 7
 
-  build-libraries-cross-android:
+  build-libraries-android:
     runs-on: ubuntu-latest
     
     steps:
@@ -208,71 +112,23 @@ jobs:
         sudo ln -sf /usr/bin/clang-20 /usr/bin/clang
         sudo ln -sf /usr/bin/clang++-20 /usr/bin/clang++
 
-    - name: Build libz (cross-compile)
+    - name: Build all 
       shell: bash
       run: |
-        chmod +x build_libz.sh
-        ./build_libz.sh --android
-
-    - name: Build bzip2 (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_bzip2.sh
-        ./build_bzip2.sh --android
-
-    - name: Build brotli (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_brotli.sh
-        ./build_brotli.sh --android
-
-    - name: Build freetype (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_freetype.sh
-        ./build_freetype.sh --android
-
-    - name: Build ogg (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_ogg.sh
-        ./build_ogg.sh --android
-
-    - name: Build opus (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_opus.sh
-        ./build_opus.sh --android
-
-    - name: Build vorbis (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_vorbis.sh
-        ./build_vorbis.sh --android
-
-    - name: Build opusfile (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_opusfile.sh
-        ./build_opusfile.sh --android
-
-    - name: Build miniaudio (cross-compile)
-      shell: bash
-      run: |
-        chmod +x build_miniaudio.sh
-        ./build_miniaudio.sh --android
+        chmod +x build_all.sh
+        ./build_all.sh --android
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: libraries-cross-compiled-android
+        name: libraries-compiled-android
         path: |
           install/**
         retention-days: 7
 
   create-release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [build-libraries-cross-linux, build-libraries-cross-android, build-libraries-windows]
+    needs: [build-libraries-linux, build-libraries-android, build-libraries-windows]
     runs-on: ubuntu-latest
     
     steps:
@@ -288,8 +144,8 @@ jobs:
       run: |
         VERSION=${GITHUB_REF#refs/tags/v}
         mkdir -p release
-        cp -r artifacts/libraries-cross-compiled-linux release/linux
-        cp -r artifacts/libraries-cross-compiled-android release/android
+        cp -r artifacts/libraries-compiled-linux release/linux
+        cp -r artifacts/libraries-compiled-android release/android
         cp -r artifacts/libraries-windows release/windows
         
         cd release
