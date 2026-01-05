@@ -62,7 +62,6 @@ parse_build_args() {
         WINDOWS_ONLY=true
     elif [ -n "$1" ]; then
         echo "오류: 알 수 없는 플래그: $1" >&2
-        echo "사용 가능한 플래그: --native (-n), --android (-a)" >&2
         exit 1
     fi
 }
