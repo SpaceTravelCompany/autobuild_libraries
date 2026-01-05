@@ -48,7 +48,7 @@ BUILD_ARG="$1"
 "${SCRIPT_DIR}/build_lua.sh" "${BUILD_ARG}" "-s"
 
 # 13. openexr 빌드
-"${SCRIPT_DIR}/build_openexr.sh" "${BUILD_ARG}"
+#"${SCRIPT_DIR}/build_openexr.sh" "${BUILD_ARG}"
 
 echo ""
 echo "=========================================="
