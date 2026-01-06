@@ -42,12 +42,11 @@ build_target() {
         -DENABLE_GLSLANG_JS=OFF
         -DENABLE_GLSLANG_WEBMIN=OFF
         -DGLSLANG_TESTS_DEFAULT=OFF
-        -DENABLE_SPIRV_TOOLS=OFF
         -DENABLE_CTEST=OFF
+        -DGLSLANG_TESTS=OFF
         -DBUILD_TESTING=OFF
         -DENABLE_OPT=OFF
         -DENABLE_PCH=OFF
-        -DENABLE_RTTI=ON
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
