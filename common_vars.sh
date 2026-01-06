@@ -42,6 +42,22 @@ ANDROID_ARCH=(
     "arm-linux-androideabi"
 )
 
+GET_ANDROID_LIB_PATHS() {
+    local __ANDROID_ARCH=$1
+    echo "-L${NDK_TOOLCHAIN_DIR}/sysroot/usr/lib/${__ANDROID_ARCH} \
+    -L${NDK_TOOLCHAIN_DIR}/sysroot/usr/lib/${__ANDROID_ARCH}/${NDK_API_LEVEL}"
+}
+
+GET_ANDROID_INCLUDE_PATHS() {
+    local __ANDROID_ARCH=$1
+    echo "-I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include \
+    -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include/c++/v1 \
+    -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include/c++/v1/${__ANDROID_ARCH}"
+}
+
+ANDROID_C_LIBS="-lc -lm -ldl -llog -landroid "
+ANDROID_CXX_LIBS="-lc++_static -lc++abi "
+
 # 명령줄 인자 파싱 함수
 parse_build_args() {
     if [ "$1" == "--native" ] || [ "$1" == "-n" ]; then

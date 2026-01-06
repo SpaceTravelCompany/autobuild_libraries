@@ -39,19 +39,20 @@ build_target() {
 
     if [ "$ANDROID_ONLY" = true ]; then
         CCFLAGS="--target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
-        -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include \
-        -L${NDK_TOOLCHAIN_DIR}/sysroot/usr/lib/${ANDROID_ARCH} \
-        -L${NDK_TOOLCHAIN_DIR}/sysroot/usr/lib/${ANDROID_ARCH}/35 \
-        -lc -lm -ldl -llog -landroid"
+        $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}")"
+
+        CMAKE_C_LINKER_WRAPPER_FLAG="${ANDROID_C_LIBS} \
+        $(GET_ANDROID_LIB_PATHS "${ANDROID_ARCH}")"
 
         if [ "$TARGET" == "aarch64-linux-android35" ]; then
-            CCFLAGS+=" -Wl,-z,max-page-size=16384"   
+            CMAKE_C_LINKER_WRAPPER_FLAG+=" -Wl,-z,max-page-size=16384"
         fi
 
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="${CCFLAGS}"
             -DENABLE_SHARED_LIB=OFF
             -DENABLE_STATIC_LIB=ON
+            -DCMAKE_C_LINKER_WRAPPER_FLAG="${CMAKE_C_LINKER_WRAPPER_FLAG}"
         )
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         CMAKE_ARGS+=(

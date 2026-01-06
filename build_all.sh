@@ -11,6 +11,9 @@ echo ""
 # 빌드 인자
 BUILD_ARG="$1"
 
+# 15. glslang 빌드
+"${SCRIPT_DIR}/build_glslang.sh" "${BUILD_ARG}"
+
 # 13. Imath 빌드
 "${SCRIPT_DIR}/build_Imath.sh" "${BUILD_ARG}"
 
