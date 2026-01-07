@@ -14,11 +14,11 @@ out/
 CMakeUserPresets.json
 
 # GN generated files
-.cipd/
-*.gclient_entries
-third_party/
-buildtools/
-tools/
+# .cipd/
+# *.gclient_entries
+# third_party/
+# buildtools/
+# tools/
 
 # Random OS stuff
 .DS_Store
