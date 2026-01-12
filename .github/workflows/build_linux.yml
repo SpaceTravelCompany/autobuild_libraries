@@ -43,6 +43,18 @@ jobs:
     - name: Build all 
       shell: bash
       run: |
+        chmod +x build_ogg.sh
+        ./build_ogg.sh
+
+        chmod +x build_opus.sh
+        ./build_opus.sh
+
+        chmod +x build_vorbis.sh
+        ./build_vorbis.sh
+
+        chmod +x build_opusfile.sh
+        ./build_opusfile.sh
+
         chmod +x build_miniaudio.sh
         ./build_miniaudio.sh
 
