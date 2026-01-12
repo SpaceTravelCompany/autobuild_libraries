@@ -1,0 +1,56 @@
+name: Build Libraries Linux
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-libraries-linux:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup build environment
+      run: |
+        # 멀티아키텍처 지원 활성화
+        sudo dpkg --add-architecture arm64
+        sudo dpkg --add-architecture riscv64
+        sudo apt-get update || true
+
+        # LLVM/Clang 20 설치
+        sudo apt-get install -y \
+          clang-20 \
+          lldb-20 \
+          lld-20
+
+        sudo ln -sf /usr/bin/clang-20 /usr/bin/clang
+        sudo ln -sf /usr/bin/clang++-20 /usr/bin/clang++
+        
+        # aarch64 크로스 컴파일 라이브러리
+        sudo apt-get install -y \
+          gcc-aarch64-linux-gnu \
+          g++-aarch64-linux-gnu
+        
+        # riscv64 크로스 컴파일 라이브러리
+        sudo apt-get install -y \
+          gcc-riscv64-linux-gnu \
+          g++-riscv64-linux-gnu
+
+    - name: Build all 
+      shell: bash
+      run: |
+        chmod +x build_miniaudio.sh
+        ./build_miniaudio.sh
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: libraries-compiled-linux
+        path: |
+          install/**
+        retention-days: 7
+
