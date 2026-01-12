@@ -4,7 +4,7 @@
 # 주의: 이 파일을 source하기 전에 각 스크립트에서 SCRIPT_DIR을 먼저 정의해야 합니다.
 
 # NDK 설정
-NDK_TOOLCHAIN_DIR="${SCRIPT_DIR}/ndk/29.0.14206865/toolchains/llvm/prebuilt/linux-x86_64/"
+NDK_TOOLCHAIN_DIR="${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/"
 NDK_API_LEVEL="35"
 
 # 빌드 모드 플래그 (명령줄 인자로 설정됨)

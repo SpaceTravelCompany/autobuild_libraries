@@ -131,7 +131,16 @@ jobs:
         sudo ln -sf /usr/bin/clang-20 /usr/bin/clang
         sudo ln -sf /usr/bin/clang++-20 /usr/bin/clang++
 
-    - name: Build all 
+    - uses: actions/checkout@v3
+    - uses: nttld/setup-ndk@v1
+      id: setup-ndk
+      with:
+        ndk-version: r28c
+        add-to-path: false
+        
+    - name: Build all
+      env: 
+        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       shell: bash
       run: |
         chmod +x build_all.sh
