@@ -11,14 +11,11 @@ echo ""
 # 빌드 인자
 BUILD_ARG="$1"
 
-# 4. ogg 빌드
+# 5. ogg 빌드
 "${SCRIPT_DIR}/build_ogg.sh" "${BUILD_ARG}"
 
-# 5. opus 빌드
+# 6. opus 빌드
 "${SCRIPT_DIR}/build_opus.sh" "${BUILD_ARG}"
-
-# 6. freetype 빌드 (libz, bzip2, brotli 의존)
-"${SCRIPT_DIR}/build_freetype.sh" "${BUILD_ARG}"
 
 # 7. vorbis 빌드 (ogg 의존)
 "${SCRIPT_DIR}/build_vorbis.sh" "${BUILD_ARG}"
@@ -46,6 +43,9 @@ BUILD_ARG="$1"
 
 # 3. brotli 빌드
 "${SCRIPT_DIR}/build_brotli.sh" "${BUILD_ARG}"
+
+# 4. freetype 빌드 (libz, bzip2, brotli 의존)
+"${SCRIPT_DIR}/build_freetype.sh" "${BUILD_ARG}"
 
 # 10. webp 빌드
 "${SCRIPT_DIR}/build_webp.sh" "${BUILD_ARG}"
