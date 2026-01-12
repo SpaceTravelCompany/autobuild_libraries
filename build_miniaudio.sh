@@ -64,13 +64,12 @@ build_target() {
         ar r libminiaudio.a miniaudio.o miniaudio_libopus.o miniaudio_libvorbis.o
         cp libminiaudio.a "${INSTALL_DIR}/lib/libminiaudio.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
-        cl -c -O2 -MT miniaudio.c miniaudio_libopus.c miniaudio_libvorbis.c \
+        cl -O2 -MT miniaudio.c miniaudio_libopus.c miniaudio_libvorbis.c \
         -I"${OGG_INCLUDE_DIR}" \
         -I"${OPUS_INCLUDE_DIR}" \
         -I"${VORBIS_INCLUDE_DIR}" \
-        -I"${OPUSFILE_INCLUDE_DIR}"
-        lib /OUT:libminiaudio.lib miniaudio.obj miniaudio_libopus.obj miniaudio_libvorbis.obj
-        cp libminiaudio.lib "${INSTALL_DIR}/lib/libminiaudio.lib"
+        -I"${OPUSFILE_INCLUDE_DIR}" miniaudio.lib
+        cp miniaudio.lib "${INSTALL_DIR}/lib/miniaudio.lib"
     else
         clang -c miniaudio.c miniaudio_libopus.c miniaudio_libvorbis.c \
         -I"${OGG_INCLUDE_DIR}" \
