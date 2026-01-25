@@ -342,7 +342,6 @@ endfunction()
 
 # Always build ${SPIRV_TOOLS}-shared. This is expected distro packages, and
 # unlike the other SPIRV_TOOLS target, defaults to hidden symbol visibility.
-if (NOT ANDROID)
 add_library(${SPIRV_TOOLS}-shared SHARED ${SPIRV_SOURCES})
 if (SPIRV_TOOLS_USE_MIMALLOC)
   target_link_libraries(${SPIRV_TOOLS}-shared PRIVATE mimalloc-static)
@@ -353,7 +352,6 @@ target_compile_definitions(${SPIRV_TOOLS}-shared
   PRIVATE SPIRV_TOOLS_IMPLEMENTATION
   PUBLIC SPIRV_TOOLS_SHAREDLIB
 )
-endif()
 
 if(SPIRV_TOOLS_BUILD_STATIC)
   add_library(${SPIRV_TOOLS}-static STATIC ${SPIRV_SOURCES})
@@ -372,13 +370,9 @@ if(SPIRV_TOOLS_BUILD_STATIC)
     add_library(${SPIRV_TOOLS} ALIAS ${SPIRV_TOOLS}-static)
   endif()
 
-if (NOT ANDROID)
   set(SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-static ${SPIRV_TOOLS}-shared)
 else()
-  set(SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-static)
-endif()
-else()
-  add_library(${SPIRV_TOOLS} ${} ${SPIRV_SOURCES})
+  add_library(${SPIRV_TOOLS} ${SPIRV_TOOLS_LIBRARY_TYPE} ${SPIRV_SOURCES})
   if (SPIRV_TOOLS_USE_MIMALLOC)
     target_link_libraries(${SPIRV_TOOLS} PRIVATE mimalloc-static)
   endif()
@@ -414,8 +408,3 @@ if(ENABLE_SPIRV_TOOLS_INSTALL)
     "endif()\n")
   install(FILES ${CMAKE_BINARY_DIR}/${SPIRV_TOOLS}Config.cmake DESTINATION ${PACKAGE_DIR})
 endif(ENABLE_SPIRV_TOOLS_INSTALL)
-
-if(MSVC AND (NOT ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")))
-  # Enable parallel builds across four cores for this lib
-  add_definitions(/MP4)
-endif()

@@ -119,6 +119,12 @@ elseif(MSVC)
   endif()
 endif()
 
+if (PROJECT_IS_TOP_LEVEL)
+  # enable parallel builds for msbuild
+  list(APPEND CMAKE_VS_GLOBALS UseMultiToolTask=true)
+  list(APPEND CMAKE_VS_GLOBALS EnforceProcessCountAcrossBuilds=true)
+endif()
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/)
 
 option(SPIRV_COLOR_TERMINAL "Enable color terminal output" ON)
@@ -372,6 +378,7 @@ if (NOT "${SPIRV_SKIP_TESTS}")
 endif()
 
 set(SPIRV_LIBRARIES "-lSPIRV-Tools-opt -lSPIRV-Tools -lSPIRV-Tools-link")
+#set(SPIRV_SHARED_LIBRARIES "-lSPIRV-Tools-shared")
 
 # Build pkg-config file
 # Use a first-class target so it's regenerated when relevant files are updated.
@@ -389,7 +396,7 @@ add_custom_command(
         DEPENDS "CHANGES" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/SPIRV-Tools.pc.in" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/write_pkg_config.cmake")
 if (NOT ANDROID)
   set(SPIRV_SHARED_LIBRARIES "-lSPIRV-Tools-shared")
-        add_custom_command(
+add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc
         COMMAND ${CMAKE_COMMAND}
                       -DCHANGES_FILE=${CMAKE_CURRENT_SOURCE_DIR}/CHANGES
@@ -401,27 +408,16 @@ if (NOT ANDROID)
                       -DSPIRV_SHARED_LIBRARIES=${SPIRV_SHARED_LIBRARIES}
                       -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/write_pkg_config.cmake
         DEPENDS "CHANGES" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/SPIRV-Tools-shared.pc.in" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/write_pkg_config.cmake")
-
 add_custom_target(spirv-tools-pkg-config 
         ALL 
         DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools.pc)
-  if (ENABLE_SPIRV_TOOLS_INSTALL)
-    install(
-      FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools.pc
-        ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc
-      DESTINATION
-        ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-  endif()
-else()
-add_custom_target(spirv-tools-pkg-config 
-        ALL 
-        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools.pc)
-  if (ENABLE_SPIRV_TOOLS_INSTALL)
-    install(
-      FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools.pc
-      DESTINATION
-        ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-  endif()
+
+# Install pkg-config file
+if (ENABLE_SPIRV_TOOLS_INSTALL)
+  install(
+    FILES
+      ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools.pc
+      ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc
+    DESTINATION
+      ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 endif()
