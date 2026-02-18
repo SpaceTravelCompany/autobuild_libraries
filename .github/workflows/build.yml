@@ -67,9 +67,11 @@ jobs:
 
     - name: Setup build environment
       run: |
-        # 멀티아키텍처 지원 활성화
+        # Enable multi-architecture support
         sudo dpkg --add-architecture arm64
         sudo dpkg --add-architecture riscv64
+        sudo dpkg --add-architecture i386
+        sudo dpkg --add-architecture armhf
         sudo apt-get update || true
 
         # LLVM/Clang 20 설치
