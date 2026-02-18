@@ -18,6 +18,7 @@ LINUX_TARGETS=(
     "riscv64-linux-gnu"
     "x86_64-linux-gnu"
     "i686-linux-gnu"
+	"arm-linux-gnueabihf"
 )
 
 # Windows 빌드 타겟 목록
