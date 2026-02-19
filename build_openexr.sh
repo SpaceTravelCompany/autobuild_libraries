@@ -50,6 +50,7 @@ build_target() {
         -DOPENEXR_FORCE_INTERNAL_DEFLATE=ON
         -DOPENEXR_FORCE_INTERNAL_OPENJPH=ON
         -DOPENEXR_FORCE_INTERNAL_IMATH=ON
+		-DOPENEXR_ENABLE_THREADING=OFF # if set on, you need modify script for windows with llvm clang
         -DIMATH_LIB="${IMATH_INSTALL_LIB}"
         -DIMATH_INCLUDE="${IMATH_INCLUDE}"
     )
