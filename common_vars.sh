@@ -41,14 +41,9 @@ GET_SSE4_1_FLAG() {
     esac
 }
 
-# Windows clang-cl CFLAGS: -fms-runtime-lib=static, and -msse4.1 only on x86_64 (not ARM).
+# Windows clang-cl CFLAGS: -msse4.1 only on x86_64 (not ARM). Static runtime via CMAKE_MSVC_RUNTIME_LIBRARY in CMake.
 GET_WINDOWS_CLANG_CFLAGS() {
-    local SSE4=$(GET_SSE4_1_FLAG "native-windows")
-    if [ -n "$SSE4" ]; then
-        echo "${SSE4} -fms-runtime-lib=static"
-    else
-        echo "-fms-runtime-lib=static"
-    fi
+    GET_SSE4_1_FLAG "native-windows"
 }
 
 # 빌드 모드 플래그 (명령줄 인자로 설정됨)

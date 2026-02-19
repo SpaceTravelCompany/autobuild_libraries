@@ -133,6 +133,7 @@ build_target() {
             CMAKE_ARGS+=(
                 -DCMAKE_C_COMPILER=clang-cl
                 -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_CFLAGS)"
+                -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
             )
         fi
         CMAKE_ARGS+=( -DBUILD_SHARED_LIBS=OFF )
