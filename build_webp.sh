@@ -68,6 +68,9 @@ build_target() {
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
             -DBUILD_SHARED_LIBS=OFF
         )
+        if [ "$TARGET" = "windows-arm" ]; then
+            CMAKE_ARGS+=(-DCMAKE_SYSTEM_PROCESSOR=aarch64)
+        fi
     else
         CMAKE_ARGS+=(
             -DBUILD_SHARED_LIBS=OFF
