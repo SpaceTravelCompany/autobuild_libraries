@@ -64,7 +64,7 @@ build_target() {
 
         OBJ_FILES=""
         for file in ${BASE_SRC}; do
-            OBJ_FILES="${OBJ_FILES} ${file}.obj"
+            OBJ_FILES="${OBJ_FILES} ${file}.o"
         done
         "${ANDROID_AR}" rcu liblua.a ${OBJ_FILES}
         "${NDK_TOOLCHAIN_DIR}/bin/llvm-ranlib" liblua.a
