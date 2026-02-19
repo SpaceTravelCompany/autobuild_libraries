@@ -41,7 +41,7 @@ build_target() {
 
     if [ "$ANDROID_ONLY" = true ]; then
         CCFLAGS="--target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
-        $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}")"
+        $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}") $(GET_SSE4_1_FLAG "${TARGET}")"
 
         CMAKE_C_LINKER_WRAPPER_FLAG="${ANDROID_C_LIBS} \
         $(GET_ANDROID_LIB_PATHS "${ANDROID_ARCH}")"
@@ -52,17 +52,18 @@ build_target() {
         )
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         CMAKE_ARGS+=(
-            -DCMAKE_C_FLAGS="--target=${TARGET}"
+            -DCMAKE_C_FLAGS="--target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
+        )
+    elif [ "$WINDOWS_ONLY" = true ]; then
+        CMAKE_ARGS+=(
+            -DCMAKE_C_COMPILER=clang-cl
+            -DCMAKE_C_FLAGS="-msse4.1 -fms-runtime-lib=static"
         )
     fi
     
     if [ "$ANDROID_ONLY" = true ]; then
         CMAKE_ARGS+=(-DCMAKE_C_COMPILER=$(GET_ANDROID_CC "${TARGET}"))
-    elif [ "$WINDOWS_ONLY" = true ]; then
-        CMAKE_ARGS+=(
-            -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
-        )
-    else
+    elif [ "$WINDOWS_ONLY" != true ]; then
         CMAKE_ARGS+=(-DCMAKE_C_COMPILER=clang)
     fi
 

@@ -56,7 +56,7 @@ build_target() {
     if [ "$ANDROID_ONLY" = true ]; then
         ANDROID_CC=$(GET_ANDROID_CC "${TARGET}")
         ANDROID_AR=$(GET_ANDROID_AR)
-        CCFLAGS="${LUA_SEONGJUN_FLAG} -fPIC -O3 -Wall -Wextra"
+        CCFLAGS="${LUA_SEONGJUN_FLAG} -fPIC -O3 -Wall -Wextra $(GET_SSE4_1_FLAG "${TARGET}")"
 
         for file in ${BASE_SRC}; do
             "${ANDROID_CC}" -c ${file}.c ${CCFLAGS}
@@ -71,9 +71,8 @@ build_target() {
         cp liblua.a "${INSTALL_DIR}/lib/liblua.a"
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         # 크로스 컴파일 (Linux)
-        CCFLAGS="${LUA_SEONGJUN_FLAG} -fPIC -O3 -Wall -Wextra --target=${TARGET}"
+        CCFLAGS="${LUA_SEONGJUN_FLAG} -fPIC -O3 -Wall -Wextra --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
         
-        # 모든 소스 파일 컴파일
         for file in ${BASE_SRC}; do
             clang -c ${file}.c ${CCFLAGS}
         done
@@ -87,11 +86,11 @@ build_target() {
         ranlib liblua.a
         cp liblua.a "${INSTALL_DIR}/lib/liblua.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
-        # Windows build (MSVC)
-        CCFLAGS="${LUA_SEONGJUN_FLAG} -O2 -MT"
+        # Windows build (clang-cl, SSE4.1)
+        CCFLAGS="${LUA_SEONGJUN_FLAG} -O3 -msse4.1 -fms-runtime-lib=static"
 
         for file in ${BASE_SRC}; do
-            cl -c ${CCFLAGS} ${file}.c
+            clang-cl -c ${CCFLAGS} ${file}.c
         done
 
         OBJ_FILES=""
@@ -102,9 +101,8 @@ build_target() {
         cp liblua.lib "${INSTALL_DIR}/lib/liblua.lib"
     else
         # 네이티브 빌드 (Linux)
-        CCFLAGS="-DLUA_USE_LINUX ${LUA_SEONGJUN_FLAG} -fPIC -O3 -Wall -Wextra"
+        CCFLAGS="-DLUA_USE_LINUX ${LUA_SEONGJUN_FLAG} -fPIC -O3 -Wall -Wextra $(GET_SSE4_1_FLAG "${TARGET}")"
         
-        # 모든 소스 파일 컴파일
         for file in ${BASE_SRC}; do
             clang -c ${file}.c ${CCFLAGS}
         done

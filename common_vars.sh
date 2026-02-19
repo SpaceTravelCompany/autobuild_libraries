@@ -23,6 +23,15 @@ GET_ANDROID_CC() { echo "${NDK_TOOLCHAIN_DIR}/bin/$1-clang"; }
 GET_ANDROID_CXX() { echo "${NDK_TOOLCHAIN_DIR}/bin/$1-clang++"; }
 GET_ANDROID_AR() { echo "${NDK_TOOLCHAIN_DIR}/bin/llvm-ar"; }
 
+# SSE4.1 flag for x86/x64 targets (Windows clang-cl, Linux x86, Android x86). Empty for ARM/RISCV.
+GET_SSE4_1_FLAG() {
+    local TARGET=$1
+    case "$TARGET" in
+        x86_64-*|i686-*|native-windows) echo "-msse4.1" ;;
+        *) echo "" ;;
+    esac
+}
+
 # 빌드 모드 플래그 (명령줄 인자로 설정됨)
 NATIVE_ONLY=false
 ANDROID_ONLY=false
