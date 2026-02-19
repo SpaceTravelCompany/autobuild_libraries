@@ -59,16 +59,11 @@ build_target() {
         )
     fi
 
-    if [ "$WINDOWS_ONLY" = true ]; then
-        CMAKE_ARGS+=(
-            -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
-        )
-    else
-        CMAKE_ARGS+=(
-            -DCMAKE_C_COMPILER=clang
-            -DCMAKE_CXX_COMPILER=clang++
-        )
-    fi
+    # Use Clang on all platforms (Linux and Windows)
+    CMAKE_ARGS+=(
+        -DCMAKE_C_COMPILER=clang
+        -DCMAKE_CXX_COMPILER=clang++
+    )
 
     cmake "${CMAKE_ARGS[@]}"
     cmake --build . --config Release -j$(nproc)

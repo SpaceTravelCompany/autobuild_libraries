@@ -96,20 +96,18 @@ build_target() {
         ranlib liblua.a
         cp liblua.a "${INSTALL_DIR}/lib/liblua.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
-        # Windows 빌드
-        CCFLAGS="${LUA_SEONGJUN_FLAG} -O2 -MT"
-        
-        # 모든 소스 파일 컴파일
+        # Windows build (Clang + llvm-lib)
+        CCFLAGS="${LUA_SEONGJUN_FLAG} -O3"
+
         for file in ${BASE_SRC}; do
-            cl -c ${CCFLAGS} ${file}.c
+            clang -c ${CCFLAGS} ${file}.c
         done
 
-        # 정적 라이브러리 생성
         OBJ_FILES=""
         for file in ${BASE_SRC}; do
             OBJ_FILES="${OBJ_FILES} ${file}.obj"
         done
-        lib /OUT:liblua.lib ${OBJ_FILES}
+        llvm-lib /OUT:liblua.lib ${OBJ_FILES}
         cp liblua.lib "${INSTALL_DIR}/lib/liblua.lib"
     else
         # 네이티브 빌드 (Linux)

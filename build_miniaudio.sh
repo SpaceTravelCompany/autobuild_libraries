@@ -73,12 +73,12 @@ build_target() {
         cp libminiaudio_libopus.a "${INSTALL_DIR}/lib/libminiaudio_libopus.a"
         cp libminiaudio_libvorbis.a "${INSTALL_DIR}/lib/libminiaudio_libvorbis.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
-        cl -c -O2 -MT miniaudio.c
-        lib /OUT:miniaudio.lib miniaudio.obj
-        cl -c -O2 -MT miniaudio_libopus.c -I"${OGG_INCLUDE_DIR}" -I"${OPUS_INCLUDE_DIR}" -I"${OPUSFILE_INCLUDE_DIR}"
-        lib /OUT:miniaudio_libopus.lib miniaudio_libopus.obj
-        cl -c -O2 -MT miniaudio_libvorbis.c -I"${OGG_INCLUDE_DIR}" -I"${VORBIS_INCLUDE_DIR}"
-        lib /OUT:miniaudio_libvorbis.lib miniaudio_libvorbis.obj
+        clang -c -fPIC -O3 miniaudio.c
+        llvm-lib /OUT:miniaudio.lib miniaudio.obj
+        clang -c -fPIC -O3 miniaudio_libopus.c -I"${OGG_INCLUDE_DIR}" -I"${OPUS_INCLUDE_DIR}" -I"${OPUSFILE_INCLUDE_DIR}"
+        llvm-lib /OUT:miniaudio_libopus.lib miniaudio_libopus.obj
+        clang -c -fPIC -O3 miniaudio_libvorbis.c -I"${OGG_INCLUDE_DIR}" -I"${VORBIS_INCLUDE_DIR}"
+        llvm-lib /OUT:miniaudio_libvorbis.lib miniaudio_libvorbis.obj
 
         cp miniaudio.lib "${INSTALL_DIR}/lib/miniaudio.lib"
         cp miniaudio_libopus.lib "${INSTALL_DIR}/lib/miniaudio_libopus.lib"
