@@ -5,31 +5,31 @@ A project for automatically building multiple libraries with cross-compilation s
 ## Supported Libraries
 
 ### Compression Libraries
-- **libz (zlib)**: Data compression library. [Source](https://github.com/madler/zlib)
-- **bzip2**: Block-sorting compression algorithm library. [Source](https://gitlab.com/bzip2/bzip2)
-- **brotli**: General-purpose lossless compression algorithm library. [Source](https://github.com/google/brotli)
+- **[libz (zlib)](https://github.com/madler/zlib)**: Data compression library.
+- **[bzip2](https://gitlab.com/bzip2/bzip2)**: Block-sorting compression algorithm library.
+- **[brotli](https://github.com/google/brotli)**: General-purpose lossless compression algorithm library.
 
 ### Font Libraries
-- **freetype**: Font library. [Source](https://gitlab.freedesktop.org/freetype/freetype)
+- **[freetype](https://gitlab.freedesktop.org/freetype/freetype)**: Font library.
 
 ### Image Libraries
-- **libwebp**: WebP image encoding/decoding library. [Source](https://chromium.googlesource.com/webm/libwebp)
-- **openexr**: openexr image encoding/decoding library. [Source](https://github.com/AcademySoftwareFoundation/openexr)
+- **[libwebp](https://chromium.googlesource.com/webm/libwebp)**: WebP image encoding/decoding library.
+- **[openexr](https://github.com/AcademySoftwareFoundation/openexr)**: openexr image encoding/decoding library.
 
 ### Audio Libraries
-- **libogg**: Ogg container format library. [Source](https://github.com/xiph/ogg)
-- **opus**: Opus audio codec library. [Source](https://github.com/xiph/opus)
-- **libvorbis**: Vorbis audio codec library (depends on libogg). [Source](https://github.com/xiph/vorbis)
-- **opusfile**: High-level Opus file API library (depends on libogg and opus). [Source](https://github.com/xiph/opusfile)
-- **miniaudio**: Single-file audio playback and capture library (references all audio libraries). [Source](https://github.com/mackron/miniaudio)
+- **[libogg](https://github.com/xiph/ogg)**: Ogg container format library.
+- **[opus](https://github.com/xiph/opus)**: Opus audio codec library.
+- **[libvorbis](https://github.com/xiph/vorbis)**: Vorbis audio codec library (depends on libogg).
+- **[opusfile](https://github.com/xiph/opusfile)**: High-level Opus file API library (depends on libogg and opus).
+- **[miniaudio](https://github.com/mackron/miniaudio)**: Single-file audio playback and capture library (references all audio libraries).
 
 ## Math
-- **clipper2**: Polygon Clipping, Offsetting & Triangulation library. [Source](https://github.com/AngusJohnson/Clipper2)
-- **Imath**: Math library of 2D and 3D vector, matrix, and math operations for computer graphics (dependency of openexr). [Source](https://github.com/AcademySoftwareFoundation/Imath)
+- **[clipper2](https://github.com/AngusJohnson/Clipper2)**: Polygon Clipping, Offsetting & Triangulation library.
+- **[Imath](https://github.com/AcademySoftwareFoundation/Imath)**: Math library of 2D and 3D vector, matrix, and math operations for computer graphics (dependency of openexr).
 
 ### Misc
-- **lua**: Script Programming language. [Source](https://github.com/lua/lua)
-- **glslang**: Shader Compilation library. [Source](https://github.com/KhronosGroup/glslang)
+- **[lua](https://github.com/lua/lua)**: Script Programming language.
+- **[glslang](https://github.com/KhronosGroup/glslang)**: Shader Compilation library.
 
 ## Getting Started
 
