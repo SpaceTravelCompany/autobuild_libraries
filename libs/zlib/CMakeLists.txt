@@ -19,7 +19,7 @@ set(CPACK_RESOURCE_FILE_README ${zlib_SOURCE_DIR}/README)
 # configuration
 # ============================================================================
 
-option(ZLIB_BUILD_TESTING "Enable Zlib Examples as tests" ON)
+option(ZLIB_BUILD_TESTING "Enable Zlib Examples as tests" OFF)
 option(ZLIB_BUILD_SHARED "Enable building zlib shared library" ON)
 option(ZLIB_BUILD_STATIC "Enable building zlib static library" ON)
 option(ZLIB_INSTALL "Enable installation of zlib" ON)
@@ -279,20 +279,20 @@ if(ZLIB_INSTALL)
         FILES ${ZLIB_PUBLIC_HDRS}
         COMPONENT Development
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
-    install(
-        FILES zlib.3
-        COMPONENT Docs
-        DESTINATION "${CMAKE_INSTALL_MANDIR}/man3")
-    install(
-        FILES LICENSE
-              doc/algorithm.txt
-              doc/crc-doc.1.0.pdf
-              doc/rfc1950.txt
-              doc/rfc1951.txt
-              doc/rfc1952.txt
-              doc/txtvsbin.txt
-        COMPONENT Docs
-        DESTINATION "${CMAKE_INSTALL_DOCDIR}/zlib")
+    # install(
+    #     FILES zlib.3
+    #     COMPONENT Docs
+    #     DESTINATION "${CMAKE_INSTALL_MANDIR}/man3")
+    # install(
+    #     FILES LICENSE
+    #           doc/algorithm.txt
+    #           doc/crc-doc.1.0.pdf
+    #           doc/rfc1950.txt
+    #           doc/rfc1951.txt
+    #           doc/rfc1952.txt
+    #           doc/txtvsbin.txt
+    #     COMPONENT Docs
+    #     DESTINATION "${CMAKE_INSTALL_DOCDIR}/zlib")
     install(
         FILES ${ZLIB_PC}
         COMPONENT Development
