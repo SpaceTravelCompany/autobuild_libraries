@@ -433,4 +433,4 @@ add_custom_command(
 		DESTINATION
 		${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 	endif()
-endif()
+#endif()
