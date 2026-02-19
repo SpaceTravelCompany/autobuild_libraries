@@ -169,9 +169,7 @@ endif()
 option(ENABLE_EXCEPTIONS_ON_MSVC "Build SPIRV-TOOLS with c++ exceptions enabled in MSVC" ON)
 option(SPIRV_TOOLS_BUILD_STATIC "Build ${SPIRV_TOOLS}-static target. ${SPIRV_TOOLS} will alias to ${SPIRV_TOOLS}-static or ${SPIRV_TOOLS}-shared based on BUILD_SHARED_LIBS" ON)
 
-if (ANDROID)
-	set(SPIRV_TOOLS_BUILD_STATIC ON)
-endif ()
+set(SPIRV_TOOLS_BUILD_STATIC ON)
 
 if(SPIRV_TOOLS_BUILD_STATIC)
   set(SPIRV_TOOLS_FULL_VISIBILITY ${SPIRV_TOOLS}-static)
@@ -398,33 +396,33 @@ add_custom_command(
                       -DSPIRV_LIBRARIES=${SPIRV_LIBRARIES}
                       -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/write_pkg_config.cmake
         DEPENDS "CHANGES" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/SPIRV-Tools.pc.in" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/write_pkg_config.cmake")
-if (NOT ANDROID)
-  	set(SPIRV_SHARED_LIBRARIES "-lSPIRV-Tools-shared")
-		add_custom_command(
-			OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc
-			COMMAND ${CMAKE_COMMAND}
-							-DCHANGES_FILE=${CMAKE_CURRENT_SOURCE_DIR}/CHANGES
-							-DTEMPLATE_FILE=${CMAKE_CURRENT_SOURCE_DIR}/cmake/SPIRV-Tools-shared.pc.in
-							-DOUT_FILE=${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc
-							-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-							-DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_LIBDIR}
-							-DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_INCLUDEDIR}
-							-DSPIRV_SHARED_LIBRARIES=${SPIRV_SHARED_LIBRARIES}
-							-P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/write_pkg_config.cmake
-			DEPENDS "CHANGES" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/SPIRV-Tools-shared.pc.in" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/write_pkg_config.cmake")
+# if (NOT ANDROID)
+#   	set(SPIRV_SHARED_LIBRARIES "-lSPIRV-Tools-shared")
+# 		add_custom_command(
+# 			OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc
+# 			COMMAND ${CMAKE_COMMAND}
+# 							-DCHANGES_FILE=${CMAKE_CURRENT_SOURCE_DIR}/CHANGES
+# 							-DTEMPLATE_FILE=${CMAKE_CURRENT_SOURCE_DIR}/cmake/SPIRV-Tools-shared.pc.in
+# 							-DOUT_FILE=${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc
+# 							-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+# 							-DCMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_LIBDIR}
+# 							-DCMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_INCLUDEDIR}
+# 							-DSPIRV_SHARED_LIBRARIES=${SPIRV_SHARED_LIBRARIES}
+# 							-P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/write_pkg_config.cmake
+# 			DEPENDS "CHANGES" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/SPIRV-Tools-shared.pc.in" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/write_pkg_config.cmake")
 
-		add_custom_target(spirv-tools-pkg-config 
-				ALL 
-				DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools.pc)
-		if (ENABLE_SPIRV_TOOLS_INSTALL)
-		install(
-			FILES
-			${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools.pc
-			${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc
-			DESTINATION
-			${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-		endif()
-else()
+# 		add_custom_target(spirv-tools-pkg-config 
+# 				ALL 
+# 				DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools.pc)
+# 		if (ENABLE_SPIRV_TOOLS_INSTALL)
+# 		install(
+# 			FILES
+# 			${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools.pc
+# 			${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc
+# 			DESTINATION
+# 			${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+# 		endif()
+# else()
 	add_custom_target(spirv-tools-pkg-config 
 			ALL 
 			DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools.pc)

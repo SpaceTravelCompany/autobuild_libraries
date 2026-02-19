@@ -58,10 +58,6 @@ build_target() {
         CMAKE_C_LINKER_WRAPPER_FLAG="${ANDROID_C_LIBS} \
         $(GET_ANDROID_LIB_PATHS "${ANDROID_ARCH}")"
 
-        if [ "$TARGET" == "aarch64-linux-android35" ]; then
-            CMAKE_C_LINKER_WRAPPER_FLAG+=" -Wl,-z,max-page-size=16384"
-        fi
-
         # Android일 때는 정적 라이브러리만 사용
         if [ -d "${ZLIB_LIB_DIR}" ]; then
             CMAKE_ARGS+=(

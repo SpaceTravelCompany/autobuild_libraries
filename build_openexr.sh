@@ -7,23 +7,17 @@ parse_build_args "$1"
 
 OPENEXR_DIR="${SCRIPT_DIR}/libs/openexr"
 
-# 빌드 함수
+# 빌드 함수 (static only)
 build_target() {
     local TARGET=$1
-    local BUILD_TYPE=$2  # "shared" or "static"
-    local ANDROID_ARCH=$3
-    
-    BUILD_SHARED_STATIC="OFF"
-    if [ "$BUILD_TYPE" = "shared" ]; then
-        BUILD_SHARED_STATIC="ON" 
-    fi
+    local ANDROID_ARCH=$2
     
     echo "----------------------------------------"
-    echo "빌드 중: ${TARGET} (${BUILD_TYPE})"
+    echo "빌드 중: ${TARGET}"
     echo "----------------------------------------"
     
-    BUILD_DIR="${SCRIPT_DIR}/build/openexr/${TARGET}-${BUILD_TYPE}"
-    INSTALL_DIR="${SCRIPT_DIR}/install/openexr/${TARGET}-${BUILD_TYPE}"
+    BUILD_DIR="${SCRIPT_DIR}/build/openexr/${TARGET}"
+    INSTALL_DIR="${SCRIPT_DIR}/install/openexr/${TARGET}"
     IMATH_INCLUDE="${SCRIPT_DIR}/install/Imath/${TARGET}/include/Imath"
     IMATH_INSTALL_LIB="${SCRIPT_DIR}/install/Imath/${TARGET}/lib/libImath-3_2.a"
     if [ "$WINDOWS_ONLY" = true ]; then
@@ -62,10 +56,6 @@ build_target() {
         CMAKE_C_LINKER_WRAPPER_FLAG="${ANDROID_C_LIBS}${ANDROID_CXX_LIBS} \
         $(GET_ANDROID_LIB_PATHS "${ANDROID_ARCH}")"
 
-        if [ "$TARGET" == "aarch64-linux-android35" ]; then
-            CMAKE_C_LINKER_WRAPPER_FLAG+=" -Wl,-z,max-page-size=16384"
-        fi
-
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="${CCFLAGS}"
             -DCMAKE_CXX_FLAGS="${CCFLAGS}"
@@ -76,17 +66,17 @@ build_target() {
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="--target=${TARGET}"
             -DCMAKE_CXX_FLAGS="--target=${TARGET}"
-            -DBUILD_SHARED_LIBS="${BUILD_SHARED_STATIC}"
+            -DBUILD_SHARED_LIBS=OFF
         )
     elif [ "$WINDOWS_ONLY" = true ]; then
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="-fms-runtime-lib=static"
             -DCMAKE_CXX_FLAGS="-fms-runtime-lib=static"
-            -DBUILD_SHARED_LIBS="${BUILD_SHARED_STATIC}"
+            -DBUILD_SHARED_LIBS=OFF
         )
     else
         CMAKE_ARGS+=(
-            -DBUILD_SHARED_LIBS="${BUILD_SHARED_STATIC}"
+            -DBUILD_SHARED_LIBS=OFF
         )
     fi
     
@@ -112,7 +102,7 @@ build_target() {
     # 설치
     cmake --install .
     
-    echo "openexr 빌드 완료 (${TARGET}, ${BUILD_TYPE}): ${INSTALL_DIR}"
+    echo "openexr 빌드 완료 (${TARGET}): ${INSTALL_DIR}"
     echo ""
 }
 
@@ -124,33 +114,20 @@ if [ "$ANDROID_ONLY" = true ]; then
         echo "타겟: ${TARGET} ${ANDROID_ARCH[$i]}"
         echo "=========================================="
         
-        # Android일 때는 static만 빌드
-        build_target "${TARGET}" "static" "${ANDROID_ARCH[$i]}"
+        build_target "${TARGET}" "${ANDROID_ARCH[$i]}"
     done
 elif [ "$WINDOWS_ONLY" = true ]; then
-    # Windows 환경에서는 WINDOWS_TARGETS 사용
     for TARGET in "${WINDOWS_TARGETS[@]}"; do
         echo "=========================================="
         echo "타겟: ${TARGET}"
         echo "=========================================="
-        
-        # 공유 라이브러리 빌드
-        build_target "${TARGET}" "shared" ""
-        
-        # 정적 라이브러리 빌드
-        build_target "${TARGET}" "static" ""
+        build_target "${TARGET}" ""
     done
 else
-    # Linux 환경에서는 LINUX_TARGETS 사용
     for TARGET in "${LINUX_TARGETS[@]}"; do
         echo "=========================================="
         echo "타겟: ${TARGET}"
         echo "=========================================="
-        
-        # 공유 라이브러리 빌드
-        build_target "${TARGET}" "shared" ""
-        
-        # 정적 라이브러리 빌드
-        build_target "${TARGET}" "static" ""
+        build_target "${TARGET}" ""
     done
 fi

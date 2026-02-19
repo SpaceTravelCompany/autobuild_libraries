@@ -172,6 +172,10 @@ elseif(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" AND NOT MSVC)
             add_link_options("-Wl,--no-undefined")
         endif()
     endif()
+    # Static build on Windows with Clang: link MSVC runtime statically
+    if(WIN32 AND NOT BUILD_SHARED_LIBS)
+        add_compile_options(-fms-runtime-lib=static)
+    endif()
 elseif(MSVC)
     # A unary minus operator was applied to an unsigned type, resulting in an unsigned result.
     add_compile_options(/w14146)

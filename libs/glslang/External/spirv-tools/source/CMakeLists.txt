@@ -342,18 +342,18 @@ endfunction()
 
 # Always build ${SPIRV_TOOLS}-shared. This is expected distro packages, and
 # unlike the other SPIRV_TOOLS target, defaults to hidden symbol visibility.
-if (NOT ANDROID)
-add_library(${SPIRV_TOOLS}-shared SHARED ${SPIRV_SOURCES})
-if (SPIRV_TOOLS_USE_MIMALLOC)
-  target_link_libraries(${SPIRV_TOOLS}-shared PRIVATE mimalloc-static)
-endif()
-spirv_tools_default_target_options(${SPIRV_TOOLS}-shared)
-set_target_properties(${SPIRV_TOOLS}-shared PROPERTIES CXX_VISIBILITY_PRESET hidden)
-target_compile_definitions(${SPIRV_TOOLS}-shared
-  PRIVATE SPIRV_TOOLS_IMPLEMENTATION
-  PUBLIC SPIRV_TOOLS_SHAREDLIB
-)
-endif()
+# if (NOT ANDROID)
+# add_library(${SPIRV_TOOLS}-shared SHARED ${SPIRV_SOURCES})
+# if (SPIRV_TOOLS_USE_MIMALLOC)
+#   target_link_libraries(${SPIRV_TOOLS}-shared PRIVATE mimalloc-static)
+# endif()
+# spirv_tools_default_target_options(${SPIRV_TOOLS}-shared)
+# set_target_properties(${SPIRV_TOOLS}-shared PROPERTIES CXX_VISIBILITY_PRESET hidden)
+# target_compile_definitions(${SPIRV_TOOLS}-shared
+#   PRIVATE SPIRV_TOOLS_IMPLEMENTATION
+#   PUBLIC SPIRV_TOOLS_SHAREDLIB
+# )
+# endif()
 
 if(SPIRV_TOOLS_BUILD_STATIC)
   add_library(${SPIRV_TOOLS}-static STATIC ${SPIRV_SOURCES})
@@ -372,11 +372,11 @@ if(SPIRV_TOOLS_BUILD_STATIC)
     add_library(${SPIRV_TOOLS} ALIAS ${SPIRV_TOOLS}-static)
   endif()
 
-if (NOT ANDROID)
-  set(SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-static ${SPIRV_TOOLS}-shared)
-else()
+# if (NOT ANDROID)
+#   set(SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-static ${SPIRV_TOOLS}-shared)
+# else()
   set(SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-static)
-endif()
+#endif()
 else()
   add_library(${SPIRV_TOOLS} ${} ${SPIRV_SOURCES})
   if (SPIRV_TOOLS_USE_MIMALLOC)

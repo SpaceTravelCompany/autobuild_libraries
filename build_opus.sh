@@ -44,7 +44,6 @@ build_target() {
         $(GET_ANDROID_LIB_PATHS "${ANDROID_ARCH}")"
 
         if [ "$TARGET" == "aarch64-linux-android35" ]; then
-            CMAKE_C_LINKER_WRAPPER_FLAG+=" -Wl,-z,max-page-size=16384"
             CMAKE_ARGS+=(
                 -DCOMPILER_SUPPORT_NEON=ON
                 -DOPUS_MAY_HAVE_NEON=ON
