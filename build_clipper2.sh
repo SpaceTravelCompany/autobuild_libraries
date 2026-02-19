@@ -58,7 +58,7 @@ build_target() {
             -DCMAKE_C_COMPILER=clang-cl
             -DCMAKE_CXX_COMPILER=clang-cl
             -DCMAKE_C_FLAGS="-msse4.1 -fms-runtime-lib=static"
-            -DCMAKE_CXX_FLAGS="-msse4.1 -fms-runtime-lib=static -fexceptions"
+            -DCMAKE_CXX_FLAGS="-msse4.1 -fms-runtime-lib=static /EHsc" # /EHsc is MSVC exception handling flag
         )
     fi
 
