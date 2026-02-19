@@ -81,8 +81,9 @@ if(MSVC AND CMAKE_C_COMPILER_ID STREQUAL "MSVC")
 else()
   # On aarch64 (ARM64), NEON is always available; -mfpu=neon is 32-bit ARM only and unsupported.
   set(NEON_ENABLE_FLAG "-mfpu=neon")
-  if(CMAKE_SYSTEM_PROCESSOR MATCHES "[aA]arch64")
+  if(WEBP_ARM64_BUILD)
     set(NEON_ENABLE_FLAG "")
+  endif()
   endif()
   set(SIMD_ENABLE_FLAGS
       "-mavx2;-msse4.1;-msse2;-mips32;-mdspr2;${NEON_ENABLE_FLAG};-mmsa")
