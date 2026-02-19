@@ -65,6 +65,8 @@ build_target() {
         -DCMAKE_CXX_COMPILER=clang++
     )
 
+    CMAKE_ARGS=(-G "Ninja" "${CMAKE_ARGS[@]}")
+
     cmake "${CMAKE_ARGS[@]}"
     cmake --build . --config Release -j$(nproc)
     cmake --install .

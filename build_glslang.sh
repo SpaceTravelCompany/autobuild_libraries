@@ -76,7 +76,9 @@ build_target() {
         -DCMAKE_C_COMPILER=clang
         -DCMAKE_CXX_COMPILER=clang++
     )
-    
+
+    CMAKE_ARGS=(-G "Ninja" "${CMAKE_ARGS[@]}")
+
     cmake "${CMAKE_ARGS[@]}"
     
     # 빌드
