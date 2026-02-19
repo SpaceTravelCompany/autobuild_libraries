@@ -60,6 +60,11 @@ build_target() {
             -DCMAKE_C_FLAGS="--target=${TARGET}"
             -DCMAKE_CXX_FLAGS="--target=${TARGET}"
         )
+    elif [ "$WINDOWS_ONLY" = true ]; then
+        CMAKE_ARGS+=(
+            -DCMAKE_C_FLAGS="-fms-runtime-lib=static"
+            -DCMAKE_CXX_FLAGS="-fms-runtime-lib=static"
+        )
     fi
     
     if [ "$ANDROID_ONLY" = true ]; then

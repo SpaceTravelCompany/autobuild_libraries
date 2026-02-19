@@ -59,6 +59,11 @@ build_target() {
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="--target=${TARGET}"
         )
+    elif [ "$WINDOWS_ONLY" = true ]; then
+        CMAKE_ARGS+=(
+            -DBROTLI_BUILD_FOR_PACKAGE=ON
+            -DCMAKE_C_FLAGS="-fms-runtime-lib=static"
+        )
     else
         CMAKE_ARGS+=(
             -DBROTLI_BUILD_FOR_PACKAGE=ON

@@ -139,6 +139,10 @@ build_target() {
             CMAKE_ARGS+=(
                 -DCMAKE_C_FLAGS="--target=${TARGET}"
             )
+        elif [ "$WINDOWS_ONLY" = true ]; then
+            CMAKE_ARGS+=(
+                -DCMAKE_C_FLAGS="-fms-runtime-lib=static"
+            )
         fi
         CMAKE_ARGS+=(
             -DBUILD_SHARED_LIBS=${BUILD_SHARED_STATIC}
