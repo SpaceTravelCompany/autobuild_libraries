@@ -65,6 +65,8 @@ WINDOWS_TARGETS=(
     "windows"
     "windows-arm"
 )
+# Windows: single target only (windows = x64, windows-arm = ARM64)
+WINDOWS_TARGET=""
 
 # Android 타겟 목록
 ANDROIDS=(
@@ -100,7 +102,7 @@ GET_ANDROID_INCLUDE_PATHS() {
 ANDROID_C_LIBS="-lc -lm -ldl -llog -landroid "
 ANDROID_CXX_LIBS="-lc++_static -lc++abi "
 
-# 명령줄 인자 파싱 함수
+# Command-line argument parsing
 parse_build_args() {
     if [ "$1" == "--native" ] || [ "$1" == "-n" ]; then
         NATIVE_ONLY=true
@@ -110,8 +112,13 @@ parse_build_args() {
         ANDROID_ONLY=true
         echo "Android 빌드 모드로 실행합니다."
     elif [ "$1" == "--windows" ] || [ "$1" == "-w" ]; then
-        echo "Windows 빌드 모드로 실행합니다."
         WINDOWS_ONLY=true
+        WINDOWS_TARGET="windows"
+        echo "Windows 빌드 모드로 실행합니다. (x64)"
+    elif [ "$1" == "--windows-arm" ] || [ "$1" == "-wa" ]; then
+        WINDOWS_ONLY=true
+        WINDOWS_TARGET="windows-arm"
+        echo "Windows ARM 빌드 모드로 실행합니다."
     elif [ -n "$1" ]; then
         echo "오류: 알 수 없는 플래그: $1" >&2
         exit 1

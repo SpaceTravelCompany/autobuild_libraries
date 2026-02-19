@@ -94,12 +94,10 @@ if [ "$ANDROID_ONLY" = true ]; then
         build_target "${TARGET}" "${ANDROID_ARCH[$i]}"
     done
 elif [ "$WINDOWS_ONLY" = true ]; then
-    for TARGET in "${WINDOWS_TARGETS[@]}"; do
-        echo "=========================================="
-        echo "Target: ${TARGET}"
-        echo "=========================================="
-        build_target "${TARGET}" ""
-    done
+    echo "=========================================="
+    echo "Target: ${WINDOWS_TARGET}"
+    echo "=========================================="
+    build_target "${WINDOWS_TARGET}" ""
 else
     for TARGET in "${LINUX_TARGETS[@]}"; do
         echo "=========================================="
