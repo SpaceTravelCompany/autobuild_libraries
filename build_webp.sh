@@ -7,23 +7,17 @@ parse_build_args "$1"
 
 WEBP_DIR="${SCRIPT_DIR}/libs/libwebp"
 
-# 빌드 함수
+# 빌드 함수 (static only)
 build_target() {
     local TARGET=$1
-    local BUILD_TYPE=$2
-    local ANDROID_ARCH=$3
-
-    BUILD_SHARED_STATIC="OFF"
-    if [ "$BUILD_TYPE" = "shared" ]; then
-        BUILD_SHARED_STATIC="ON" 
-    fi
+    local ANDROID_ARCH=$2
     
     echo "----------------------------------------"
     echo "빌드 중: ${TARGET}"
     echo "----------------------------------------"
     
-    BUILD_DIR="${SCRIPT_DIR}/build/webp/${TARGET}-${BUILD_TYPE}"
-    INSTALL_DIR="${SCRIPT_DIR}/install/webp/${TARGET}-${BUILD_TYPE}"
+    BUILD_DIR="${SCRIPT_DIR}/build/webp/${TARGET}"
+    INSTALL_DIR="${SCRIPT_DIR}/install/webp/${TARGET}"
     
     # 빌드 디렉토리 생성
     mkdir -p "${BUILD_DIR}"
@@ -65,16 +59,16 @@ build_target() {
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="--target=${TARGET}"
-            -DBUILD_SHARED_LIBS=${BUILD_SHARED_STATIC}
+            -DBUILD_SHARED_LIBS=OFF
         )
     elif [ "$WINDOWS_ONLY" = true ]; then
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="-fms-runtime-lib=static"
-            -DBUILD_SHARED_LIBS=${BUILD_SHARED_STATIC}
+            -DBUILD_SHARED_LIBS=OFF
         )
     else
         CMAKE_ARGS+=(
-            -DBUILD_SHARED_LIBS=${BUILD_SHARED_STATIC}
+            -DBUILD_SHARED_LIBS=OFF
         )
     fi
     
@@ -106,30 +100,20 @@ if [ "$ANDROID_ONLY" = true ]; then
         echo "타겟: ${TARGET} ${ANDROID_ARCH[$i]}"
         echo "=========================================="
         
-        build_target "${TARGET}" "static" "${ANDROID_ARCH[$i]}"
+        build_target "${TARGET}" "${ANDROID_ARCH[$i]}"
     done
 elif [ "$WINDOWS_ONLY" = true ]; then
     for TARGET in "${WINDOWS_TARGETS[@]}"; do
         echo "=========================================="
         echo "타겟: ${TARGET}"
         echo "=========================================="
-        
-        # 공유 라이브러리 빌드
-        build_target "${TARGET}" "shared" ""
-        
-        # 정적 라이브러리 빌드
-        build_target "${TARGET}" "static" ""
+        build_target "${TARGET}" ""
     done
 else
     for TARGET in "${LINUX_TARGETS[@]}"; do
         echo "=========================================="
         echo "타겟: ${TARGET}"
         echo "=========================================="
-        
-         # 공유 라이브러리 빌드
-        build_target "${TARGET}" "shared" ""
-        
-        # 정적 라이브러리 빌드
-        build_target "${TARGET}" "static" ""
+        build_target "${TARGET}" ""
     done
 fi

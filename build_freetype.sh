@@ -8,23 +8,17 @@ parse_build_args "$1"
 FREETYPE_DIR="${SCRIPT_DIR}/libs/freetype"
 
 
-# 빌드 함수
+# 빌드 함수 (static only)
 build_target() {
     local TARGET=$1
-    local BUILD_TYPE=$2  # "shared" or "static"
-    local ANDROID_ARCH=$3
+    local ANDROID_ARCH=$2
     
-    BUILD_SHARED_STATIC="OFF"
-    if [ "$BUILD_TYPE" = "shared" ]; then
-        BUILD_SHARED_STATIC="ON" 
-    fi
-
     echo "----------------------------------------"
-    echo "빌드 중: ${TARGET} (${BUILD_TYPE})"
+    echo "빌드 중: ${TARGET}"
     echo "----------------------------------------"
     
-    BUILD_DIR="${SCRIPT_DIR}/build/freetype/${TARGET}-${BUILD_TYPE}"
-    INSTALL_DIR="${SCRIPT_DIR}/install/freetype/${TARGET}-${BUILD_TYPE}"
+    BUILD_DIR="${SCRIPT_DIR}/build/freetype/${TARGET}"
+    INSTALL_DIR="${SCRIPT_DIR}/install/freetype/${TARGET}"
     
     # 빌드 디렉토리 생성
     mkdir -p "${BUILD_DIR}"
@@ -140,9 +134,7 @@ build_target() {
                 -DCMAKE_C_FLAGS="-fms-runtime-lib=static"
             )
         fi
-        CMAKE_ARGS+=(
-            -DBUILD_SHARED_LIBS=${BUILD_SHARED_STATIC}
-        )
+        CMAKE_ARGS+=( -DBUILD_SHARED_LIBS=OFF )
     fi
 
     if [ "$ANDROID_ONLY" = true ]; then
@@ -161,7 +153,7 @@ build_target() {
     # 설치
     cmake --install .
     
-    echo "freetype 빌드 완료 (${TARGET}, ${BUILD_TYPE}): ${INSTALL_DIR}"
+    echo "freetype 빌드 완료 (${TARGET}): ${INSTALL_DIR}"
     echo ""
 }
 
@@ -173,34 +165,21 @@ if [ "$ANDROID_ONLY" = true ]; then
         echo "타겟: ${TARGET} ${ANDROID_ARCH[$i]}"
         echo "=========================================="
         
-        # Android일 때는 static만 빌드
-        build_target "${TARGET}" "static" "${ANDROID_ARCH[$i]}"
+        build_target "${TARGET}" "${ANDROID_ARCH[$i]}"
     done
 elif [ "$WINDOWS_ONLY" = true ]; then
-    # Windows 환경에서는 WINDOWS_TARGETS 사용
     for TARGET in "${WINDOWS_TARGETS[@]}"; do
         echo "=========================================="
         echo "타겟: ${TARGET}"
         echo "=========================================="
-        
-        # 공유 라이브러리 빌드
-        build_target "${TARGET}" "shared" ""
-        
-        # 정적 라이브러리 빌드
-        build_target "${TARGET}" "static" ""
+        build_target "${TARGET}" ""
     done
 else
-    # Linux 환경에서는 LINUX_TARGETS 사용
     for TARGET in "${LINUX_TARGETS[@]}"; do
         echo "=========================================="
         echo "타겟: ${TARGET}"
         echo "=========================================="
-        
-        # 공유 라이브러리 빌드
-        build_target "${TARGET}" "shared" ""
-        
-        # 정적 라이브러리 빌드
-        build_target "${TARGET}" "static" ""
+        build_target "${TARGET}" ""
     done
 fi
 
