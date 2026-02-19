@@ -84,7 +84,6 @@ else()
   if(WEBP_ARM64_BUILD)
     set(NEON_ENABLE_FLAG "")
   endif()
-  endif()
   set(SIMD_ENABLE_FLAGS
       "-mavx2;-msse4.1;-msse2;-mips32;-mdspr2;${NEON_ENABLE_FLAG};-mmsa")
   set(SIMD_DISABLE_FLAGS
