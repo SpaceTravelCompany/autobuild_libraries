@@ -129,16 +129,16 @@ build_target() {
             CMAKE_ARGS+=(
                 -DCMAKE_C_FLAGS="--target=${TARGET}"
             )
-        elif [ "$WINDOWS_ONLY" = true ]; then
-            CMAKE_ARGS+=(
-                -DCMAKE_C_FLAGS="-fms-runtime-lib=static"
-            )
         fi
         CMAKE_ARGS+=( -DBUILD_SHARED_LIBS=OFF )
     fi
 
     if [ "$ANDROID_ONLY" = true ]; then
         CMAKE_ARGS+=(-DCMAKE_C_COMPILER=$(GET_ANDROID_CC "${TARGET}"))
+    elif [ "$WINDOWS_ONLY" = true ]; then
+        CMAKE_ARGS+=(
+            -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
+        )
     else
         CMAKE_ARGS+=(-DCMAKE_C_COMPILER=clang)
     fi

@@ -64,7 +64,7 @@ build_target() {
 
         OBJ_FILES=""
         for file in ${BASE_SRC}; do
-            OBJ_FILES="${OBJ_FILES} ${file}.o"
+            OBJ_FILES="${OBJ_FILES} ${file}.obj"
         done
         "${ANDROID_AR}" rcu liblua.a ${OBJ_FILES}
         "${NDK_TOOLCHAIN_DIR}/bin/llvm-ranlib" liblua.a
@@ -87,18 +87,18 @@ build_target() {
         ranlib liblua.a
         cp liblua.a "${INSTALL_DIR}/lib/liblua.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
-        # Windows build (Clang + llvm-lib)
-        CCFLAGS="${LUA_SEONGJUN_FLAG} -O3 -fms-runtime-lib=static"
+        # Windows build (MSVC)
+        CCFLAGS="${LUA_SEONGJUN_FLAG} -O2 -MT"
 
         for file in ${BASE_SRC}; do
-            clang -c ${CCFLAGS} ${file}.c
+            cl -c ${CCFLAGS} ${file}.c
         done
 
         OBJ_FILES=""
         for file in ${BASE_SRC}; do
-            OBJ_FILES="${OBJ_FILES} ${file}.o"
+            OBJ_FILES="${OBJ_FILES} ${file}.obj"
         done
-        llvm-lib /OUT:liblua.lib ${OBJ_FILES}
+        lib /OUT:liblua.lib ${OBJ_FILES}
         cp liblua.lib "${INSTALL_DIR}/lib/liblua.lib"
     else
         # 네이티브 빌드 (Linux)

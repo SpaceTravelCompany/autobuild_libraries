@@ -58,7 +58,6 @@ build_target() {
     elif [ "$WINDOWS_ONLY" = true ]; then
         CMAKE_ARGS+=(
             -DBROTLI_BUILD_FOR_PACKAGE=ON
-            -DCMAKE_C_FLAGS="-fms-runtime-lib=static"
         )
     else
         CMAKE_ARGS+=(
@@ -68,6 +67,10 @@ build_target() {
     
     if [ "$ANDROID_ONLY" = true ]; then
         CMAKE_ARGS+=(-DCMAKE_C_COMPILER=$(GET_ANDROID_CC "${TARGET}"))
+    elif [ "$WINDOWS_ONLY" = true ]; then
+        CMAKE_ARGS+=(
+            -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
+        )
     else
         CMAKE_ARGS+=(-DCMAKE_C_COMPILER=clang)
     fi

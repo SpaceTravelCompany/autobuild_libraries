@@ -18,7 +18,7 @@
 #endif
 
 #if defined __SSE4_1__ || (_MSC_VER && (_M_IX86 || _M_X64))
-//#    define IMF_HAVE_SSE4_1 1
+#    define IMF_HAVE_SSE4_1 1
 #endif
 
 // Compiler flags on e2k (MCST Elbrus 2000) architecture
