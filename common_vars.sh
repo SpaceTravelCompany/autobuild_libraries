@@ -23,27 +23,27 @@ GET_ANDROID_CC() { echo "${NDK_TOOLCHAIN_DIR}/bin/$1-clang"; }
 GET_ANDROID_CXX() { echo "${NDK_TOOLCHAIN_DIR}/bin/$1-clang++"; }
 GET_ANDROID_AR() { echo "${NDK_TOOLCHAIN_DIR}/bin/llvm-ar"; }
 
-# SSE4.1 flag for x86/x64 targets (Linux x86, Android x86). Empty for ARM/RISCV.
-# For native-windows: -msse4.1 only when host is x86_64 (not on Windows ARM).
+# SSE4.1 flag: only for x86/x64 targets. "windows" = -msse4.1, "windows-arm" = no SSE.
 GET_SSE4_1_FLAG() {
     local TARGET=$1
     case "$TARGET" in
-        x86_64-*|i686-*) echo "-msse4.1" ;;
-        native-windows)
-            local M=$(uname -m 2>/dev/null || true)
-            if [ "$M" = "aarch64" ] || [ "$M" = "arm64" ]; then
-                echo ""
-            else
-                echo "-msse4.1"
-            fi
-            ;;
+        x86_64-*|i686-*|windows) echo "-msse4.1" ;;
         *) echo "" ;;
     esac
 }
 
-# Windows clang-cl CFLAGS: -msse4.1 only on x86_64 (not ARM). Static runtime via CMAKE_MSVC_RUNTIME_LIBRARY in CMake.
+# Windows clang-cl CFLAGS by target: SSE only for "windows", empty for "windows-arm".
 GET_WINDOWS_CLANG_CFLAGS() {
-    GET_SSE4_1_FLAG "native-windows"
+    GET_SSE4_1_FLAG "$1"
+}
+
+# When building for windows-arm (cross to ARM64): pass clang target triple.
+GET_WINDOWS_CLANG_TARGET_FLAG() {
+    if [ "$1" = "windows-arm" ]; then
+        echo "--target=aarch64-windows-msvc"
+    else
+        echo "--target=x86_64-windows-msvc"
+    fi
 }
 
 # 빌드 모드 플래그 (명령줄 인자로 설정됨)
@@ -60,9 +60,10 @@ LINUX_TARGETS=(
 	"arm-linux-gnueabihf"
 )
 
-# Windows 빌드 타겟 목록
+# Windows 빌드 타겟 목록 (windows = x64, windows-arm = ARM64)
 WINDOWS_TARGETS=(
-    "native-windows"
+    "windows"
+    "windows-arm"
 )
 
 # Android 타겟 목록

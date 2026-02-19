@@ -61,7 +61,7 @@ build_target() {
             -DENABLE_SHARED_LIB=ON
             -DENABLE_STATIC_LIB=ON
             -DCMAKE_C_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_CFLAGS)"
+            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
     else

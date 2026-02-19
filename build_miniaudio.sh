@@ -64,8 +64,8 @@ build_target() {
         cp libminiaudio_libopus.a "${INSTALL_DIR}/lib/libminiaudio_libopus.a"
         cp libminiaudio_libvorbis.a "${INSTALL_DIR}/lib/libminiaudio_libvorbis.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
-        # Windows build (clang-cl, SSE4.1)
-        CCFLAGS="-O2 $(GET_WINDOWS_CLANG_CFLAGS) -MT"
+        # Windows build (clang-cl; windows=SSE4.1, windows-arm=--target=arm64-pc-windows-msvc)
+        CCFLAGS="-O2 $(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}") -MT"
         clang-cl -c ${CCFLAGS} miniaudio.c
         lib /OUT:miniaudio.lib miniaudio.obj
         clang-cl -c ${CCFLAGS} miniaudio_libopus.c -I"${OGG_INCLUDE_DIR}" -I"${OPUS_INCLUDE_DIR}" -I"${OPUSFILE_INCLUDE_DIR}"

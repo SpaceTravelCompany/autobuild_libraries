@@ -86,8 +86,8 @@ build_target() {
         ranlib liblua.a
         cp liblua.a "${INSTALL_DIR}/lib/liblua.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
-        # Windows build (clang-cl, SSE4.1)
-        CCFLAGS="${LUA_SEONGJUN_FLAG} -O2 $(GET_WINDOWS_CLANG_CFLAGS) -MT"
+        # Windows build (clang-cl; windows=SSE4.1, windows-arm=--target=arm64-pc-windows-msvc)
+        CCFLAGS="${LUA_SEONGJUN_FLAG} -O2 $(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}") -MT"
 
         for file in ${BASE_SRC}; do
             clang-cl -c ${CCFLAGS} ${file}.c

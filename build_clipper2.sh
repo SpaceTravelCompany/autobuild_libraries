@@ -57,8 +57,8 @@ build_target() {
         CMAKE_ARGS+=(
             -DCMAKE_C_COMPILER=clang-cl
             -DCMAKE_CXX_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_CFLAGS)"
-            -DCMAKE_CXX_FLAGS="$(GET_WINDOWS_CLANG_CFLAGS) -EHsc"
+            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
+            -DCMAKE_CXX_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}") /EHsc"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
     fi

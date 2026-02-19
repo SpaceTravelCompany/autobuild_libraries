@@ -59,7 +59,7 @@ build_target() {
         CMAKE_ARGS+=(
             -DBROTLI_BUILD_FOR_PACKAGE=ON
             -DCMAKE_C_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_CFLAGS)"
+            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
     else
