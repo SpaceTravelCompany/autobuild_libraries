@@ -96,7 +96,7 @@ build_target() {
 
         OBJ_FILES=""
         for file in ${BASE_SRC}; do
-            OBJ_FILES="${OBJ_FILES} ${file}.obj"
+            OBJ_FILES="${OBJ_FILES} ${file}.o"
         done
         llvm-lib /OUT:liblua.lib ${OBJ_FILES}
         cp liblua.lib "${INSTALL_DIR}/lib/liblua.lib"
