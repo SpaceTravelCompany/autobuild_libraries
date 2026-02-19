@@ -3,9 +3,25 @@
 # 이 파일은 모든 빌드 스크립트에서 공통으로 사용되는 변수들을 정의합니다.
 # 주의: 이 파일을 source하기 전에 각 스크립트에서 SCRIPT_DIR을 먼저 정의해야 합니다.
 
-# NDK 설정
-NDK_TOOLCHAIN_DIR="${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/"
+# NDK settings (host-agnostic: use prebuilt dir that exists)
+if [ -n "${ANDROID_NDK_HOME}" ]; then
+    if [ -d "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64" ]; then
+        NDK_TOOLCHAIN_DIR="${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64"
+    elif [ -d "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64" ]; then
+        NDK_TOOLCHAIN_DIR="${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64"
+    else
+        NDK_PREBUILT=$(find "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | head -1)
+        NDK_TOOLCHAIN_DIR="${NDK_PREBUILT}"
+    fi
+else
+    NDK_TOOLCHAIN_DIR=""
+fi
 NDK_API_LEVEL="35"
+
+# Return path to NDK clang for the given Android target (e.g. aarch64-linux-android35)
+GET_ANDROID_CC() { echo "${NDK_TOOLCHAIN_DIR}/bin/$1-clang"; }
+GET_ANDROID_CXX() { echo "${NDK_TOOLCHAIN_DIR}/bin/$1-clang++"; }
+GET_ANDROID_AR() { echo "${NDK_TOOLCHAIN_DIR}/bin/llvm-ar"; }
 
 # 빌드 모드 플래그 (명령줄 인자로 설정됨)
 NATIVE_ONLY=false

@@ -54,33 +54,24 @@ build_target() {
     cd ${LUA_DIR}
 
     if [ "$ANDROID_ONLY" = true ]; then
-        CCFLAGS="--target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
-        -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include \
-        -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include/c++/v1 \
-        -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include/c++/v1/${ANDROID_ARCH} \
-        ${LUA_SEONGJUN_FLAG} \
-        -fPIC -O2 -Wall -Wextra -lc -lm -ldl -llog -landroid"
+        ANDROID_CC=$(GET_ANDROID_CC "${TARGET}")
+        ANDROID_AR=$(GET_ANDROID_AR)
+        CCFLAGS="${LUA_SEONGJUN_FLAG} -fPIC -O3 -Wall -Wextra"
 
-        # if [ "$TARGET" == "aarch64-linux-android35" ]; then
-        #     CCFLAGS+=" -Wl,-z,max-page-size=16384"
-        # fi
-
-        # 모든 소스 파일 컴파일
         for file in ${BASE_SRC}; do
-            clang -c ${file}.c ${CCFLAGS}
+            "${ANDROID_CC}" -c ${file}.c ${CCFLAGS}
         done
 
-        # 정적 라이브러리 생성
         OBJ_FILES=""
         for file in ${BASE_SRC}; do
             OBJ_FILES="${OBJ_FILES} ${file}.o"
         done
-        ar rcu liblua.a ${OBJ_FILES}
-        ranlib liblua.a
+        "${ANDROID_AR}" rcu liblua.a ${OBJ_FILES}
+        "${NDK_TOOLCHAIN_DIR}/bin/llvm-ranlib" liblua.a
         cp liblua.a "${INSTALL_DIR}/lib/liblua.a"
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         # 크로스 컴파일 (Linux)
-        CCFLAGS="${LUA_SEONGJUN_FLAG} -fPIC -O2 -Wall -Wextra --target=${TARGET}"
+        CCFLAGS="${LUA_SEONGJUN_FLAG} -fPIC -O3 -Wall -Wextra --target=${TARGET}"
         
         # 모든 소스 파일 컴파일
         for file in ${BASE_SRC}; do
@@ -111,7 +102,7 @@ build_target() {
         cp liblua.lib "${INSTALL_DIR}/lib/liblua.lib"
     else
         # 네이티브 빌드 (Linux)
-        CCFLAGS="-DLUA_USE_LINUX ${LUA_SEONGJUN_FLAG} -fPIC -O2 -Wall -Wextra"
+        CCFLAGS="-DLUA_USE_LINUX ${LUA_SEONGJUN_FLAG} -fPIC -O3 -Wall -Wextra"
         
         # 모든 소스 파일 컴파일
         for file in ${BASE_SRC}; do

@@ -145,10 +145,11 @@ build_target() {
         )
     fi
 
-    # Use Clang on all platforms (Linux and Windows)
-    CMAKE_ARGS+=(
-        -DCMAKE_C_COMPILER=clang
-    )
+    if [ "$ANDROID_ONLY" = true ]; then
+        CMAKE_ARGS+=(-DCMAKE_C_COMPILER=$(GET_ANDROID_CC "${TARGET}"))
+    else
+        CMAKE_ARGS+=(-DCMAKE_C_COMPILER=clang)
+    fi
 
     CMAKE_ARGS=(-G "Ninja" "${CMAKE_ARGS[@]}")
 

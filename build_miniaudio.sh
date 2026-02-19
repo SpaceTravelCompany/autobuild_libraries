@@ -37,26 +37,16 @@ build_target() {
     OPUS_INCLUDE_DIR="${SCRIPT_DIR}/install/opus/${TARGET}/include/opus"
 
     if [ "$ANDROID_ONLY" = true ]; then
-        CCFLAGS="--target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
-        -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include \
-        -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include/c++/v1 \
-        -I${NDK_TOOLCHAIN_DIR}/sysroot/usr/include/c++/v1/${ANDROID_ARCH} \
-        -I${OGG_INCLUDE_DIR} \
-        -I${OPUS_INCLUDE_DIR} \
-        -I${VORBIS_INCLUDE_DIR} \
-        -I${OPUSFILE_INCLUDE_DIR} \
-        -fPIC -O3 -lc -lm -ldl -llog -landroid"
+        ANDROID_CC=$(GET_ANDROID_CC "${TARGET}")
+        ANDROID_AR=$(GET_ANDROID_AR)
+        CCFLAGS="-I${OGG_INCLUDE_DIR} -I${OPUS_INCLUDE_DIR} -I${VORBIS_INCLUDE_DIR} -I${OPUSFILE_INCLUDE_DIR} -fPIC -O3"
 
-        # if [ "$TARGET" == "aarch64-linux-android35" ]; then
-        #     CCFLAGS+=" -Wl,-z,max-page-size=16384"
-        # fi
-
-        clang -c miniaudio.c ${CCFLAGS}
-        ar r libminiaudio.a miniaudio.o
-        clang -c miniaudio_libopus.c ${CCFLAGS}
-        ar r libminiaudio_libopus.a miniaudio_libopus.o
-        clang -c miniaudio_libvorbis.c ${CCFLAGS}
-        ar r libminiaudio_libvorbis.a miniaudio_libvorbis.o
+        "${ANDROID_CC}" -c miniaudio.c ${CCFLAGS}
+        "${ANDROID_AR}" r libminiaudio.a miniaudio.o
+        "${ANDROID_CC}" -c miniaudio_libopus.c ${CCFLAGS}
+        "${ANDROID_AR}" r libminiaudio_libopus.a miniaudio_libopus.o
+        "${ANDROID_CC}" -c miniaudio_libvorbis.c ${CCFLAGS}
+        "${ANDROID_AR}" r libminiaudio_libvorbis.a miniaudio_libvorbis.o
 
         cp libminiaudio.a "${INSTALL_DIR}/lib/libminiaudio.a"
         cp libminiaudio_libopus.a "${INSTALL_DIR}/lib/libminiaudio_libopus.a"
@@ -73,11 +63,11 @@ build_target() {
         cp libminiaudio_libopus.a "${INSTALL_DIR}/lib/libminiaudio_libopus.a"
         cp libminiaudio_libvorbis.a "${INSTALL_DIR}/lib/libminiaudio_libvorbis.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
-        clang -c -fPIC -O3 miniaudio.c
+        clang -c -O3 miniaudio.c
         llvm-lib /OUT:miniaudio.lib miniaudio.obj
-        clang -c -fPIC -O3 miniaudio_libopus.c -I"${OGG_INCLUDE_DIR}" -I"${OPUS_INCLUDE_DIR}" -I"${OPUSFILE_INCLUDE_DIR}"
+        clang -c -O3 miniaudio_libopus.c -I"${OGG_INCLUDE_DIR}" -I"${OPUS_INCLUDE_DIR}" -I"${OPUSFILE_INCLUDE_DIR}"
         llvm-lib /OUT:miniaudio_libopus.lib miniaudio_libopus.obj
-        clang -c -fPIC -O3 miniaudio_libvorbis.c -I"${OGG_INCLUDE_DIR}" -I"${VORBIS_INCLUDE_DIR}"
+        clang -c -O3 miniaudio_libvorbis.c -I"${OGG_INCLUDE_DIR}" -I"${VORBIS_INCLUDE_DIR}"
         llvm-lib /OUT:miniaudio_libvorbis.lib miniaudio_libvorbis.obj
 
         cp miniaudio.lib "${INSTALL_DIR}/lib/miniaudio.lib"
