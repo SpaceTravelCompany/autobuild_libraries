@@ -56,7 +56,8 @@ All build scripts support the following options:
 - **Default**: Cross-compilation for multiple architectures
 - `--native` or `-n`: Build only for native architecture
 - `--android` or `-a`: Build for Android (static libraries only)
-- `--windows` or `-w`: Build for Windows native
+- `--windows` or `-w`: Build for Windows x86_64
+- `--windows-arm` or `-wa`: Build for Windows arm
 
 Cross-compilation is performed for the following target architectures, building both **shared libraries** and **static libraries** for each target:
 - `aarch64-linux-gnu`

@@ -58,7 +58,7 @@ jobs:
         CC: clang-cl
         CXX: clang-cl
       run: |
-        ./build_all.sh -w
+        ./build_all.sh -wa
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
