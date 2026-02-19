@@ -59,7 +59,7 @@ build_target() {
         CMAKE_ARGS+=(
             -DBROTLI_BUILD_FOR_PACKAGE=ON
             -DCMAKE_C_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="-msse4.1 -fms-runtime-lib=static"
+            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_CFLAGS)"
         )
     else
         CMAKE_ARGS+=(

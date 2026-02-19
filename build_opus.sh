@@ -61,7 +61,7 @@ build_target() {
     elif [ "$WINDOWS_ONLY" = true ]; then
         CMAKE_ARGS+=(
             -DCMAKE_C_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="-msse4.1 -fms-runtime-lib=static"
+            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_CFLAGS)"
         )
     fi
     

@@ -65,7 +65,7 @@ build_target() {
         cp libminiaudio_libvorbis.a "${INSTALL_DIR}/lib/libminiaudio_libvorbis.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
         # Windows build (clang-cl, SSE4.1)
-        CCFLAGS="-O2 -msse4.1 -fms-runtime-lib=static"
+        CCFLAGS="-O2 $(GET_WINDOWS_CLANG_CFLAGS)"
         clang-cl -c ${CCFLAGS} miniaudio.c
         lib /OUT:miniaudio.lib miniaudio.obj
         clang-cl -c ${CCFLAGS} miniaudio_libopus.c -I"${OGG_INCLUDE_DIR}" -I"${OPUS_INCLUDE_DIR}" -I"${OPUSFILE_INCLUDE_DIR}"

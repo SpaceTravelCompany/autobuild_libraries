@@ -23,13 +23,32 @@ GET_ANDROID_CC() { echo "${NDK_TOOLCHAIN_DIR}/bin/$1-clang"; }
 GET_ANDROID_CXX() { echo "${NDK_TOOLCHAIN_DIR}/bin/$1-clang++"; }
 GET_ANDROID_AR() { echo "${NDK_TOOLCHAIN_DIR}/bin/llvm-ar"; }
 
-# SSE4.1 flag for x86/x64 targets (Windows clang-cl, Linux x86, Android x86). Empty for ARM/RISCV.
+# SSE4.1 flag for x86/x64 targets (Linux x86, Android x86). Empty for ARM/RISCV.
+# For native-windows: -msse4.1 only when host is x86_64 (not on Windows ARM).
 GET_SSE4_1_FLAG() {
     local TARGET=$1
     case "$TARGET" in
-        x86_64-*|i686-*|native-windows) echo "-msse4.1" ;;
+        x86_64-*|i686-*) echo "-msse4.1" ;;
+        native-windows)
+            local M=$(uname -m 2>/dev/null || true)
+            if [ "$M" = "aarch64" ] || [ "$M" = "arm64" ]; then
+                echo ""
+            else
+                echo "-msse4.1"
+            fi
+            ;;
         *) echo "" ;;
     esac
+}
+
+# Windows clang-cl CFLAGS: -fms-runtime-lib=static, and -msse4.1 only on x86_64 (not ARM).
+GET_WINDOWS_CLANG_CFLAGS() {
+    local SSE4=$(GET_SSE4_1_FLAG "native-windows")
+    if [ -n "$SSE4" ]; then
+        echo "${SSE4} -fms-runtime-lib=static"
+    else
+        echo "-fms-runtime-lib=static"
+    fi
 }
 
 # 빌드 모드 플래그 (명령줄 인자로 설정됨)

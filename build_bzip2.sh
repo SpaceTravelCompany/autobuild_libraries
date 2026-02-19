@@ -61,7 +61,7 @@ build_target() {
             -DENABLE_SHARED_LIB=ON
             -DENABLE_STATIC_LIB=ON
             -DCMAKE_C_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="-msse4.1 -fms-runtime-lib=static"
+            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_CFLAGS)"
         )
     else
         CMAKE_ARGS+=(

@@ -57,8 +57,8 @@ build_target() {
         CMAKE_ARGS+=(
             -DCMAKE_C_COMPILER=clang-cl
             -DCMAKE_CXX_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="-msse4.1 -fms-runtime-lib=static"
-            -DCMAKE_CXX_FLAGS="-msse4.1 -fms-runtime-lib=static /EHsc" # /EHsc is MSVC exception handling flag
+            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_CFLAGS)"
+            -DCMAKE_CXX_FLAGS="$(GET_WINDOWS_CLANG_CFLAGS) /EHsc"
         )
     fi
 

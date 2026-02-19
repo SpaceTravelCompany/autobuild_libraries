@@ -87,7 +87,7 @@ build_target() {
         cp liblua.a "${INSTALL_DIR}/lib/liblua.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
         # Windows build (clang-cl, SSE4.1)
-        CCFLAGS="${LUA_SEONGJUN_FLAG} -O2 -msse4.1 -fms-runtime-lib=static"
+        CCFLAGS="${LUA_SEONGJUN_FLAG} -O2 $(GET_WINDOWS_CLANG_CFLAGS)"
 
         for file in ${BASE_SRC}; do
             clang-cl -c ${CCFLAGS} ${file}.c
