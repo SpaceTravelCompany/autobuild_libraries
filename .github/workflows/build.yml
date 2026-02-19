@@ -17,13 +17,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup MSVC
-      uses: microsoft/setup-msbuild@v2
-
-    - uses: ilammy/msvc-dev-cmd@v1
+    - name: Install Clang/LLVM
+      uses: KyleMayes/install-llvm-action@v2
+      with:
+        version: "21.1.8"
+        env: true
 
     - name: Build all
       shell: bash
+      env:
+        CC: clang-cl
+        CXX: clang-cl
       run: |
         ./build_all.sh -w
 
@@ -42,13 +46,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup MSVC
-      uses: microsoft/setup-msbuild@v2
-
-    - uses: ilammy/msvc-dev-cmd@v1
+    - name: Install Clang/LLVM
+      uses: KyleMayes/install-llvm-action@v2
+      with:
+        version: "21.1.8"
+        env: true
 
     - name: Build all
       shell: bash
+      env:
+        CC: clang-cl
+        CXX: clang-cl
       run: |
         ./build_all.sh -w
 

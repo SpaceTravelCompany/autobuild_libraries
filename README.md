@@ -14,7 +14,6 @@ A project for automatically building multiple libraries with cross-compilation s
 
 ### Image Libraries
 - **[libwebp](https://chromium.googlesource.com/webm/libwebp)**: WebP image encoding/decoding library.
-- **[openexr](https://github.com/AcademySoftwareFoundation/openexr)**: openexr image encoding/decoding library.
 
 ### Audio Libraries
 - **[libogg](https://github.com/xiph/ogg)**: Ogg container format library.
@@ -25,11 +24,9 @@ A project for automatically building multiple libraries with cross-compilation s
 
 ## Math
 - **[clipper2](https://github.com/AngusJohnson/Clipper2)**: Polygon Clipping, Offsetting & Triangulation library.
-- **[Imath](https://github.com/AcademySoftwareFoundation/Imath)**: Math library of 2D and 3D vector, matrix, and math operations for computer graphics (dependency of openexr).
 
 ### Misc
 - **[lua](https://github.com/lua/lua)**: Script Programming language.
-- **[glslang](https://github.com/KhronosGroup/glslang)**: Shader Compilation library.
 
 ## Getting Started
 

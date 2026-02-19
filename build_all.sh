@@ -29,15 +29,6 @@ BUILD_ARG="$1"
 # 9. miniaudio 빌드 (vorbis, opusfile, ogg, opus 의존)
 "${SCRIPT_DIR}/build_miniaudio.sh" "${BUILD_ARG}"
 
-# 15. glslang 빌드
-"${SCRIPT_DIR}/build_glslang.sh" "${BUILD_ARG}"
-
-# 13. Imath 빌드
-"${SCRIPT_DIR}/build_Imath.sh" "${BUILD_ARG}"
-
-# 14. openexr 빌드 (Imath 의존)
-"${SCRIPT_DIR}/build_openexr.sh" "${BUILD_ARG}"
-
 # 1. libz 빌드
 "${SCRIPT_DIR}/build_libz.sh" "${BUILD_ARG}"
 
