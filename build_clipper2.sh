@@ -5,7 +5,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common_vars.sh"
 parse_build_args "$1"
 
-CLIPPER2_DIR="${SCRIPT_DIR}/libs/Clipper2/CPP"
+# clipper2c (C API wrapper) with vendored Clipper2; replaces former libs/Clipper2
+CLIPPER2_DIR="${SCRIPT_DIR}/libs/clipper2c"
 
 build_target() {
     local TARGET=$1
@@ -81,7 +82,7 @@ build_target() {
     cmake --build . --config Release -j$(nproc)
     cmake --install .
 
-    echo "Clipper2 build done (${TARGET}): ${INSTALL_DIR}"
+    echo "clipper2c build done (${TARGET}): ${INSTALL_DIR}"
     echo ""
 }
 
