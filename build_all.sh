@@ -11,9 +11,6 @@ echo ""
 # 빌드 인자
 BUILD_ARG="$1"
 
-# 15. clipper2 빌드
-"${SCRIPT_DIR}/build_clipper2.sh" "${BUILD_ARG}"
-
 # 5. ogg 빌드
 "${SCRIPT_DIR}/build_ogg.sh" "${BUILD_ARG}"
 

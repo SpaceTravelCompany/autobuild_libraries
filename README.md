@@ -22,9 +22,6 @@ A project for automatically building multiple libraries with cross-compilation s
 - **[opusfile](https://github.com/xiph/opusfile)**: High-level Opus file API library (depends on libogg and opus).
 - **[miniaudio](https://github.com/mackron/miniaudio)**: Single-file audio playback and capture library (references all audio libraries).
 
-## Math
-- **clipper2c**: C API for [Clipper2](https://github.com/AngusJohnson/Clipper2) (polygon clipping, offsetting, triangulation). Built from `libs/clipper2c` (vendors Clipper2).
-
 ### Misc
 - **[lua](https://github.com/lua/lua)**: Script Programming language.
 
