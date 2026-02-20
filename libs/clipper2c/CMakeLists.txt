@@ -14,7 +14,9 @@ set(CLIPPER2_USINGZ "OFF" CACHE STRING "Preempt cache default of USINGZ (only bi
 add_definitions(-D_HAS_EXCEPTIONS=0) # disable exceptions for STL
 
 option(BUILD_SHARED_LIBS OFF)
-add_compile_options(-fPIC)
+if (NOT WIN32)
+    add_compile_options(-fPIC)
+endif()
 
 add_subdirectory(${CLIPPER2_CPP_DIR} ${CMAKE_BINARY_DIR}/Clipper2_build)
 
