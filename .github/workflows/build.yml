@@ -16,6 +16,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Install Clang/LLVM
       uses: KyleMayes/install-llvm-action@v2
@@ -45,6 +47,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Install Clang/LLVM
       uses: KyleMayes/install-llvm-action@v2
@@ -74,6 +78,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Install Clang/LLVM
       uses: KyleMayes/install-llvm-action@v2
@@ -81,34 +87,8 @@ jobs:
         version: "21.1.8"
         env: true
 
-    - name: Setup build environment
-      run: |
-        # Enable multi-architecture support
-        sudo dpkg --add-architecture arm64
-        sudo dpkg --add-architecture riscv64
-        sudo dpkg --add-architecture i386
-        sudo dpkg --add-architecture armhf
-        sudo apt-get update || true
-
-        # aarch64 cross-compilation libraries
-        sudo apt-get install -y \
-          gcc-aarch64-linux-gnu \
-          g++-aarch64-linux-gnu
-        
-        # riscv64 cross-compilation libraries
-        sudo apt-get install -y \
-          gcc-riscv64-linux-gnu \
-          g++-riscv64-linux-gnu
-
-        # i686 cross-compilation libraries
-        sudo apt-get install -y \
-          gcc-i686-linux-gnu \
-          g++-i686-linux-gnu
-
-        # arm-linux-gnueabihf cross-compilation libraries
-        sudo apt-get install -y \
-          gcc-arm-linux-gnueabihf \
-          g++-arm-linux-gnueabihf
+    - name: Setup cross-compilation environment
+      uses: SpaceTravelCompany/My-Actions/setup-linux-cross@main
 
     - name: Build all 
       shell: bash
@@ -129,6 +109,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - uses: actions/checkout@v3
     - uses: nttld/setup-ndk@v1
@@ -160,6 +142,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Download all artifacts
       uses: actions/download-artifact@v4
