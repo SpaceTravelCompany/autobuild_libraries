@@ -35,6 +35,7 @@ build_target() {
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
+		-DBUILD_TESTING=OFF
         -DBUILD_SHARED_LIBS=OFF
     )
 
@@ -56,6 +57,7 @@ build_target() {
     elif [ "$WINDOWS_ONLY" = true ]; then
         CMAKE_ARGS+=(
             -DCMAKE_C_COMPILER=clang-cl
+            -DCMAKE_CXX_COMPILER=clang-cl
             -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
@@ -63,8 +65,10 @@ build_target() {
 
     if [ "$ANDROID_ONLY" = true ]; then
         CMAKE_ARGS+=(-DCMAKE_C_COMPILER=$(GET_ANDROID_CC "${TARGET}"))
+        CMAKE_ARGS+=(-DCMAKE_CXX_COMPILER=$(GET_ANDROID_CXX "${TARGET}"))
     elif [ "$WINDOWS_ONLY" != true ]; then
         CMAKE_ARGS+=(-DCMAKE_C_COMPILER=clang)
+        CMAKE_ARGS+=(-DCMAKE_CXX_COMPILER=clang++)
     fi
 
     CMAKE_ARGS=(-G "Ninja" "${CMAKE_ARGS[@]}")
