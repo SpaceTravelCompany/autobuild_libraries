@@ -74,10 +74,12 @@ build_target() {
             -DCMAKE_CXX_FLAGS="--target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
         )
     elif [ "$WINDOWS_ONLY" = true ]; then
+        # HB_NO_MMAP: avoid FILE*/int mismatch on Windows (clang-cl) in hb-blob.cc mmap path
         CMAKE_ARGS+=(
             -DCMAKE_C_COMPILER=clang-cl
             -DCMAKE_CXX_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
+            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}") -DHB_NO_MMAP"
+            -DCMAKE_CXX_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}") -DHB_NO_MMAP"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
     fi
