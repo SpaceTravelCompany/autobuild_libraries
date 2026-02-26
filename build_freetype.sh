@@ -5,6 +5,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common_vars.sh"
 parse_build_args "$1"
 
+# --no-harfbuzz / -nh: build freetype without harfbuzz (for bootstrap; harfbuzz needs freetype first)
+FREETYPE_NO_HARFBUZZ=false
+for arg in "$@"; do
+    case "$arg" in
+        --no-harfbuzz|-nh) FREETYPE_NO_HARFBUZZ=true ;;
+    esac
+done
+
 FREETYPE_DIR="${SCRIPT_DIR}/libs/freetype"
 
 
@@ -18,7 +26,11 @@ build_target() {
     echo "----------------------------------------"
     
     BUILD_DIR="${SCRIPT_DIR}/build/freetype/${TARGET}"
-    INSTALL_DIR="${SCRIPT_DIR}/install/freetype/${TARGET}"
+    if [ "$FREETYPE_NO_HARFBUZZ" = true ]; then
+        INSTALL_DIR="${SCRIPT_DIR}/install/freetype-no-harfbuzz/${TARGET}"
+    else
+        INSTALL_DIR="${SCRIPT_DIR}/install/freetype/${TARGET}"
+    fi
     
     # 빌드 디렉토리 생성
     mkdir -p "${BUILD_DIR}"
@@ -32,21 +44,29 @@ build_target() {
     BROTLI_LIB_DIR="${SCRIPT_DIR}/install/brotli/${TARGET}/lib"
     HARFBUZZ_INSTALL_DIR="${SCRIPT_DIR}/install/harfbuzz/${TARGET}"
 
-    # CMake config
+    # CMake config (harfbuzz on/off via FREETYPE_NO_HARFBUZZ)
     CMAKE_ARGS=(
         "${FREETYPE_DIR}"
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
-        -DCMAKE_PREFIX_PATH="${HARFBUZZ_INSTALL_DIR}"
-        -DFT_DYNAMIC_HARFBUZZ=FALSE
         -DFT_DISABLE_ZLIB=OFF
         -DFT_DISABLE_BZIP2=OFF
         -DFT_DISABLE_PNG=ON
-        -DFT_DISABLE_HARFBUZZ=OFF
-        -DFT_REQUIRE_HARFBUZZ=TRUE
         -DFT_DISABLE_BROTLI=OFF
     )
+    if [ "$FREETYPE_NO_HARFBUZZ" = true ]; then
+        CMAKE_ARGS+=(
+            -DFT_DISABLE_HARFBUZZ=ON
+        )
+    else
+        CMAKE_ARGS+=(
+            -DCMAKE_PREFIX_PATH="${HARFBUZZ_INSTALL_DIR}"
+            -DFT_DYNAMIC_HARFBUZZ=FALSE
+            -DFT_DISABLE_HARFBUZZ=OFF
+            -DFT_REQUIRE_HARFBUZZ=TRUE
+        )
+    fi
 
     if [ "$ANDROID_ONLY" = true ]; then
         CCFLAGS="--target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \

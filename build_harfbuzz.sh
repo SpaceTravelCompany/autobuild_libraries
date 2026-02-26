@@ -5,6 +5,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common_vars.sh"
 parse_build_args "$1"
 
+# --with-freetype / -f: build harfbuzz with freetype interop (needs freetype built first without harfbuzz)
+HARFBUZZ_WITH_FREETYPE=false
+for arg in "$@"; do
+    case "$arg" in
+        --with-freetype|-f) HARFBUZZ_WITH_FREETYPE=true ;;
+    esac
+done
+
 HARFBUZZ_DIR="${SCRIPT_DIR}/libs/harfbuzz"
 
 # Ensure submodule is initialized
@@ -24,6 +32,7 @@ build_target() {
 
     BUILD_DIR="${SCRIPT_DIR}/build/harfbuzz/${TARGET}"
     INSTALL_DIR="${SCRIPT_DIR}/install/harfbuzz/${TARGET}"
+    FREETYPE_INSTALL_DIR="${SCRIPT_DIR}/install/freetype-no-harfbuzz/${TARGET}"
 
     mkdir -p "${BUILD_DIR}"
     mkdir -p "${INSTALL_DIR}"
@@ -37,12 +46,15 @@ build_target() {
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
         -DBUILD_SHARED_LIBS=OFF
         -DHB_HAVE_CAIRO=OFF
-        -DHB_HAVE_FREETYPE=ON
+        -DHB_HAVE_FREETYPE=$([ "$HARFBUZZ_WITH_FREETYPE" = true ] && echo ON || echo OFF)
         -DHB_HAVE_GLIB=OFF
         -DHB_HAVE_ICU=OFF
         -DHB_BUILD_UTILS=OFF
         -DHB_BUILD_SUBSET=ON
     )
+    if [ "$HARFBUZZ_WITH_FREETYPE" = true ]; then
+        CMAKE_ARGS+=(-DCMAKE_PREFIX_PATH="${FREETYPE_INSTALL_DIR}")
+    fi
 
     if [ "$ANDROID_ONLY" = true ]; then
         CCFLAGS="--target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \

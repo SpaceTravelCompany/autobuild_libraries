@@ -11,43 +11,42 @@ echo ""
 # 빌드 인자
 BUILD_ARG="$1"
 
-# 0. harfbuzz 빌드 (freetype 의존)
-"${SCRIPT_DIR}/build_harfbuzz.sh" "${BUILD_ARG}"
-
-# 12. cmark 빌드
-"${SCRIPT_DIR}/build_cmark.sh" "${BUILD_ARG}"
-
-# 5. ogg 빌드
-"${SCRIPT_DIR}/build_ogg.sh" "${BUILD_ARG}"
-
-# 6. opus 빌드
-"${SCRIPT_DIR}/build_opus.sh" "${BUILD_ARG}"
-
-# 7. vorbis 빌드 (ogg 의존)
-"${SCRIPT_DIR}/build_vorbis.sh" "${BUILD_ARG}"
-
-# 8. opusfile 빌드 (opus 의존)
-"${SCRIPT_DIR}/build_opusfile.sh" "${BUILD_ARG}"
-
-# 9. miniaudio 빌드 (vorbis, opusfile, ogg, opus 의존)
-"${SCRIPT_DIR}/build_miniaudio.sh" "${BUILD_ARG}"
-
-# 1. libz 빌드
+# 1. libz, bzip2, brotli 빌드 (freetype 의존)
 "${SCRIPT_DIR}/build_libz.sh" "${BUILD_ARG}"
-
-# 2. bzip2 빌드
 "${SCRIPT_DIR}/build_bzip2.sh" "${BUILD_ARG}"
-
-# 3. brotli 빌드
 "${SCRIPT_DIR}/build_brotli.sh" "${BUILD_ARG}"
 
-# 4. freetype 빌드 (libz, bzip2, brotli 의존)
+# 2. freetype 빌드 (harfbuzz 없이, harfbuzz가 freetype 필요)
+"${SCRIPT_DIR}/build_freetype.sh" "${BUILD_ARG}" --no-harfbuzz
+
+# 3. harfbuzz 빌드 (freetype 연동)
+"${SCRIPT_DIR}/build_harfbuzz.sh" "${BUILD_ARG}" --with-freetype
+
+# 4. freetype 재빌드 (harfbuzz 연동)
 "${SCRIPT_DIR}/build_freetype.sh" "${BUILD_ARG}"
 
-# 10. webp 빌드
+# 5. cmark 빌드
+"${SCRIPT_DIR}/build_cmark.sh" "${BUILD_ARG}"
+
+# 6. ogg 빌드
+"${SCRIPT_DIR}/build_ogg.sh" "${BUILD_ARG}"
+
+# 7. opus 빌드
+"${SCRIPT_DIR}/build_opus.sh" "${BUILD_ARG}"
+
+# 8. vorbis 빌드 (ogg 의존)
+"${SCRIPT_DIR}/build_vorbis.sh" "${BUILD_ARG}"
+
+# 9. opusfile 빌드 (opus 의존)
+"${SCRIPT_DIR}/build_opusfile.sh" "${BUILD_ARG}"
+
+# 10. miniaudio 빌드 (vorbis, opusfile, ogg, opus 의존)
+"${SCRIPT_DIR}/build_miniaudio.sh" "${BUILD_ARG}"
+
+# 11. webp 빌드
 "${SCRIPT_DIR}/build_webp.sh" "${BUILD_ARG}"
 
-# 11. lua 빌드
+# 12. lua 빌드
 "${SCRIPT_DIR}/build_lua.sh" "${BUILD_ARG}"
 
 echo ""
