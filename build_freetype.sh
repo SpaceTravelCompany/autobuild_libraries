@@ -26,22 +26,25 @@ build_target() {
     
     cd "${BUILD_DIR}"
     
-    # 의존성 라이브러리 경로 설정
+    # Dependency paths
     ZLIB_LIB_DIR="${SCRIPT_DIR}/install/libz/${TARGET}/lib"
     BZIP2_LIB_DIR="${SCRIPT_DIR}/install/bzip2/${TARGET}/lib"
     BROTLI_LIB_DIR="${SCRIPT_DIR}/install/brotli/${TARGET}/lib"
-    
-    # CMake 설정
+    HARFBUZZ_INSTALL_DIR="${SCRIPT_DIR}/install/harfbuzz/${TARGET}"
+
+    # CMake config
     CMAKE_ARGS=(
         "${FREETYPE_DIR}"
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
+        -DCMAKE_PREFIX_PATH="${HARFBUZZ_INSTALL_DIR}"
         -DFT_DYNAMIC_HARFBUZZ=FALSE
         -DFT_DISABLE_ZLIB=OFF
         -DFT_DISABLE_BZIP2=OFF
         -DFT_DISABLE_PNG=ON
-        -DFT_DISABLE_HARFBUZZ=ON
+        -DFT_DISABLE_HARFBUZZ=OFF
+        -DFT_REQUIRE_HARFBUZZ=TRUE
         -DFT_DISABLE_BROTLI=OFF
     )
 

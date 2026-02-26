@@ -11,6 +11,9 @@ echo ""
 # 빌드 인자
 BUILD_ARG="$1"
 
+# 0. harfbuzz 빌드 (freetype 의존)
+"${SCRIPT_DIR}/build_harfbuzz.sh" "${BUILD_ARG}"
+
 # 12. cmark 빌드
 "${SCRIPT_DIR}/build_cmark.sh" "${BUILD_ARG}"
 

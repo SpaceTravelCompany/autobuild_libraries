@@ -10,7 +10,8 @@ A project for automatically building multiple libraries with cross-compilation s
 - **[brotli](https://github.com/google/brotli)**: General-purpose lossless compression algorithm library.
 
 ### Font Libraries
-- **[freetype](https://gitlab.freedesktop.org/freetype/freetype)**: Font library.
+- **[harfbuzz](https://github.com/harfbuzz/harfbuzz)**: Text shaping library (used by freetype).
+- **[freetype](https://gitlab.freedesktop.org/freetype/freetype)**: Font library (depends on harfbuzz).
 
 ### Image Libraries
 - **[libwebp](https://chromium.googlesource.com/webm/libwebp)**: WebP image encoding/decoding library.
@@ -23,6 +24,7 @@ A project for automatically building multiple libraries with cross-compilation s
 - **[miniaudio](https://github.com/mackron/miniaudio)**: Single-file audio playback and capture library (references all audio libraries).
 
 ### Misc
+- **[cmark](https://github.com/commonmark/cmark)**: CommonMark parsing and rendering library.
 - **[lua](https://github.com/lua/lua)**: Script Programming language.
 
 ## Getting Started
