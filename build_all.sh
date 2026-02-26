@@ -11,6 +11,9 @@ echo ""
 # 빌드 인자
 BUILD_ARG="$1"
 
+# 12. cmark 빌드
+"${SCRIPT_DIR}/build_cmark.sh" "${BUILD_ARG}"
+
 # 5. ogg 빌드
 "${SCRIPT_DIR}/build_ogg.sh" "${BUILD_ARG}"
 
@@ -43,9 +46,6 @@ BUILD_ARG="$1"
 
 # 11. lua 빌드
 "${SCRIPT_DIR}/build_lua.sh" "${BUILD_ARG}"
-
-# 12. lua 빌드(본인 용도로 수정)
-"${SCRIPT_DIR}/build_lua.sh" "${BUILD_ARG}" "-s"
 
 echo ""
 echo "=========================================="
