@@ -1,3 +1,6 @@
 [submodule "libs/cmark"]
 	path = libs/cmark
 	url = https://github.com/commonmark/cmark.git
+[submodule "libs/harfbuzz"]
+	path = libs/harfbuzz
+	url = https://github.com/harfbuzz/harfbuzz.git
