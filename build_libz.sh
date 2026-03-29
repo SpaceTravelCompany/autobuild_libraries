@@ -7,6 +7,10 @@ parse_build_args "$1"
 
 ZLIB_DIR="${SCRIPT_DIR}/libs/zlib"
 
+if [ ! -f "${ZLIB_DIR}/CMakeLists.txt" ]; then
+    echo "Initializing zlib submodule..."
+    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/zlib
+fi
 
 # 빌드 함수
 build_target() {
@@ -33,6 +37,7 @@ build_target() {
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
         -DZLIB_BUILD_TESTING=OFF
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
@@ -46,6 +51,8 @@ build_target() {
             -DCMAKE_C_FLAGS="${CCFLAGS}"
             -DZLIB_BUILD_SHARED=OFF
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${CMAKE_C_LINKER_WRAPPER_FLAG}"
+            -DCMAKE_C_COMPILER_AR="$(GET_ANDROID_AR)"
+            -DCMAKE_C_COMPILER_RANLIB="$(GET_ANDROID_RANLIB)"
         )
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         CMAKE_ARGS+=(
@@ -54,6 +61,7 @@ build_target() {
     elif [ "$WINDOWS_ONLY" = true ]; then
         CMAKE_ARGS+=(
             -DCMAKE_C_COMPILER=clang-cl
+            -DCMAKE_CXX_COMPILER=clang-cl
             -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
@@ -104,4 +112,3 @@ else
         build_target "${TARGET}" ""
     done
 fi
-

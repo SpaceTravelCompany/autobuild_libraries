@@ -34,6 +34,7 @@ build_target() {
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
         -DBROTLI_DISABLE_TESTS=ON
         -DBROTLI_BUILD_TOOLS=OFF
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
@@ -47,6 +48,8 @@ build_target() {
             -DCMAKE_C_FLAGS="${CCFLAGS}"
             -DBUILD_SHARED_LIBS=OFF
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${CMAKE_C_LINKER_WRAPPER_FLAG}"
+            -DCMAKE_C_COMPILER_AR="$(GET_ANDROID_AR)"
+            -DCMAKE_C_COMPILER_RANLIB="$(GET_ANDROID_RANLIB)"
         )
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         CMAKE_ARGS+=(
@@ -59,6 +62,7 @@ build_target() {
         CMAKE_ARGS+=(
             -DBROTLI_BUILD_FOR_PACKAGE=ON
             -DCMAKE_C_COMPILER=clang-cl
+            -DCMAKE_CXX_COMPILER=clang-cl
             -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )

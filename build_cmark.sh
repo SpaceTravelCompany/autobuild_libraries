@@ -37,6 +37,7 @@ build_target() {
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
 		-DBUILD_TESTING=OFF
         -DBUILD_SHARED_LIBS=OFF
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
@@ -49,6 +50,10 @@ build_target() {
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="${CCFLAGS}"
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${CMAKE_C_LINKER_WRAPPER_FLAG}"
+            -DCMAKE_C_COMPILER_AR="$(GET_ANDROID_AR)"
+            -DCMAKE_C_COMPILER_RANLIB="$(GET_ANDROID_RANLIB)"
+            -DCMAKE_CXX_COMPILER_AR="$(GET_ANDROID_AR)"
+            -DCMAKE_CXX_COMPILER_RANLIB="$(GET_ANDROID_RANLIB)"
         )
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         CMAKE_ARGS+=(

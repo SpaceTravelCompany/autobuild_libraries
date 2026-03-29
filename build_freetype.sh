@@ -15,6 +15,11 @@ done
 
 FREETYPE_DIR="${SCRIPT_DIR}/libs/freetype"
 
+# Ensure submodule is initialized
+if [ ! -f "${FREETYPE_DIR}/CMakeLists.txt" ]; then
+    echo "Initializing freetype submodule..."
+    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/freetype
+fi
 
 # 빌드 함수 (static only)
 build_target() {
@@ -54,6 +59,7 @@ build_target() {
         -DFT_DISABLE_BZIP2=OFF
         -DFT_DISABLE_PNG=ON
         -DFT_DISABLE_BROTLI=OFF
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     )
     if [ "$FREETYPE_NO_HARFBUZZ" = true ]; then
         CMAKE_ARGS+=(
@@ -84,6 +90,7 @@ build_target() {
         fi
         if [ -d "${BZIP2_LIB_DIR}" ]; then
             CMAKE_ARGS+=(
+                -DBZIP2_LIBRARY="${BZIP2_LIB_DIR}/libbz2_static.a"
                 -DBZIP2_LIBRARIES="${BZIP2_LIB_DIR}/libbz2_static.a"
                 -DBZIP2_INCLUDE_DIR="${SCRIPT_DIR}/install/bzip2/${TARGET}/include"
             )
@@ -91,8 +98,6 @@ build_target() {
         if [ -d "${BROTLI_LIB_DIR}" ]; then
             CMAKE_ARGS+=(
                 -DBROTLIDEC_LIBRARIES="${BROTLI_LIB_DIR}/libbrotlidec-static.a"
-                -DBROTLIENC_LIBRARIES="${BROTLI_LIB_DIR}/libbrotlienc-static.a"
-                -DBROTLICOMMON_LIBRARIES="${BROTLI_LIB_DIR}/libbrotlicommon-static.a"
                 -DBROTLIDEC_INCLUDE_DIRS="${SCRIPT_DIR}/install/brotli/${TARGET}/include"
             )
         fi
@@ -101,6 +106,8 @@ build_target() {
             -DCMAKE_C_FLAGS="${CCFLAGS}"
             -DBUILD_SHARED_LIBS=OFF
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${CMAKE_C_LINKER_WRAPPER_FLAG}"
+            -DCMAKE_C_COMPILER_AR="$(GET_ANDROID_AR)"
+            -DCMAKE_C_COMPILER_RANLIB="$(GET_ANDROID_RANLIB)"
         )
     else
         # 의존성 라이브러리 경로 추가
@@ -113,6 +120,7 @@ build_target() {
             fi
             if [ -d "${BZIP2_LIB_DIR}" ]; then
                 CMAKE_ARGS+=(
+                    -DBZIP2_LIBRARY="${BZIP2_LIB_DIR}/libbz2_static.a"
                     -DBZIP2_LIBRARIES="${BZIP2_LIB_DIR}/libbz2_static.a"
                     -DBZIP2_INCLUDE_DIR="${SCRIPT_DIR}/install/bzip2/${TARGET}/include"
                 )
@@ -120,8 +128,6 @@ build_target() {
             if [ -d "${BROTLI_LIB_DIR}" ]; then
                 CMAKE_ARGS+=(
                     -DBROTLIDEC_LIBRARIES="${BROTLI_LIB_DIR}/libbrotlidec-static.a"
-                    -DBROTLIENC_LIBRARIES="${BROTLI_LIB_DIR}/libbrotlienc-static.a"
-                    -DBROTLICOMMON_LIBRARIES="${BROTLI_LIB_DIR}/libbrotlicommon-static.a"
                     -DBROTLIDEC_INCLUDE_DIRS="${SCRIPT_DIR}/install/brotli/${TARGET}/include"
                 )
             fi
@@ -134,6 +140,7 @@ build_target() {
             fi
             if [ -d "${BZIP2_LIB_DIR}" ]; then
                 CMAKE_ARGS+=(
+                    -DBZIP2_LIBRARY="${BZIP2_LIB_DIR}/bz2_static.lib"
                     -DBZIP2_LIBRARIES="${BZIP2_LIB_DIR}/bz2_static.lib"
                     -DBZIP2_INCLUDE_DIR="${SCRIPT_DIR}/install/bzip2/${TARGET}/include"
                 )
@@ -141,8 +148,6 @@ build_target() {
             if [ -d "${BROTLI_LIB_DIR}" ]; then
                 CMAKE_ARGS+=(
                     -DBROTLIDEC_LIBRARIES="${BROTLI_LIB_DIR}/brotlidec-static.lib"
-                    -DBROTLIENC_LIBRARIES="${BROTLI_LIB_DIR}/brotlienc-static.lib"
-                    -DBROTLICOMMON_LIBRARIES="${BROTLI_LIB_DIR}/brotlicommon-static.lib"
                     -DBROTLIDEC_INCLUDE_DIRS="${SCRIPT_DIR}/install/brotli/${TARGET}/include"
                 )
             fi
@@ -155,6 +160,7 @@ build_target() {
         elif [ "$WINDOWS_ONLY" = true ]; then
             CMAKE_ARGS+=(
                 -DCMAKE_C_COMPILER=clang-cl
+                -DCMAKE_CXX_COMPILER=clang-cl
                 -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
                 -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
             )

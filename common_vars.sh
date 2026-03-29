@@ -22,6 +22,7 @@ NDK_API_LEVEL="35"
 GET_ANDROID_CC() { echo "${NDK_TOOLCHAIN_DIR}/bin/$1-clang"; }
 GET_ANDROID_CXX() { echo "${NDK_TOOLCHAIN_DIR}/bin/$1-clang++"; }
 GET_ANDROID_AR() { echo "${NDK_TOOLCHAIN_DIR}/bin/llvm-ar"; }
+GET_ANDROID_RANLIB() { echo "${NDK_TOOLCHAIN_DIR}/bin/llvm-ranlib"; }
 
 # SSE4.1 flag: only for x86/x64 targets. "windows" = -msse4.1, "windows-arm" = no SSE.
 GET_SSE4_1_FLAG() {
@@ -45,6 +46,10 @@ GET_WINDOWS_CLANG_TARGET_FLAG() {
         echo "--target=x86_64-windows-msvc"
     fi
 }
+
+# Thin LTO for clang/clang++ -c (lua, miniaudio). Windows clang-cl: /clang:-flto=thin.
+GET_CLANG_LTO_THIN_FLAGS() { echo "-flto=thin"; }
+GET_WINDOWS_CLANG_LTO_THIN_FLAGS() { echo "/clang:-flto=thin"; }
 
 # 빌드 모드 플래그 (명령줄 인자로 설정됨)
 NATIVE_ONLY=false
