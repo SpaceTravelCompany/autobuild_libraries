@@ -73,7 +73,7 @@ jobs:
         retention-days: 7
 
   build-libraries-linux:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-lastest
 
     steps:
     - name: Checkout repository
