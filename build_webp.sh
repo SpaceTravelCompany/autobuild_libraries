@@ -63,9 +63,12 @@ build_target() {
             -DCMAKE_C_COMPILER_RANLIB="$(GET_ANDROID_RANLIB)"
         )
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
+        LW="$(GET_LINUX_CROSS_LINKER_WRAPPER_FLAGS)"
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="--target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
             -DBUILD_SHARED_LIBS=OFF
+            -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
+            -DCMAKE_CXX_LINKER_WRAPPER_FLAG="${LW}"
         )
 		if [ "$TARGET" = "aarch64-linux-gnu" ]; then
             CMAKE_ARGS+=(-DWEBP_ARM64_BUILD=ON)   

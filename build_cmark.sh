@@ -56,8 +56,11 @@ build_target() {
             -DCMAKE_CXX_COMPILER_RANLIB="$(GET_ANDROID_RANLIB)"
         )
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
+        LW="$(GET_LINUX_CROSS_LINKER_WRAPPER_FLAGS)"
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="--target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
+            -DCMAKE_CXX_LINKER_WRAPPER_FLAG="${LW}"
         )
     elif [ "$WINDOWS_ONLY" = true ]; then
         CMAKE_ARGS+=(
