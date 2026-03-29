@@ -69,6 +69,9 @@ build_target() {
             -DBUILD_SHARED_LIBS=OFF
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_CXX_LINKER_WRAPPER_FLAG="${LW}"
+            -DCMAKE_EXE_LINKER_FLAGS="${LW}"
+            -DCMAKE_SHARED_LINKER_FLAGS="${LW}"
+            -DCMAKE_MODULE_LINKER_FLAGS="${LW}"
         )
 		if [ "$TARGET" = "aarch64-linux-gnu" ]; then
             CMAKE_ARGS+=(-DWEBP_ARM64_BUILD=ON)   

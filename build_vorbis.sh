@@ -55,6 +55,9 @@ build_target() {
             -DCMAKE_C_FLAGS="--target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_CXX_LINKER_WRAPPER_FLAG="${LW}"
+            -DCMAKE_EXE_LINKER_FLAGS="${LW}"
+            -DCMAKE_SHARED_LINKER_FLAGS="${LW}"
+            -DCMAKE_MODULE_LINKER_FLAGS="${LW}"
         )
     elif [ "$WINDOWS_ONLY" = true ]; then
         CMAKE_ARGS+=(
