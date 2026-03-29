@@ -73,7 +73,7 @@ jobs:
         retention-days: 7
 
   build-libraries-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout repository
@@ -81,14 +81,14 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Setup cross-compilation environment
+      uses: SpaceTravelCompany/My-Actions/setup-linux-cross@main
+
     - name: Install Clang/LLVM
       uses: KyleMayes/install-llvm-action@v2
       with:
         version: "21.1.8"
-        env: true
-
-    - name: Setup cross-compilation environment
-      uses: SpaceTravelCompany/My-Actions/setup-linux-cross@main
+        env: true 
 
     - name: Build all 
       shell: bash
@@ -176,4 +176,3 @@ jobs:
         prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
