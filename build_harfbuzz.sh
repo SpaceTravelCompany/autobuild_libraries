@@ -51,7 +51,6 @@ build_target() {
         -DHB_HAVE_ICU=OFF
         -DHB_BUILD_UTILS=OFF
         -DHB_BUILD_SUBSET=ON
-        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     )
     if [ "$HARFBUZZ_WITH_FREETYPE" = true ]; then
         CMAKE_ARGS+=(-DCMAKE_PREFIX_PATH="${FREETYPE_INSTALL_DIR}")

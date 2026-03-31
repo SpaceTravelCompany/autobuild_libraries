@@ -37,7 +37,6 @@ build_target() {
         -DOP_DISABLE_EXAMPLES=ON
         -DOP_DISABLE_DOCS=ON
         -DBUILD_SHARED_LIBS=OFF
-        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     )
 
     if [ "$ANDROID_ONLY" = true ]; then

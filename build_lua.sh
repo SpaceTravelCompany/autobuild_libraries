@@ -48,7 +48,7 @@ build_target() {
     if [ "$ANDROID_ONLY" = true ]; then
         ANDROID_CC=$(GET_ANDROID_CC "${TARGET}")
         ANDROID_AR=$(GET_ANDROID_AR)
-        CCFLAGS="-fPIC -O3 -Wall -Wextra $(GET_CLANG_LTO_THIN_FLAGS) $(GET_SSE4_1_FLAG "${TARGET}")"
+        CCFLAGS="-fPIC -O3 -Wall -Wextra $(GET_SSE4_1_FLAG "${TARGET}")"
 
         for file in ${BASE_SRC}; do
             "${ANDROID_CC}" -c ${file}.c ${CCFLAGS}
@@ -62,7 +62,7 @@ build_target() {
         "${NDK_TOOLCHAIN_DIR}/bin/llvm-ranlib" liblua.a
         cp liblua.a "${INSTALL_DIR}/lib/liblua.a"
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
-        CCFLAGS="-fPIC -O3 -Wall -Wextra $(GET_CLANG_LTO_THIN_FLAGS) --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
+        CCFLAGS="-fPIC -O3 -Wall -Wextra --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
 
         for file in ${BASE_SRC}; do
             clang -c ${file}.c ${CCFLAGS}
@@ -76,7 +76,7 @@ build_target() {
         ranlib liblua.a
         cp liblua.a "${INSTALL_DIR}/lib/liblua.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
-        CCFLAGS="-O2 $(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}") -MT $(GET_WINDOWS_CLANG_LTO_THIN_FLAGS)"
+        CCFLAGS="-O2 $(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}") -MT"
 
         for file in ${BASE_SRC}; do
             clang-cl -c ${CCFLAGS} ${file}.c
@@ -89,7 +89,7 @@ build_target() {
         llvm-lib /OUT:liblua.lib ${OBJ_FILES}
         cp liblua.lib "${INSTALL_DIR}/lib/liblua.lib"
     else
-        CCFLAGS="-DLUA_USE_LINUX -fPIC -O3 -Wall -Wextra $(GET_CLANG_LTO_THIN_FLAGS) $(GET_SSE4_1_FLAG "${TARGET}")"
+        CCFLAGS="-DLUA_USE_LINUX -fPIC -O3 -Wall -Wextra $(GET_SSE4_1_FLAG "${TARGET}")"
 
         for file in ${BASE_SRC}; do
             clang -c ${file}.c ${CCFLAGS}

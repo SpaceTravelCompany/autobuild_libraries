@@ -59,7 +59,6 @@ build_target() {
         -DFT_DISABLE_BZIP2=OFF
         -DFT_DISABLE_PNG=ON
         -DFT_DISABLE_BROTLI=OFF
-        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     )
     if [ "$FREETYPE_NO_HARFBUZZ" = true ]; then
         CMAKE_ARGS+=(

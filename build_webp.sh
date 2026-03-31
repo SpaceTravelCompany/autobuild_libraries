@@ -42,7 +42,6 @@ build_target() {
         -DWEBP_BUILD_WEBPINFO=OFF
         -DWEBP_BUILD_EXTRAS=OFF
 		-DWEBP_USE_THREAD=OFF # if set on, you need modify script for windows with llvm clang
-        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     )
 
     if [ "$ANDROID_ONLY" = true ]; then

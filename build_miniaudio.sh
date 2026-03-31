@@ -45,7 +45,7 @@ build_target() {
     if [ "$ANDROID_ONLY" = true ]; then
         ANDROID_CC=$(GET_ANDROID_CC "${TARGET}")
         ANDROID_AR=$(GET_ANDROID_AR)
-        CCFLAGS="-I${OGG_INCLUDE_DIR} -I${OPUS_INCLUDE_DIR} -I${VORBIS_INCLUDE_DIR} -I${OPUSFILE_INCLUDE_DIR} -fPIC -O3 $(GET_CLANG_LTO_THIN_FLAGS) $(GET_SSE4_1_FLAG "${TARGET}")"
+        CCFLAGS="-I${OGG_INCLUDE_DIR} -I${OPUS_INCLUDE_DIR} -I${VORBIS_INCLUDE_DIR} -I${OPUSFILE_INCLUDE_DIR} -fPIC -O3 $(GET_SSE4_1_FLAG "${TARGET}")"
 
         "${ANDROID_CC}" -c miniaudio.c ${CCFLAGS}
         "${ANDROID_AR}" r libminiaudio.a miniaudio.o
@@ -59,19 +59,18 @@ build_target() {
         cp libminiaudio_libvorbis.a "${INSTALL_DIR}/lib/libminiaudio_libvorbis.a"
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         SSE4=$(GET_SSE4_1_FLAG "${TARGET}")
-        LTO=$(GET_CLANG_LTO_THIN_FLAGS)
-        clang -c miniaudio.c -fPIC -O3 ${LTO} --target=${TARGET} ${SSE4}
+        clang -c miniaudio.c -fPIC -O3 --target=${TARGET} ${SSE4}
         ar r libminiaudio.a miniaudio.o
-        clang -c "${MA_OPUS_DECODER}/miniaudio_libopus.c" -fPIC -O3 ${LTO} -I"${OGG_INCLUDE_DIR}" -I"${OPUS_INCLUDE_DIR}" -I"${OPUSFILE_INCLUDE_DIR}" --target=${TARGET} ${SSE4}
+        clang -c "${MA_OPUS_DECODER}/miniaudio_libopus.c" -fPIC -O3 -I"${OGG_INCLUDE_DIR}" -I"${OPUS_INCLUDE_DIR}" -I"${OPUSFILE_INCLUDE_DIR}" --target=${TARGET} ${SSE4}
         ar r libminiaudio_libopus.a miniaudio_libopus.o
-        clang -c "${MA_VORBIS_DECODER}/miniaudio_libvorbis.c" -fPIC -O3 ${LTO} -I"${OGG_INCLUDE_DIR}" -I"${VORBIS_INCLUDE_DIR}" --target=${TARGET} ${SSE4}
+        clang -c "${MA_VORBIS_DECODER}/miniaudio_libvorbis.c" -fPIC -O3 -I"${OGG_INCLUDE_DIR}" -I"${VORBIS_INCLUDE_DIR}" --target=${TARGET} ${SSE4}
         ar r libminiaudio_libvorbis.a miniaudio_libvorbis.o
 
         cp libminiaudio.a "${INSTALL_DIR}/lib/libminiaudio.a"
         cp libminiaudio_libopus.a "${INSTALL_DIR}/lib/libminiaudio_libopus.a"
         cp libminiaudio_libvorbis.a "${INSTALL_DIR}/lib/libminiaudio_libvorbis.a"
     elif [ "$WINDOWS_ONLY" = true ]; then
-        CCFLAGS="-O2 $(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}") -MT $(GET_WINDOWS_CLANG_LTO_THIN_FLAGS)"
+        CCFLAGS="-O2 $(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}") -MT"
         clang-cl -c ${CCFLAGS} miniaudio.c
         llvm-lib /OUT:miniaudio.lib miniaudio.obj
         clang-cl -c ${CCFLAGS} "${MA_OPUS_DECODER}/miniaudio_libopus.c" -I"${OGG_INCLUDE_DIR}" -I"${OPUS_INCLUDE_DIR}" -I"${OPUSFILE_INCLUDE_DIR}"
@@ -83,12 +82,11 @@ build_target() {
         cp miniaudio_libopus.lib "${INSTALL_DIR}/lib/miniaudio_libopus.lib"
         cp miniaudio_libvorbis.lib "${INSTALL_DIR}/lib/miniaudio_libvorbis.lib"
     else
-        LTO=$(GET_CLANG_LTO_THIN_FLAGS)
-        clang -c miniaudio.c -fPIC -O3 ${LTO}
+        clang -c miniaudio.c -fPIC -O3
         ar r libminiaudio.a miniaudio.o
-        clang -c "${MA_OPUS_DECODER}/miniaudio_libopus.c" -fPIC -O3 ${LTO} -I"${OGG_INCLUDE_DIR}" -I"${OPUS_INCLUDE_DIR}" -I"${OPUSFILE_INCLUDE_DIR}"
+        clang -c "${MA_OPUS_DECODER}/miniaudio_libopus.c" -fPIC -O3 -I"${OGG_INCLUDE_DIR}" -I"${OPUS_INCLUDE_DIR}" -I"${OPUSFILE_INCLUDE_DIR}"
         ar r libminiaudio_libopus.a miniaudio_libopus.o
-        clang -c "${MA_VORBIS_DECODER}/miniaudio_libvorbis.c" -fPIC -O3 ${LTO} -I"${OGG_INCLUDE_DIR}" -I"${VORBIS_INCLUDE_DIR}"
+        clang -c "${MA_VORBIS_DECODER}/miniaudio_libvorbis.c" -fPIC -O3 -I"${OGG_INCLUDE_DIR}" -I"${VORBIS_INCLUDE_DIR}"
         ar r libminiaudio_libvorbis.a miniaudio_libvorbis.o
 
         cp libminiaudio.a "${INSTALL_DIR}/lib/libminiaudio.a"

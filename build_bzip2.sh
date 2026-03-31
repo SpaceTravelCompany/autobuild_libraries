@@ -35,7 +35,6 @@ build_target() {
         -DENABLE_LIB_ONLY=OFF
         -DENABLE_DEBUG=OFF
         -DENABLE_APP=OFF
-        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     )
 
     if [ "$ANDROID_ONLY" = true ]; then

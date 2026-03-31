@@ -47,11 +47,7 @@ GET_WINDOWS_CLANG_TARGET_FLAG() {
     fi
 }
 
-# Thin LTO for clang/clang++ -c (lua, miniaudio). Windows clang-cl: /clang:-flto=thin.
-GET_CLANG_LTO_THIN_FLAGS() { echo "-flto=thin"; }
-GET_WINDOWS_CLANG_LTO_THIN_FLAGS() { echo "/clang:-flto=thin"; }
-
-# Linux cross + IPO: pass to CMAKE_{C,CXX}_LINKER_WRAPPER_FLAG so clang uses lld (avoids cross-ld + LLVMgold.so).
+# Linux cross: pass to CMAKE_{C,CXX}_LINKER_WRAPPER_FLAG so clang uses lld (avoids cross-ld + LLVMgold.so).
 GET_LINUX_CROSS_LINKER_WRAPPER_FLAGS() { echo "-fuse-ld=lld"; }
 
 # 빌드 모드 플래그 (명령줄 인자로 설정됨)

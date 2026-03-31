@@ -34,7 +34,6 @@ build_target() {
         -DOPUS_BUILD_TESTING=OFF
         -DOPUS_BUILD_PROGRAMS=OFF
         -DOPUS_BUILD_SHARED_LIBRARY=OFF
-        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
