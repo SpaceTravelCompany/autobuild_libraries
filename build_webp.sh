@@ -46,7 +46,7 @@ build_target() {
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
-        CCFLAGS="--target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
+        CCFLAGS="-fPIC --target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
         $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}") $(GET_SSE4_1_FLAG "${TARGET}")"
 		if [ "$TARGET" = "aarch64-linux-android35" ]; then
             CMAKE_ARGS+=(-DWEBP_ARM64_BUILD=ON)   
@@ -65,7 +65,7 @@ build_target() {
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         LW="$(GET_LINUX_CROSS_LINKER_WRAPPER_FLAGS)"
         CMAKE_ARGS+=(
-            -DCMAKE_C_FLAGS="--target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_C_FLAGS="-fPIC --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
             -DBUILD_SHARED_LIBS=OFF
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_CXX_LINKER_WRAPPER_FLAG="${LW}"
@@ -90,6 +90,7 @@ build_target() {
     else
         CMAKE_ARGS+=(
             -DBUILD_SHARED_LIBS=OFF
+            -DCMAKE_C_FLAGS="-fPIC $(GET_SSE4_1_FLAG "${TARGET}")"
         )
     fi
     

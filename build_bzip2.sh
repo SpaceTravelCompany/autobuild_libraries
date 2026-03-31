@@ -39,7 +39,7 @@ build_target() {
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
-        CCFLAGS="--target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
+        CCFLAGS="-fPIC --target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
         $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}") $(GET_SSE4_1_FLAG "${TARGET}")"
 
         CMAKE_C_LINKER_WRAPPER_FLAG="${ANDROID_C_LIBS} \
@@ -58,7 +58,7 @@ build_target() {
         CMAKE_ARGS+=(
             -DENABLE_SHARED_LIB=ON
             -DENABLE_STATIC_LIB=ON
-            -DCMAKE_C_FLAGS="--target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_C_FLAGS="-fPIC --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_CXX_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_EXE_LINKER_FLAGS="${LW}"
@@ -78,6 +78,7 @@ build_target() {
         CMAKE_ARGS+=(
             -DENABLE_SHARED_LIB=ON
             -DENABLE_STATIC_LIB=ON
+            -DCMAKE_C_FLAGS="-fPIC $(GET_SSE4_1_FLAG "${TARGET}")"
         )
     fi
     

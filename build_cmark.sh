@@ -41,7 +41,7 @@ build_target() {
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
-        CCFLAGS="--target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
+        CCFLAGS="-fPIC --target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
         $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}") $(GET_SSE4_1_FLAG "${TARGET}")"
 
         CMAKE_C_LINKER_WRAPPER_FLAG="${ANDROID_C_LIBS} \
@@ -49,6 +49,7 @@ build_target() {
 
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="${CCFLAGS}"
+            -DCMAKE_CXX_FLAGS="${CCFLAGS}"
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${CMAKE_C_LINKER_WRAPPER_FLAG}"
             -DCMAKE_C_COMPILER_AR="$(GET_ANDROID_AR)"
             -DCMAKE_C_COMPILER_RANLIB="$(GET_ANDROID_RANLIB)"
@@ -58,7 +59,8 @@ build_target() {
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         LW="$(GET_LINUX_CROSS_LINKER_WRAPPER_FLAGS)"
         CMAKE_ARGS+=(
-            -DCMAKE_C_FLAGS="--target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_C_FLAGS="-fPIC --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_CXX_FLAGS="-fPIC --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_CXX_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_EXE_LINKER_FLAGS="${LW}"
@@ -71,6 +73,11 @@ build_target() {
             -DCMAKE_CXX_COMPILER=clang-cl
             -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
+        )
+    else
+        CMAKE_ARGS+=(
+            -DCMAKE_C_FLAGS="-fPIC $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_CXX_FLAGS="-fPIC $(GET_SSE4_1_FLAG "${TARGET}")"
         )
     fi
 
