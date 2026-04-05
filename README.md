@@ -4,9 +4,11 @@ A project for automatically building multiple libraries with cross-compilation s
 
 ## Supported Libraries
 
+All libraries in this project that depend on zlib are configured to use **zlib-ng**.
+
 ### Compression Libraries
 - **[libz (zlib)](https://github.com/madler/zlib)**: Data compression library.
-- **[zlib-ng](https://github.com/zlib-ng/zlib-ng)**: zlib-compatible, optimized compression library.
+- **[zlib-ng](https://github.com/zlib-ng/zlib-ng)**: zlib-compatible, SIMD optimized compression library.
 - **[bzip2](https://gitlab.com/bzip2/bzip2)**: Block-sorting compression algorithm library.
 - **[brotli](https://github.com/google/brotli)**: General-purpose lossless compression algorithm library.
 

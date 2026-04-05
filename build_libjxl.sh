@@ -24,6 +24,8 @@ build_target() {
 
     BUILD_DIR="${SCRIPT_DIR}/build/libjxl/${TARGET}"
     INSTALL_DIR="${SCRIPT_DIR}/install/libjxl/${TARGET}"
+    LIBPNG_INSTALL_DIR="${SCRIPT_DIR}/install/libpng/${TARGET}"
+    ZLIB_NG_INSTALL_DIR="${SCRIPT_DIR}/install/zlib-ng/${TARGET}"
 
     mkdir -p "${BUILD_DIR}"
     mkdir -p "${INSTALL_DIR}"
@@ -50,6 +52,14 @@ build_target() {
         -DJPEGXL_ENABLE_OPENEXR=OFF
         -DJPEGXL_ENABLE_TCMALLOC=OFF
         -DJPEGXL_ENABLE_FUZZERS=OFF
+        # libjxl 번들 libpng/번들 zlib 대신,
+        # 외부 libpng(= zlib-ng로 빌드된 libpng)를 사용한다.
+        -DJPEGXL_BUNDLE_LIBPNG=OFF
+        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
+        -DCMAKE_PREFIX_PATH="${LIBPNG_INSTALL_DIR};${ZLIB_NG_INSTALL_DIR}"
+        -DPNG_ROOT="${LIBPNG_INSTALL_DIR}"
+        -DZLIB_ROOT="${ZLIB_NG_INSTALL_DIR}"
+        -DZLIB_USE_STATIC_LIBS=ON
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
