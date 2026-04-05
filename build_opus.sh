@@ -80,6 +80,15 @@ build_target() {
             -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}")"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
+
+        if [ "$TARGET" = "windows-arm" ]; then
+            # clang-cl + ARM64 Windows에서는 RTCD(__emit 경로)가 깨질 수 있어
+            # NEON을 가정하고 런타임 감지를 비활성화한다.
+            CMAKE_ARGS+=(
+                -DOPUS_MAY_HAVE_NEON=OFF
+                -DOPUS_PRESUME_NEON=ON
+            )
+        fi
     else
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="-fPIC"
