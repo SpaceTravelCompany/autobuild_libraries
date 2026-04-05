@@ -37,6 +37,8 @@ build_target() {
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
+        -DBUILD_SHARED_LIBS=OFF
+        -DBROTLI_BUILD_FOR_PACKAGE=OFF
         -DBROTLI_DISABLE_TESTS=ON
         -DBROTLI_BUILD_TOOLS=OFF
     )
@@ -50,16 +52,12 @@ build_target() {
 		
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="${CCFLAGS}"
-            -DBUILD_SHARED_LIBS=OFF
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${CMAKE_C_LINKER_WRAPPER_FLAG}"
             -DCMAKE_C_COMPILER_AR="$(GET_ANDROID_AR)"
             -DCMAKE_C_COMPILER_RANLIB="$(GET_ANDROID_RANLIB)"
         )
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         LW="$(GET_LINUX_CROSS_LINKER_WRAPPER_FLAGS)"
-        CMAKE_ARGS+=(
-            -DBROTLI_BUILD_FOR_PACKAGE=ON
-        )
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="-fPIC --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
@@ -70,7 +68,6 @@ build_target() {
         )
     elif [ "$WINDOWS_ONLY" = true ]; then
         CMAKE_ARGS+=(
-            -DBROTLI_BUILD_FOR_PACKAGE=ON
             -DCMAKE_C_COMPILER=clang-cl
             -DCMAKE_CXX_COMPILER=clang-cl
             -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
@@ -78,7 +75,6 @@ build_target() {
         )
     else
         CMAKE_ARGS+=(
-            -DBROTLI_BUILD_FOR_PACKAGE=ON
             -DCMAKE_C_FLAGS="-fPIC $(GET_SSE4_1_FLAG "${TARGET}")"
         )
     fi
@@ -128,4 +124,3 @@ else
         build_target "${TARGET}" ""
     done
 fi
-
