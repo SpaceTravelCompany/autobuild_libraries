@@ -24,6 +24,8 @@ build_target() {
     
     BUILD_DIR="${SCRIPT_DIR}/build/opusfile/${TARGET}"
     INSTALL_DIR="${SCRIPT_DIR}/install/opusfile/${TARGET}"
+    OGG_INSTALL_DIR="${SCRIPT_DIR}/install/ogg/${TARGET}"
+    OPUS_INSTALL_DIR="${SCRIPT_DIR}/install/opus/${TARGET}"
     
     # 빌드 디렉토리 생성
     mkdir -p "${BUILD_DIR}"
@@ -42,6 +44,11 @@ build_target() {
         -DOP_DISABLE_EXAMPLES=ON
         -DOP_DISABLE_DOCS=ON
         -DBUILD_SHARED_LIBS=OFF
+        -DCMAKE_PREFIX_PATH="${OGG_INSTALL_DIR};${OPUS_INSTALL_DIR}"
+        -DOgg_DIR="${OGG_INSTALL_DIR}/lib/cmake/Ogg"
+        -DOpus_DIR="${OPUS_INSTALL_DIR}/lib/cmake/Opus"
+        -DOgg_ROOT="${OGG_INSTALL_DIR}"
+        -DOpus_ROOT="${OPUS_INSTALL_DIR}"
     )
 
     if [ "$ANDROID_ONLY" = true ]; then

@@ -24,6 +24,7 @@ build_target() {
     
     BUILD_DIR="${SCRIPT_DIR}/build/vorbis/${TARGET}"
     INSTALL_DIR="${SCRIPT_DIR}/install/vorbis/${TARGET}"
+    OGG_INSTALL_DIR="${SCRIPT_DIR}/install/ogg/${TARGET}"
     
     # 빌드 디렉토리 생성
     mkdir -p "${BUILD_DIR}"
@@ -38,6 +39,9 @@ build_target() {
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
         -DBUILD_SHARED_LIBS=OFF
+        -DBUILD_TESTING=OFF
+        -DCMAKE_PREFIX_PATH="${OGG_INSTALL_DIR}"
+        -DOGG_ROOT="${OGG_INSTALL_DIR}"
     )
 
     if [ "$ANDROID_ONLY" = true ]; then

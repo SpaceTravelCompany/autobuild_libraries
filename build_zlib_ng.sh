@@ -65,10 +65,16 @@ build_target() {
             -DCMAKE_MODULE_LINKER_FLAGS="${LW}"
         )
     elif [ "$WINDOWS_ONLY" = true ]; then
+        WINDOWS_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}")"
+        if [ "$TARGET" = "windows-arm" ]; then
+            # clang-cl + aarch64-windows-msvc 조합에서는 ARM CRC intrinsic
+            # (__crc32*) 선언 감지가 불안정해 빌드가 깨질 수 있어 ARMv8 CRC 경로를 끈다.
+            CMAKE_ARGS+=(-DWITH_ARMV8=OFF)
+        fi
         CMAKE_ARGS+=(
             -DCMAKE_C_COMPILER=clang-cl
             -DCMAKE_CXX_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}")"
+            -DCMAKE_C_FLAGS="${WINDOWS_C_FLAGS}"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
     else
