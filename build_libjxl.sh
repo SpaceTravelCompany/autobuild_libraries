@@ -26,6 +26,11 @@ build_target() {
     INSTALL_DIR="${SCRIPT_DIR}/install/libjxl/${TARGET}"
     LIBPNG_INSTALL_DIR="${SCRIPT_DIR}/install/libpng/${TARGET}"
     ZLIB_NG_INSTALL_DIR="${SCRIPT_DIR}/install/zlib-ng/${TARGET}"
+    BROTLI_INSTALL_DIR="${SCRIPT_DIR}/install/brotli/${TARGET}"
+    BROTLI_LIB_EXT=".a"
+    if [ "$WINDOWS_ONLY" = true ]; then
+        BROTLI_LIB_EXT=".lib"
+    fi
 
     mkdir -p "${BUILD_DIR}"
     mkdir -p "${INSTALL_DIR}"
@@ -52,19 +57,24 @@ build_target() {
         -DJPEGXL_ENABLE_OPENEXR=OFF
         -DJPEGXL_ENABLE_TCMALLOC=OFF
         -DJPEGXL_ENABLE_FUZZERS=OFF
+        -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
         # libjxl 번들 libpng/번들 zlib 대신,
         # 외부 libpng(= zlib-ng로 빌드된 libpng)를 사용한다.
         -DJPEGXL_BUNDLE_LIBPNG=OFF
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
-        -DCMAKE_PREFIX_PATH="${LIBPNG_INSTALL_DIR};${ZLIB_NG_INSTALL_DIR}"
+        -DCMAKE_PREFIX_PATH="${LIBPNG_INSTALL_DIR};${ZLIB_NG_INSTALL_DIR};${BROTLI_INSTALL_DIR}"
         -DPNG_ROOT="${LIBPNG_INSTALL_DIR}"
         -DZLIB_ROOT="${ZLIB_NG_INSTALL_DIR}"
         -DZLIB_USE_STATIC_LIBS=ON
+        -DBROTLI_INCLUDE_DIR="${BROTLI_INSTALL_DIR}/include"
+        -DBROTLICOMMON_LIBRARY="${BROTLI_INSTALL_DIR}/lib/brotlicommon${BROTLI_LIB_EXT}"
+        -DBROTLIENC_LIBRARY="${BROTLI_INSTALL_DIR}/lib/brotlienc${BROTLI_LIB_EXT}"
+        -DBROTLIDEC_LIBRARY="${BROTLI_INSTALL_DIR}/lib/brotlidec${BROTLI_LIB_EXT}"
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
         CCFLAGS="-fPIC --target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
-        $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}") $(GET_SSE4_1_FLAG "${TARGET}")"
+        $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}")"
 
         CXXFLAGS="$CCFLAGS"
         CMAKE_C_LINKER_WRAPPER_FLAG="${ANDROID_C_LIBS} \
@@ -82,8 +92,8 @@ build_target() {
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         LW="$(GET_LINUX_CROSS_LINKER_WRAPPER_FLAGS)"
         CMAKE_ARGS+=(
-            -DCMAKE_C_FLAGS="-fPIC --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
-            -DCMAKE_CXX_FLAGS="-fPIC --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_C_FLAGS="-fPIC --target=${TARGET}"
+            -DCMAKE_CXX_FLAGS="-fPIC --target=${TARGET}"
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_CXX_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_EXE_LINKER_FLAGS="${LW}"
@@ -100,8 +110,8 @@ build_target() {
         )
     else
         CMAKE_ARGS+=(
-            -DCMAKE_C_FLAGS="-fPIC $(GET_SSE4_1_FLAG "${TARGET}")"
-            -DCMAKE_CXX_FLAGS="-fPIC $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_C_FLAGS="-fPIC"
+            -DCMAKE_CXX_FLAGS="-fPIC"
         )
     fi
 

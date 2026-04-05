@@ -51,7 +51,7 @@ build_target() {
 
     if [ "$ANDROID_ONLY" = true ]; then
         CCFLAGS="-fPIC --target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
-        $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}") $(GET_SSE4_1_FLAG "${TARGET}")"
+        $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}")"
 		if [ "$TARGET" = "aarch64-linux-android35" ]; then
             CMAKE_ARGS+=(-DWEBP_ARM64_BUILD=ON)   
         fi
@@ -69,7 +69,7 @@ build_target() {
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         LW="$(GET_LINUX_CROSS_LINKER_WRAPPER_FLAGS)"
         CMAKE_ARGS+=(
-            -DCMAKE_C_FLAGS="-fPIC --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_C_FLAGS="-fPIC --target=${TARGET}"
             -DBUILD_SHARED_LIBS=OFF
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_CXX_LINKER_WRAPPER_FLAG="${LW}"
@@ -81,20 +81,28 @@ build_target() {
             CMAKE_ARGS+=(-DWEBP_ARM64_BUILD=ON)   
         fi
     elif [ "$WINDOWS_ONLY" = true ]; then
-        CMAKE_ARGS+=(
-            -DCMAKE_C_COMPILER=clang-cl
-            -DCMAKE_CXX_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
-            -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
-            -DBUILD_SHARED_LIBS=OFF
-        )
         if [ "$TARGET" = "windows-arm" ]; then
-            CMAKE_ARGS+=(-DWEBP_ARM64_BUILD=ON)
+            CMAKE_ARGS+=(
+                -DCMAKE_C_COMPILER=clang
+                -DCMAKE_CXX_COMPILER=clang++
+                -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}")"
+                -DCMAKE_CXX_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}")"
+                -DBUILD_SHARED_LIBS=OFF
+                -DWEBP_ARM64_BUILD=ON
+            )
+        else
+            CMAKE_ARGS+=(
+                -DCMAKE_C_COMPILER=clang-cl
+                -DCMAKE_CXX_COMPILER=clang-cl
+                -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
+                -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
+                -DBUILD_SHARED_LIBS=OFF
+            )
         fi
     else
         CMAKE_ARGS+=(
             -DBUILD_SHARED_LIBS=OFF
-            -DCMAKE_C_FLAGS="-fPIC $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_C_FLAGS="-fPIC"
         )
     fi
     
