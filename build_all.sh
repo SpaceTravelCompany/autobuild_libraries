@@ -11,6 +11,12 @@ echo ""
 # 빌드 인자
 BUILD_ARG="$1"
 
+# 10. ogg 빌드
+bash "${SCRIPT_DIR}/build_ogg.sh" "${BUILD_ARG}"
+
+# 11. opus 빌드
+bash "${SCRIPT_DIR}/build_opus.sh" "${BUILD_ARG}"
+
 # 1. libz, zlib-ng, bzip2, brotli 빌드 (freetype/libpng 의존)
 bash "${SCRIPT_DIR}/build_libz.sh" "${BUILD_ARG}"
 bash "${SCRIPT_DIR}/build_zlib_ng.sh" "${BUILD_ARG}"
@@ -40,12 +46,6 @@ bash "${SCRIPT_DIR}/build_cmark.sh" "${BUILD_ARG}"
 
 # 9. plutovg 빌드
 bash "${SCRIPT_DIR}/build_plutovg.sh" "${BUILD_ARG}"
-
-# 10. ogg 빌드
-bash "${SCRIPT_DIR}/build_ogg.sh" "${BUILD_ARG}"
-
-# 11. opus 빌드
-bash "${SCRIPT_DIR}/build_opus.sh" "${BUILD_ARG}"
 
 # 12. vorbis 빌드 (ogg 의존)
 bash "${SCRIPT_DIR}/build_vorbis.sh" "${BUILD_ARG}"

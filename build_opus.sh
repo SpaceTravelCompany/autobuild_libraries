@@ -82,11 +82,13 @@ build_target() {
         )
 
         if [ "$TARGET" = "windows-arm" ]; then
-            # clang-cl + ARM64 Windows에서는 RTCD(__emit 경로)가 깨질 수 있어
-            # NEON을 가정하고 런타임 감지를 비활성화한다.
+            # clang-cl + ARM64 Windows에서는 RTCD(__emit) 경로를 피하고
+            # NEON presume 경로를 사용한다.
             CMAKE_ARGS+=(
+                -DOPUS_USE_NEON=ON
                 -DOPUS_MAY_HAVE_NEON=OFF
                 -DOPUS_PRESUME_NEON=ON
+                -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") -DOPUS_ARM_MAY_HAVE_NEON -DOPUS_ARM_MAY_HAVE_NEON_INTR"
             )
         fi
     else
