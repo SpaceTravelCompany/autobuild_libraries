@@ -15,6 +15,7 @@ A project for automatically building multiple libraries with cross-compilation s
 
 ### Image Libraries
 - **[libwebp](https://chromium.googlesource.com/webm/libwebp)**: WebP image encoding/decoding library.
+- **[plutovg](https://github.com/sammycage/plutovg)**: Tiny 2D vector graphics library in C.
 
 ### Audio Libraries
 - **[libogg](https://github.com/xiph/ogg)**: Ogg container format library.

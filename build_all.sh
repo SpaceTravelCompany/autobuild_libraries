@@ -28,25 +28,28 @@ BUILD_ARG="$1"
 # 5. cmark 빌드
 "${SCRIPT_DIR}/build_cmark.sh" "${BUILD_ARG}"
 
-# 6. ogg 빌드
+# 6. plutovg 빌드
+"${SCRIPT_DIR}/build_plutovg.sh" "${BUILD_ARG}"
+
+# 7. ogg 빌드
 "${SCRIPT_DIR}/build_ogg.sh" "${BUILD_ARG}"
 
-# 7. opus 빌드
+# 8. opus 빌드
 "${SCRIPT_DIR}/build_opus.sh" "${BUILD_ARG}"
 
-# 8. vorbis 빌드 (ogg 의존)
+# 9. vorbis 빌드 (ogg 의존)
 "${SCRIPT_DIR}/build_vorbis.sh" "${BUILD_ARG}"
 
-# 9. opusfile 빌드 (opus 의존)
+# 10. opusfile 빌드 (opus 의존)
 "${SCRIPT_DIR}/build_opusfile.sh" "${BUILD_ARG}"
 
-# 10. miniaudio 빌드 (vorbis, opusfile, ogg, opus 의존)
+# 11. miniaudio 빌드 (vorbis, opusfile, ogg, opus 의존)
 "${SCRIPT_DIR}/build_miniaudio.sh" "${BUILD_ARG}"
 
-# 11. webp 빌드
+# 12. webp 빌드
 "${SCRIPT_DIR}/build_webp.sh" "${BUILD_ARG}"
 
-# 12. lua 빌드
+# 13. lua 빌드
 "${SCRIPT_DIR}/build_lua.sh" "${BUILD_ARG}"
 
 echo ""

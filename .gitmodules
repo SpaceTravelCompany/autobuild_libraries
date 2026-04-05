@@ -16,3 +16,6 @@
 [submodule "libs/lua"]
 	path = libs/lua
 	url = https://github.com/lua/lua.git
+[submodule "libs/plutovg"]
+	path = libs/plutovg
+	url = https://github.com/sammycage/plutovg.git
