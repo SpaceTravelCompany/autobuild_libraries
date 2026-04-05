@@ -19,3 +19,36 @@
 [submodule "libs/plutovg"]
 	path = libs/plutovg
 	url = https://github.com/sammycage/plutovg.git
+[submodule "libs/zlib-ng"]
+	path = libs/zlib-ng
+	url = https://github.com/zlib-ng/zlib-ng.git
+[submodule "libs/libpng"]
+	path = libs/libpng
+	url = https://github.com/pnggroup/libpng.git
+[submodule "libs/brotli"]
+	path = libs/brotli
+	url = https://github.com/google/brotli.git
+[submodule "libs/bzip2"]
+	path = libs/bzip2
+	url = https://gitlab.com/bzip2/bzip2.git
+[submodule "libs/libogg"]
+	path = libs/libogg
+	url = https://github.com/xiph/ogg.git
+[submodule "libs/libvorbis"]
+	path = libs/libvorbis
+	url = https://github.com/xiph/vorbis.git
+[submodule "libs/libwebp"]
+	path = libs/libwebp
+	url = https://chromium.googlesource.com/webm/libwebp
+[submodule "libs/opus"]
+	path = libs/opus
+	url = https://github.com/xiph/opus.git
+[submodule "libs/opusfile"]
+	path = libs/opusfile
+	url = https://github.com/xiph/opusfile.git
+[submodule "libs/libjpeg-turbo"]
+	path = libs/libjpeg-turbo
+	url = https://github.com/libjpeg-turbo/libjpeg-turbo.git
+[submodule "libs/libjxl"]
+	path = libs/libjxl
+	url = https://github.com/libjxl/libjxl.git

@@ -7,6 +7,11 @@ parse_build_args "$1"
 
 OPUS_DIR="${SCRIPT_DIR}/libs/opus"
 
+if [ ! -f "${OPUS_DIR}/CMakeLists.txt" ]; then
+    echo "Initializing opus submodule..."
+    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/opus
+fi
+
 # 빌드 함수
 build_target() {
     local TARGET=$1
@@ -35,10 +40,12 @@ build_target() {
         -DOPUS_BUILD_PROGRAMS=OFF
         -DOPUS_BUILD_SHARED_LIBRARY=OFF
     )
+    # opus는 런타임 CPU capability detection을 사용하므로
+    # 타겟별 SIMD 컴파일 플래그(예: -msse4.1)를 강제로 주지 않는다.
 
     if [ "$ANDROID_ONLY" = true ]; then
         CCFLAGS="-fPIC --target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
-        $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}") $(GET_SSE4_1_FLAG "${TARGET}")"
+        $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}")"
 
         CMAKE_C_LINKER_WRAPPER_FLAG="${ANDROID_C_LIBS} \
         $(GET_ANDROID_LIB_PATHS "${ANDROID_ARCH}")"
@@ -59,7 +66,7 @@ build_target() {
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         LW="$(GET_LINUX_CROSS_LINKER_WRAPPER_FLAGS)"
         CMAKE_ARGS+=(
-            -DCMAKE_C_FLAGS="-fPIC --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_C_FLAGS="-fPIC --target=${TARGET}"
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_CXX_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_EXE_LINKER_FLAGS="${LW}"
@@ -70,12 +77,12 @@ build_target() {
         CMAKE_ARGS+=(
             -DCMAKE_C_COMPILER=clang-cl
             -DCMAKE_CXX_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
+            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}")"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
     else
         CMAKE_ARGS+=(
-            -DCMAKE_C_FLAGS="-fPIC $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_C_FLAGS="-fPIC"
         )
     fi
     

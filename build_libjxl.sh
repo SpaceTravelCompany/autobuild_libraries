@@ -5,63 +5,75 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/common_vars.sh"
 parse_build_args "$1"
 
-BROTLI_DIR="${SCRIPT_DIR}/libs/brotli"
+LIBJXL_DIR="${SCRIPT_DIR}/libs/libjxl"
 
-if [ ! -f "${BROTLI_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing brotli submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/brotli
+if [ ! -f "${LIBJXL_DIR}/CMakeLists.txt" ]; then
+    echo "Initializing libjxl submodule..."
+    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/libjxl
 fi
+# libjxl는 third_party 하위 서브모듈 의존성이 있으므로 항상 재확인한다.
+git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/libjxl
 
-
-# 빌드 함수
 build_target() {
     local TARGET=$1
     local ANDROID_ARCH=$2
-    
+
     echo "----------------------------------------"
     echo "빌드 중: ${TARGET}"
     echo "----------------------------------------"
-    
-    BUILD_DIR="${SCRIPT_DIR}/build/brotli/${TARGET}"
-    INSTALL_DIR="${SCRIPT_DIR}/install/brotli/${TARGET}"
-    
-    # 빌드 디렉토리 생성
+
+    BUILD_DIR="${SCRIPT_DIR}/build/libjxl/${TARGET}"
+    INSTALL_DIR="${SCRIPT_DIR}/install/libjxl/${TARGET}"
+
     mkdir -p "${BUILD_DIR}"
     mkdir -p "${INSTALL_DIR}"
-    
+
     cd "${BUILD_DIR}"
-    
-    # CMake 설정
+
     CMAKE_ARGS=(
-        "${BROTLI_DIR}"
+        "${LIBJXL_DIR}"
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
         -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
-        -DBROTLI_DISABLE_TESTS=ON
-        -DBROTLI_BUILD_TOOLS=OFF
+        -DBUILD_SHARED_LIBS=OFF
+        -DBUILD_TESTING=OFF
+        -DJPEGXL_ENABLE_TOOLS=OFF
+        -DJPEGXL_ENABLE_DEVTOOLS=OFF
+        -DJPEGXL_ENABLE_DOXYGEN=OFF
+        -DJPEGXL_ENABLE_MANPAGES=OFF
+        -DJPEGXL_ENABLE_BENCHMARK=OFF
+        -DJPEGXL_ENABLE_EXAMPLES=OFF
+        -DJPEGXL_ENABLE_JNI=OFF
+        -DJPEGXL_ENABLE_VIEWERS=OFF
+        -DJPEGXL_ENABLE_PLUGINS=OFF
+        -DJPEGXL_ENABLE_SJPEG=OFF
+        -DJPEGXL_ENABLE_OPENEXR=OFF
+        -DJPEGXL_ENABLE_TCMALLOC=OFF
+        -DJPEGXL_ENABLE_FUZZERS=OFF
     )
 
     if [ "$ANDROID_ONLY" = true ]; then
         CCFLAGS="-fPIC --target=${TARGET} --sysroot=${NDK_TOOLCHAIN_DIR}/sysroot \
         $(GET_ANDROID_INCLUDE_PATHS "${ANDROID_ARCH}") $(GET_SSE4_1_FLAG "${TARGET}")"
 
+        CXXFLAGS="$CCFLAGS"
         CMAKE_C_LINKER_WRAPPER_FLAG="${ANDROID_C_LIBS} \
         $(GET_ANDROID_LIB_PATHS "${ANDROID_ARCH}")"
-		
+
         CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="${CCFLAGS}"
-            -DBUILD_SHARED_LIBS=OFF
+            -DCMAKE_CXX_FLAGS="${CXXFLAGS}"
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${CMAKE_C_LINKER_WRAPPER_FLAG}"
             -DCMAKE_C_COMPILER_AR="$(GET_ANDROID_AR)"
             -DCMAKE_C_COMPILER_RANLIB="$(GET_ANDROID_RANLIB)"
+            -DCMAKE_CXX_COMPILER_AR="$(GET_ANDROID_AR)"
+            -DCMAKE_CXX_COMPILER_RANLIB="$(GET_ANDROID_RANLIB)"
         )
     elif [ "$TARGET" != "native" ] && [ "$WINDOWS_ONLY" = false ]; then
         LW="$(GET_LINUX_CROSS_LINKER_WRAPPER_FLAGS)"
         CMAKE_ARGS+=(
-            -DBROTLI_BUILD_FOR_PACKAGE=ON
-        )
-        CMAKE_ARGS+=(
             -DCMAKE_C_FLAGS="-fPIC --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_CXX_FLAGS="-fPIC --target=${TARGET} $(GET_SSE4_1_FLAG "${TARGET}")"
             -DCMAKE_C_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_CXX_LINKER_WRAPPER_FLAG="${LW}"
             -DCMAKE_EXE_LINKER_FLAGS="${LW}"
@@ -70,47 +82,44 @@ build_target() {
         )
     elif [ "$WINDOWS_ONLY" = true ]; then
         CMAKE_ARGS+=(
-            -DBROTLI_BUILD_FOR_PACKAGE=ON
             -DCMAKE_C_COMPILER=clang-cl
             -DCMAKE_CXX_COMPILER=clang-cl
             -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
+            -DCMAKE_CXX_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
     else
         CMAKE_ARGS+=(
-            -DBROTLI_BUILD_FOR_PACKAGE=ON
             -DCMAKE_C_FLAGS="-fPIC $(GET_SSE4_1_FLAG "${TARGET}")"
+            -DCMAKE_CXX_FLAGS="-fPIC $(GET_SSE4_1_FLAG "${TARGET}")"
         )
     fi
-    
+
     if [ "$ANDROID_ONLY" = true ]; then
         CMAKE_ARGS+=(-DCMAKE_C_COMPILER=$(GET_ANDROID_CC "${TARGET}"))
+        CMAKE_ARGS+=(-DCMAKE_CXX_COMPILER=$(GET_ANDROID_CXX "${TARGET}"))
     elif [ "$WINDOWS_ONLY" != true ]; then
         CMAKE_ARGS+=(-DCMAKE_C_COMPILER=clang)
+        CMAKE_ARGS+=(-DCMAKE_CXX_COMPILER=clang++)
     fi
 
     CMAKE_ARGS=(-G "Ninja" "${CMAKE_ARGS[@]}")
 
     cmake "${CMAKE_ARGS[@]}"
-    
-    # 빌드
     cmake --build . --config Release -j$(nproc)
-    
-    # 설치
     cmake --install .
-    
-    echo "brotli 빌드 완료 (${TARGET}): ${INSTALL_DIR}"
+
+    echo "libjxl 빌드 완료 (${TARGET}): ${INSTALL_DIR}"
     echo ""
 }
 
-# 각 타겟에 대해 빌드
 if [ "$ANDROID_ONLY" = true ]; then
     for i in "${!ANDROIDS[@]}"; do
         TARGET="${ANDROIDS[$i]}"
         echo "=========================================="
         echo "타겟: ${TARGET} ${ANDROID_ARCH[$i]}"
         echo "=========================================="
-        
+
         build_target "${TARGET}" "${ANDROID_ARCH[$i]}"
     done
 elif [ "$WINDOWS_ONLY" = true ]; then
@@ -119,13 +128,11 @@ elif [ "$WINDOWS_ONLY" = true ]; then
     echo "=========================================="
     build_target "${WINDOWS_TARGET}" ""
 else
-    # Linux 환경에서는 LINUX_TARGETS 사용
     for TARGET in "${LINUX_TARGETS[@]}"; do
         echo "=========================================="
         echo "타겟: ${TARGET}"
         echo "=========================================="
-        
+
         build_target "${TARGET}" ""
     done
 fi
-

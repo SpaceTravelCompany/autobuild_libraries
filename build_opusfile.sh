@@ -7,6 +7,11 @@ parse_build_args "$1"
 
 OPUSFILE_DIR="${SCRIPT_DIR}/libs/opusfile"
 
+if [ ! -f "${OPUSFILE_DIR}/CMakeLists.txt" ]; then
+    echo "Initializing opusfile submodule..."
+    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/opusfile
+fi
+
 
 # 빌드 함수
 build_target() {

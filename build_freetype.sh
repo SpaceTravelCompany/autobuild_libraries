@@ -44,7 +44,7 @@ build_target() {
     cd "${BUILD_DIR}"
     
     # Dependency paths
-    ZLIB_LIB_DIR="${SCRIPT_DIR}/install/libz/${TARGET}/lib"
+    ZLIB_LIB_DIR="${SCRIPT_DIR}/install/zlib-ng/${TARGET}/lib"
     BZIP2_LIB_DIR="${SCRIPT_DIR}/install/bzip2/${TARGET}/lib"
     BROTLI_LIB_DIR="${SCRIPT_DIR}/install/brotli/${TARGET}/lib"
     HARFBUZZ_INSTALL_DIR="${SCRIPT_DIR}/install/harfbuzz/${TARGET}"
@@ -84,7 +84,7 @@ build_target() {
         if [ -d "${ZLIB_LIB_DIR}" ]; then
             CMAKE_ARGS+=(
                 -DZLIB_LIBRARY="${ZLIB_LIB_DIR}/libz.a"
-                -DZLIB_INCLUDE_DIR="${SCRIPT_DIR}/install/libz/${TARGET}/include"
+                -DZLIB_INCLUDE_DIR="${SCRIPT_DIR}/install/zlib-ng/${TARGET}/include"
             )
         fi
         if [ -d "${BZIP2_LIB_DIR}" ]; then
@@ -113,8 +113,8 @@ build_target() {
         if [ "${OS}" != "Windows_NT" ] && [ -z "${MSYSTEM}" ]; then
             if [ -d "${ZLIB_LIB_DIR}" ]; then
                 CMAKE_ARGS+=(
-                    -DZLIB_LIBRARY="${ZLIB_LIB_DIR}/libz.so"
-                    -DZLIB_INCLUDE_DIR="${SCRIPT_DIR}/install/libz/${TARGET}/include"
+                    -DZLIB_LIBRARY="${ZLIB_LIB_DIR}/libz.a"
+                    -DZLIB_INCLUDE_DIR="${SCRIPT_DIR}/install/zlib-ng/${TARGET}/include"
                 )
             fi
             if [ -d "${BZIP2_LIB_DIR}" ]; then
@@ -133,8 +133,8 @@ build_target() {
         else
             if [ -d "${ZLIB_LIB_DIR}" ]; then
                 CMAKE_ARGS+=(
-                    -DZLIB_LIBRARY="${ZLIB_LIB_DIR}/zs.lib"
-                    -DZLIB_INCLUDE_DIR="${SCRIPT_DIR}/install/libz/${TARGET}/include"
+                -DZLIB_LIBRARY="${ZLIB_LIB_DIR}/zlibstatic.lib"
+                -DZLIB_INCLUDE_DIR="${SCRIPT_DIR}/install/zlib-ng/${TARGET}/include"
                 )
             fi
             if [ -d "${BZIP2_LIB_DIR}" ]; then

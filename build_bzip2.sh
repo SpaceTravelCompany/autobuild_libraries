@@ -7,6 +7,11 @@ parse_build_args "$1"
 
 BZIP2_DIR="${SCRIPT_DIR}/libs/bzip2"
 
+if [ ! -f "${BZIP2_DIR}/CMakeLists.txt" ]; then
+    echo "Initializing bzip2 submodule..."
+    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/bzip2
+fi
+
 
 # 빌드 함수
 build_target() {

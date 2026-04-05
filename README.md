@@ -6,6 +6,7 @@ A project for automatically building multiple libraries with cross-compilation s
 
 ### Compression Libraries
 - **[libz (zlib)](https://github.com/madler/zlib)**: Data compression library.
+- **[zlib-ng](https://github.com/zlib-ng/zlib-ng)**: zlib-compatible, optimized compression library.
 - **[bzip2](https://gitlab.com/bzip2/bzip2)**: Block-sorting compression algorithm library.
 - **[brotli](https://github.com/google/brotli)**: General-purpose lossless compression algorithm library.
 
@@ -16,6 +17,9 @@ A project for automatically building multiple libraries with cross-compilation s
 ### Image Libraries
 - **[libwebp](https://chromium.googlesource.com/webm/libwebp)**: WebP image encoding/decoding library.
 - **[plutovg](https://github.com/sammycage/plutovg)**: Tiny 2D vector graphics library in C.
+- **[libpng](https://github.com/pnggroup/libpng)**: PNG image format reference library.
+- **[libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo)**: High-performance JPEG codec library.
+- **[libjxl](https://github.com/libjxl/libjxl)**: JPEG XL image codec reference library.
 
 ### Audio Libraries
 - **[libogg](https://github.com/xiph/ogg)**: Ogg container format library.
