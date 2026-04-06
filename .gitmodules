@@ -52,3 +52,6 @@
 [submodule "libs/libjxl"]
 	path = libs/libjxl
 	url = https://github.com/libjxl/libjxl.git
+[submodule "libs/lz4"]
+	path = libs/lz4
+	url = https://github.com/lz4/lz4.git

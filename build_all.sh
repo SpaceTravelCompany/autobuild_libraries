@@ -22,6 +22,7 @@ bash "${SCRIPT_DIR}/build_libz.sh" "${BUILD_ARG}"
 bash "${SCRIPT_DIR}/build_zlib_ng.sh" "${BUILD_ARG}"
 bash "${SCRIPT_DIR}/build_bzip2.sh" "${BUILD_ARG}"
 bash "${SCRIPT_DIR}/build_brotli.sh" "${BUILD_ARG}"
+bash "${SCRIPT_DIR}/build_lz4.sh" "${BUILD_ARG}"
 
 # 2. libpng 빌드 (zlib-ng 의존)
 bash "${SCRIPT_DIR}/build_libpng.sh" "${BUILD_ARG}"

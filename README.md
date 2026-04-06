@@ -11,6 +11,7 @@ All libraries in this project that depend on zlib are configured to use **zlib-n
 - **[zlib-ng](https://github.com/zlib-ng/zlib-ng)**: zlib-compatible, SIMD optimized compression library.
 - **[bzip2](https://gitlab.com/bzip2/bzip2)**: Block-sorting compression algorithm library.
 - **[brotli](https://github.com/google/brotli)**: General-purpose lossless compression algorithm library.
+- **[lz4](https://github.com/lz4/lz4)**: Extremely fast lossless compression library.
 
 ### Font Libraries
 - **[harfbuzz](https://github.com/harfbuzz/harfbuzz)**: Text shaping library (used by freetype).

@@ -10,14 +10,36 @@ permissions:
   contents: write
 
 jobs:
+  prepare-sources:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository with submodules
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Upload submodule sources
+      uses: actions/upload-artifact@v4
+      with:
+        name: submodule-sources
+        path: |
+          libs/**
+        retention-days: 1
+
   build-libraries-windows:
+    needs: prepare-sources
     runs-on: windows-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Download submodule sources
+      uses: actions/download-artifact@v4
       with:
-        submodules: recursive
+        name: submodule-sources
+        path: .
 
     - name: Install Clang/LLVM
       uses: KyleMayes/install-llvm-action@v2
@@ -42,13 +64,18 @@ jobs:
         retention-days: 7
 
   build-libraries-windows-arm64:
+    needs: prepare-sources
     runs-on: windows-11-arm
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Download submodule sources
+      uses: actions/download-artifact@v4
       with:
-        submodules: recursive
+        name: submodule-sources
+        path: .
 
     - name: Install Clang/LLVM
       uses: KyleMayes/install-llvm-action@v2
@@ -73,13 +100,18 @@ jobs:
         retention-days: 7
 
   build-libraries-linux:
+    needs: prepare-sources
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Download submodule sources
+      uses: actions/download-artifact@v4
       with:
-        submodules: recursive
+        name: submodule-sources
+        path: .
 
     - name: Setup cross-compilation environment
       uses: SpaceTravelCompany/My-Actions/setup-linux-cross@main
@@ -104,15 +136,19 @@ jobs:
         retention-days: 7
 
   build-libraries-android:
+    needs: prepare-sources
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        submodules: recursive
 
-    - uses: actions/checkout@v3
+    - name: Download submodule sources
+      uses: actions/download-artifact@v4
+      with:
+        name: submodule-sources
+        path: .
+
     - uses: nttld/setup-ndk@v1
       id: setup-ndk
       with:
@@ -142,8 +178,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        submodules: recursive
 
     - name: Download all artifacts
       uses: actions/download-artifact@v4
