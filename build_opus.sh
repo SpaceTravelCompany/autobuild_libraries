@@ -73,6 +73,7 @@ build_target() {
             -DCMAKE_C_COMPILER=clang-cl
             -DCMAKE_CXX_COMPILER=clang-cl
             -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}")"
+            -DOPUS_STATIC_RUNTIME=ON
             -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
 
