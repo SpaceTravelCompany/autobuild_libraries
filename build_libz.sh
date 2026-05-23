@@ -12,8 +12,6 @@ if [ ! -f "${ZLIB_DIR}/CMakeLists.txt" ]; then
     git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/zlib
 fi
 
-apply_submodule_patches "${ZLIB_DIR}"
-
 # 빌드 함수
 build_target() {
     local TARGET=$1
