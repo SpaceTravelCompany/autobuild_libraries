@@ -106,6 +106,52 @@ GET_ANDROID_INCLUDE_PATHS() {
 ANDROID_C_LIBS="-lc -lm -ldl -llog -landroid "
 ANDROID_CXX_LIBS="-lc++_static -lc++abi "
 
+# Apply git patches from patches/<prefix>-*.patch and patches/<prefix>/*.patch.
+# REPO_DIR: submodule root (e.g. "${SCRIPT_DIR}/libs/flac").
+# PATCH_PREFIX: optional; defaults to the basename of REPO_DIR (e.g. "flac").
+# Requires SCRIPT_DIR to be set by the calling build script.
+apply_submodule_patches() {
+    local REPO_DIR="$1"
+    local PATCH_PREFIX="${2:-$(basename "${REPO_DIR}")}"
+    local PATCH_DIR="${SCRIPT_DIR}/patches"
+    local PATCH_FILE
+
+    if [ -z "${SCRIPT_DIR}" ]; then
+        echo "ERROR: SCRIPT_DIR must be set before calling apply_submodule_patches" >&2
+        exit 1
+    fi
+
+    if [ ! -d "${REPO_DIR}" ]; then
+        echo "ERROR: Submodule directory not found: ${REPO_DIR}" >&2
+        exit 1
+    fi
+
+    shopt -s nullglob
+    local patches=(
+        "${PATCH_DIR}/${PATCH_PREFIX}"-*.patch
+        "${PATCH_DIR}/${PATCH_PREFIX}"/*.patch
+    )
+    shopt -u nullglob
+
+    if [ ${#patches[@]} -eq 0 ]; then
+        return 0
+    fi
+
+    while IFS= read -r PATCH_FILE; do
+        [ -z "${PATCH_FILE}" ] && continue
+
+        if git -C "${REPO_DIR}" apply --check "${PATCH_FILE}" 2>/dev/null; then
+            git -C "${REPO_DIR}" apply "${PATCH_FILE}"
+            echo "Applied patch: $(basename "${PATCH_FILE}") -> ${PATCH_PREFIX}"
+        elif git -C "${REPO_DIR}" apply --reverse --check "${PATCH_FILE}" 2>/dev/null; then
+            :
+        else
+            echo "ERROR: Patch $(basename "${PATCH_FILE}") does not apply cleanly to ${PATCH_PREFIX}" >&2
+            exit 1
+        fi
+    done < <(printf '%s\n' "${patches[@]}" | LC_ALL=C sort -u)
+}
+
 # Command-line argument parsing
 parse_build_args() {
     if [ "$1" == "--native" ] || [ "$1" == "-n" ]; then

@@ -12,26 +12,7 @@ if [ ! -f "${FLAC_DIR}/CMakeLists.txt" ]; then
     git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/flac
 fi
 
-apply_flac_patches() {
-    local PATCH_FILE="${SCRIPT_DIR}/patches/flac-getopt-windows.patch"
-
-    if [ ! -f "${PATCH_FILE}" ]; then
-        echo "ERROR: Missing patch: ${PATCH_FILE}" >&2
-        exit 1
-    fi
-
-    if git -C "${FLAC_DIR}" apply --check "${PATCH_FILE}" 2>/dev/null; then
-        git -C "${FLAC_DIR}" apply "${PATCH_FILE}"
-        echo "Applied FLAC patch: $(basename "${PATCH_FILE}")"
-    elif git -C "${FLAC_DIR}" apply --reverse --check "${PATCH_FILE}" 2>/dev/null; then
-        :
-    else
-        echo "ERROR: FLAC patch $(basename "${PATCH_FILE}") does not apply cleanly" >&2
-        exit 1
-    fi
-}
-
-apply_flac_patches
+apply_submodule_patches "${FLAC_DIR}"
 
 build_target() {
     local TARGET=$1
