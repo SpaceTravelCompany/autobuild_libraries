@@ -55,3 +55,6 @@
 [submodule "libs/lz4"]
 	path = libs/lz4
 	url = https://github.com/lz4/lz4.git
+[submodule "libs/flac"]
+	path = libs/flac
+	url = https://github.com/xiph/flac
