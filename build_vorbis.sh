@@ -7,11 +7,6 @@ parse_build_args "$1"
 
 VORBIS_DIR="${SCRIPT_DIR}/libs/libvorbis"
 
-if [ ! -f "${VORBIS_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing libvorbis submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/libvorbis
-fi
-
 # 빌드 함수
 build_target() {
     local TARGET=$1

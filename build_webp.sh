@@ -7,11 +7,6 @@ parse_build_args "$1"
 
 WEBP_DIR="${SCRIPT_DIR}/libs/libwebp"
 
-if [ ! -f "${WEBP_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing libwebp submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/libwebp
-fi
-
 # 빌드 함수 (static only)
 build_target() {
     local TARGET=$1

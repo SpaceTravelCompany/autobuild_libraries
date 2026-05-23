@@ -15,12 +15,6 @@ done
 
 HARFBUZZ_DIR="${SCRIPT_DIR}/libs/harfbuzz"
 
-# Ensure submodule is initialized
-if [ ! -f "${HARFBUZZ_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing harfbuzz submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/harfbuzz
-fi
-
 # Build function (static lib only)
 build_target() {
     local TARGET=$1

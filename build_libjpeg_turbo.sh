@@ -7,11 +7,6 @@ parse_build_args "$1"
 
 LIBJPEG_TURBO_DIR="${SCRIPT_DIR}/libs/libjpeg-turbo"
 
-if [ ! -f "${LIBJPEG_TURBO_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing libjpeg-turbo submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/libjpeg-turbo
-fi
-
 build_target() {
     local TARGET=$1
     local ANDROID_ARCH=$2

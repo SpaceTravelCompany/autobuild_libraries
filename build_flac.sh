@@ -7,11 +7,6 @@ parse_build_args "$1"
 
 FLAC_DIR="${SCRIPT_DIR}/libs/flac"
 
-if [ ! -f "${FLAC_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing flac submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/flac
-fi
-
 build_target() {
     local TARGET=$1
     local ANDROID_ARCH=$2

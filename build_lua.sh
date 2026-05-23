@@ -8,11 +8,6 @@ parse_build_args "$1"
 
 LUA_DIR="${SCRIPT_DIR}/libs/lua"
 
-if [ ! -f "${LUA_DIR}/lua.h" ]; then
-    echo "Initializing lua submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/lua
-fi
-
 # CORE sources
 CORE_SRC="lapi lcode lctype ldebug ldo ldump lfunc lgc llex lmem lobject lopcodes lparser lstate lstring ltable ltm lundump lvm lzio"
 

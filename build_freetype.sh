@@ -15,12 +15,6 @@ done
 
 FREETYPE_DIR="${SCRIPT_DIR}/libs/freetype"
 
-# Ensure submodule is initialized
-if [ ! -f "${FREETYPE_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing freetype submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/freetype
-fi
-
 # 빌드 함수 (static only)
 build_target() {
     local TARGET=$1

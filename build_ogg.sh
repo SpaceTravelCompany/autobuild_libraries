@@ -7,11 +7,6 @@ parse_build_args "$1"
 
 OGG_DIR="${SCRIPT_DIR}/libs/libogg"
 
-if [ ! -f "${OGG_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing libogg submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/libogg
-fi
-
 # 빌드 함수
 build_target() {
     local TARGET=$1

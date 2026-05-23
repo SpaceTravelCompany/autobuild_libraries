@@ -7,11 +7,6 @@ parse_build_args "$1"
 
 BROTLI_DIR="${SCRIPT_DIR}/libs/brotli"
 
-if [ ! -f "${BROTLI_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing brotli submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/brotli
-fi
-
 
 # 빌드 함수
 build_target() {

@@ -8,11 +8,6 @@ parse_build_args "$1"
 LZ4_DIR="${SCRIPT_DIR}/libs/lz4"
 LZ4_CMAKE_DIR="${LZ4_DIR}/build/cmake"
 
-if [ ! -f "${LZ4_CMAKE_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing lz4 submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/lz4
-fi
-
 build_target() {
     local TARGET=$1
     local ANDROID_ARCH=$2

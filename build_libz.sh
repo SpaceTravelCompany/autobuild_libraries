@@ -7,11 +7,6 @@ parse_build_args "$1"
 
 ZLIB_DIR="${SCRIPT_DIR}/libs/zlib"
 
-if [ ! -f "${ZLIB_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing zlib submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/zlib
-fi
-
 # 빌드 함수
 build_target() {
     local TARGET=$1

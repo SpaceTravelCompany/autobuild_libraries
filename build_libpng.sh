@@ -7,11 +7,6 @@ parse_build_args "$1"
 
 LIBPNG_DIR="${SCRIPT_DIR}/libs/libpng"
 
-if [ ! -f "${LIBPNG_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing libpng submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/libpng
-fi
-
 build_target() {
     local TARGET=$1
     local ANDROID_ARCH=$2

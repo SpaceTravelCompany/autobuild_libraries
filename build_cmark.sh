@@ -7,12 +7,6 @@ parse_build_args "$1"
 
 CMARK_DIR="${SCRIPT_DIR}/libs/cmark"
 
-# Ensure submodule is initialized (e.g. when clone was without --recurse-submodules or in CI)
-if [ ! -f "${CMARK_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing cmark submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/cmark
-fi
-
 # Build function (static lib only)
 build_target() {
     local TARGET=$1

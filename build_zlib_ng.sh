@@ -7,11 +7,6 @@ parse_build_args "$1"
 
 ZLIB_NG_DIR="${SCRIPT_DIR}/libs/zlib-ng"
 
-if [ ! -f "${ZLIB_NG_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing zlib-ng submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/zlib-ng
-fi
-
 build_target() {
     local TARGET=$1
     local ANDROID_ARCH=$2

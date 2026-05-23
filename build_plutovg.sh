@@ -7,11 +7,6 @@ parse_build_args "$1"
 
 PLUTOVG_DIR="${SCRIPT_DIR}/libs/plutovg"
 
-if [ ! -f "${PLUTOVG_DIR}/CMakeLists.txt" ]; then
-    echo "Initializing plutovg submodule..."
-    git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/plutovg
-fi
-
 build_target() {
     local TARGET=$1
     local ANDROID_ARCH=$2
