@@ -25,7 +25,7 @@ jobs:
       with:
         name: submodule-sources
         path: |
-          libs/**
+          libs/
         retention-days: 1
 
   build-libraries-windows:
@@ -40,7 +40,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: submodule-sources
-        path: .
+        path: libs/
 
     - name: Install Clang/LLVM
       uses: KyleMayes/install-llvm-action@v2
@@ -81,7 +81,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: submodule-sources
-        path: .
+        path: libs/
 
     - name: Install Clang/LLVM
       uses: KyleMayes/install-llvm-action@v2
@@ -122,7 +122,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: submodule-sources
-        path: .
+        path: libs/
 
     - name: Setup cross-compilation environment
       uses: SpaceTravelCompany/My-Actions/setup-linux-cross@main
@@ -163,7 +163,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: submodule-sources
-        path: .
+        path: libs/
 
     - uses: nttld/setup-ndk@v1
       id: setup-ndk
