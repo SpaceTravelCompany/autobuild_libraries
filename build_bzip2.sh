@@ -64,16 +64,13 @@ build_target() {
             -DCMAKE_MODULE_LINKER_FLAGS="${LW}"
         )
     elif [ "$WINDOWS_ONLY" = true ]; then
-        # CMake 3.12에서는 CMAKE_MSVC_RUNTIME_LIBRARY 적용이 불안정할 수 있어
-        # clang-cl 플래그로 정적 CRT(-MT)를 직접 강제한다.
-        WIN_BASE_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
         CMAKE_ARGS+=(
             -DENABLE_SHARED_LIB=ON
             -DENABLE_STATIC_LIB=ON
             -DCMAKE_C_COMPILER=clang-cl
             -DCMAKE_CXX_COMPILER=clang-cl
-            -DCMAKE_C_FLAGS="${WIN_BASE_FLAGS} -MT"
-            -DCMAKE_C_FLAGS_RELEASE="-MT /O2 /Ob2 /DNDEBUG"
+            -DCMAKE_C_FLAGS="$(GET_WINDOWS_CLANG_TARGET_FLAG "${TARGET}") $(GET_WINDOWS_CLANG_CFLAGS "${TARGET}")"
+            -DCMAKE_MSVC_RUNTIME_LIBRARY="MultiThreaded"
         )
     else
         CMAKE_ARGS+=(
