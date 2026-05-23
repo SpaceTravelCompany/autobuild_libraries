@@ -13,8 +13,6 @@ if [ ! -f "${LZ4_CMAKE_DIR}/CMakeLists.txt" ]; then
     git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/lz4
 fi
 
-apply_submodule_patches "${LZ4_DIR}"
-
 build_target() {
     local TARGET=$1
     local ANDROID_ARCH=$2
