@@ -12,6 +12,8 @@ if [ ! -f "${ZLIB_NG_DIR}/CMakeLists.txt" ]; then
     git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/zlib-ng
 fi
 
+apply_submodule_patches "${ZLIB_NG_DIR}"
+
 build_target() {
     local TARGET=$1
     local ANDROID_ARCH=$2

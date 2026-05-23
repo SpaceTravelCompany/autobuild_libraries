@@ -12,6 +12,8 @@ if [ ! -f "${OGG_DIR}/CMakeLists.txt" ]; then
     git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/libogg
 fi
 
+apply_submodule_patches "${OGG_DIR}"
+
 # 빌드 함수
 build_target() {
     local TARGET=$1

@@ -21,6 +21,8 @@ if [ ! -f "${FREETYPE_DIR}/CMakeLists.txt" ]; then
     git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/freetype
 fi
 
+apply_submodule_patches "${FREETYPE_DIR}"
+
 # 빌드 함수 (static only)
 build_target() {
     local TARGET=$1

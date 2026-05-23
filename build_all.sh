@@ -57,9 +57,6 @@ bash "${SCRIPT_DIR}/build_flac.sh" "${BUILD_ARG}"
 # 14. opusfile 빌드 (opus 의존)
 bash "${SCRIPT_DIR}/build_opusfile.sh" "${BUILD_ARG}"
 
-# 15. miniaudio 빌드 (vorbis, opusfile, flac, ogg, opus 의존)
-bash "${SCRIPT_DIR}/build_miniaudio.sh" "${BUILD_ARG}"
-
 # 15. webp 빌드
 bash "${SCRIPT_DIR}/build_webp.sh" "${BUILD_ARG}"
 

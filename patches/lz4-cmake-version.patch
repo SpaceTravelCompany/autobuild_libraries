@@ -1,0 +1,13 @@
+diff --git a/build/cmake/CMakeLists.txt b/build/cmake/CMakeLists.txt
+index 15418e65..af9612a3 100644
+--- a/build/cmake/CMakeLists.txt
++++ b/build/cmake/CMakeLists.txt
+@@ -10,7 +10,7 @@
+ 
+ # Use range version specification for policy control while maintaining 
+ # compatibility with older CMake versions
+-cmake_minimum_required(VERSION 3.5...4.0.2)
++cmake_minimum_required(VERSION 3.15...4.0.2)
+ 
+ set(LZ4_TOP_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../..")
+ 

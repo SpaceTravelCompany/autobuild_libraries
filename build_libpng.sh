@@ -12,6 +12,8 @@ if [ ! -f "${LIBPNG_DIR}/CMakeLists.txt" ]; then
     git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/libpng
 fi
 
+apply_submodule_patches "${LIBPNG_DIR}"
+
 build_target() {
     local TARGET=$1
     local ANDROID_ARCH=$2

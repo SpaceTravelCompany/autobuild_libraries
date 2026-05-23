@@ -12,6 +12,7 @@ if [ ! -f "${VORBIS_DIR}/CMakeLists.txt" ]; then
     git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/libvorbis
 fi
 
+apply_submodule_patches "${VORBIS_DIR}"
 
 # 빌드 함수
 build_target() {
