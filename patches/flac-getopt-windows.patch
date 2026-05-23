@@ -1,0 +1,38 @@
+diff --git a/src/share/getopt/getopt.c b/src/share/getopt/getopt.c
+index 1dd75166..021f10eb 100644
+--- a/src/share/getopt/getopt.c
++++ b/src/share/getopt/getopt.c
+@@ -217,14 +217,11 @@ static char *posixly_correct;
+ #else
+ 
+ #include <string.h>
++#include <stdlib.h>
+ 
+ /* Avoid depending on library functions or files
+    whose names are inconsistent.  */
+ 
+-#ifndef getenv
+-extern char *getenv (const char * name);
+-#endif
+-
+ static char *
+ my_index (const char *str, int chr)
+ {
+@@ -659,7 +656,7 @@ share___getopt_internal (
+       /* Test all long options for either exact match
+ 	 or abbreviated matches.  */
+       for (p = longopts, option_index = 0; p->name; p++, option_index++)
+-	if (!strncmp (p->name, nextchar, nameend - nextchar))
++	if (!strncmp (p->name, nextchar, (size_t) (nameend - nextchar)))
+ 	  {
+ 	    if ((size_t) (nameend - nextchar) == strlen (p->name))
+ 	      {
+@@ -847,7 +844,7 @@ share___getopt_internal (
+ 	/* Test all long options for either exact match
+ 	   or abbreviated matches.  */
+ 	for (p = longopts, option_index = 0; p->name; p++, option_index++)
+-	  if (!strncmp (p->name, nextchar, nameend - nextchar))
++	  if (!strncmp (p->name, nextchar, (size_t) (nameend - nextchar)))
+ 	    {
+ 	      if ((size_t) (nameend - nextchar) == strlen (p->name))
+ 		{

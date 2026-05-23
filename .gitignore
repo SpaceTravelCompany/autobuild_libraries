@@ -18,3 +18,4 @@ CMakeCache.txt
 Thumbs.db
 
 !ndk/*/build/
+log.txt
