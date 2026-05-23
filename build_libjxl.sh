@@ -7,8 +7,6 @@ parse_build_args "$1"
 
 LIBJXL_DIR="${SCRIPT_DIR}/libs/libjxl"
 
-# libjxl는 third_party 하위 서브모듈 의존성이 있으므로 항상 재확인한다.
-git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/libjxl
 
 build_target() {
     local TARGET=$1
