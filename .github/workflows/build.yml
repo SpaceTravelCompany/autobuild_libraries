@@ -20,11 +20,6 @@ jobs:
     - name: Initialize submodules
       run: git submodule update --init
 
-    - name: Apply submodule patches
-      shell: bash
-      run: |
-        ./prepare_sources.sh
-
     - name: Upload submodule sources
       uses: actions/upload-artifact@v4
       with:
@@ -52,6 +47,11 @@ jobs:
       with:
         version: "21.1.8"
         env: true
+
+    - name: Apply patches
+      shell: bash
+      run: |
+        ./prepare_sources.sh
 
     - name: Build all
       shell: bash
@@ -88,6 +88,11 @@ jobs:
       with:
         version: "21.1.8"
         env: true
+
+    - name: Apply patches
+      shell: bash
+      run: |
+        ./prepare_sources.sh
 
     - name: Build all
       shell: bash
@@ -128,6 +133,11 @@ jobs:
         version: "21.1.8"
         env: true 
 
+    - name: Apply patches
+      shell: bash
+      run: |
+        ./prepare_sources.sh
+
     - name: Build all 
       shell: bash
       run: |
@@ -161,6 +171,11 @@ jobs:
         ndk-version: r29
         add-to-path: false
         
+    - name: Apply patches
+      shell: bash
+      run: |
+        ./prepare_sources.sh
+
     - name: Build all
       env: 
         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
