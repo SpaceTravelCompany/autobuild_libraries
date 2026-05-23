@@ -13,8 +13,6 @@ if [ ! -f "${CMARK_DIR}/CMakeLists.txt" ]; then
     git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/cmark
 fi
 
-apply_submodule_patches "${CMARK_DIR}"
-
 # Build function (static lib only)
 build_target() {
     local TARGET=$1

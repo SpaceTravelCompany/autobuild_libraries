@@ -140,11 +140,11 @@ apply_submodule_patches() {
     while IFS= read -r PATCH_FILE; do
         [ -z "${PATCH_FILE}" ] && continue
 
-        if git -C "${REPO_DIR}" apply --check "${PATCH_FILE}" 2>/dev/null; then
-            git -C "${REPO_DIR}" apply "${PATCH_FILE}"
+        if git -C "${REPO_DIR}" apply --check --ignore-whitespace "${PATCH_FILE}" 2>/dev/null; then
+            git -C "${REPO_DIR}" apply --ignore-whitespace "${PATCH_FILE}"
             echo "Applied patch: $(basename "${PATCH_FILE}") -> ${PATCH_PREFIX}"
-        elif git -C "${REPO_DIR}" apply --reverse --check "${PATCH_FILE}" 2>/dev/null; then
-            :
+        elif git -C "${REPO_DIR}" apply --reverse --check --ignore-whitespace "${PATCH_FILE}" 2>/dev/null; then
+            echo "Skipped (already applied): $(basename "${PATCH_FILE}")"
         else
             echo "ERROR: Patch $(basename "${PATCH_FILE}") does not apply cleanly to ${PATCH_PREFIX}" >&2
             exit 1

@@ -12,8 +12,6 @@ if [ ! -f "${FLAC_DIR}/CMakeLists.txt" ]; then
     git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/flac
 fi
 
-apply_submodule_patches "${FLAC_DIR}"
-
 build_target() {
     local TARGET=$1
     local ANDROID_ARCH=$2

@@ -12,8 +12,6 @@ if [ ! -f "${BZIP2_DIR}/CMakeLists.txt" ]; then
     git -C "${SCRIPT_DIR}" submodule update --init --recursive libs/bzip2
 fi
 
-apply_submodule_patches "${BZIP2_DIR}"
-
 # 빌드 함수
 build_target() {
     local TARGET=$1
