@@ -51,10 +51,13 @@ bash "${SCRIPT_DIR}/build_plutovg.sh" "${BUILD_ARG}"
 # 12. vorbis 빌드 (ogg 의존)
 bash "${SCRIPT_DIR}/build_vorbis.sh" "${BUILD_ARG}"
 
-# 13. opusfile 빌드 (opus 의존)
+# 13. flac 빌드 (ogg 의존)
+bash "${SCRIPT_DIR}/build_flac.sh" "${BUILD_ARG}"
+
+# 14. opusfile 빌드 (opus 의존)
 bash "${SCRIPT_DIR}/build_opusfile.sh" "${BUILD_ARG}"
 
-# 14. miniaudio 빌드 (vorbis, opusfile, ogg, opus 의존)
+# 15. miniaudio 빌드 (vorbis, opusfile, flac, ogg, opus 의존)
 bash "${SCRIPT_DIR}/build_miniaudio.sh" "${BUILD_ARG}"
 
 # 15. webp 빌드
