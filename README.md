@@ -29,6 +29,7 @@ All libraries in this project that depend on zlib are configured to use **zlib-n
 - **[opus](https://github.com/xiph/opus)**: Opus audio codec library.
 - **[libvorbis](https://github.com/xiph/vorbis)**: Vorbis audio codec library (depends on libogg).
 - **[opusfile](https://github.com/xiph/opusfile)**: High-level Opus file API library (depends on libogg and opus).
+- **[flac](https://github.com/xiph/flac)**: Free Lossless Audio Codec library (depends on libogg).
 - **[miniaudio](https://github.com/mackron/miniaudio)**: Single-file audio playback and capture library (references all audio libraries).
 
 ### Misc
@@ -70,3 +71,4 @@ Cross-compilation is performed for the following target architectures, building 
 - `aarch64-linux-gnu`
 - `riscv64-linux-gnu`
 - `x86_64-linux-gnu`
+- `arm-linux-gnueabihf`
