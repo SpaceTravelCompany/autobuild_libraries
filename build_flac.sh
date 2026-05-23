@@ -43,6 +43,7 @@ build_target() {
         -DBUILD_DOXYGEN=OFF
         -DBUILD_UTILS=OFF
         -DWITH_OGG=ON
+        -DINSTALL_MANPAGES=OFF
         -DCMAKE_PREFIX_PATH="${OGG_INSTALL_DIR}"
         -DOGG_ROOT="${OGG_INSTALL_DIR}"
     )
