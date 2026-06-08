@@ -48,6 +48,9 @@ bash "${SCRIPT_DIR}/build_cmark.sh" "${BUILD_ARG}"
 # 9. plutovg 빌드
 bash "${SCRIPT_DIR}/build_plutovg.sh" "${BUILD_ARG}"
 
+# 10. libtess2 빌드
+bash "${SCRIPT_DIR}/build_libtess2.sh" "${BUILD_ARG}"
+
 # 12. vorbis 빌드 (ogg 의존)
 bash "${SCRIPT_DIR}/build_vorbis.sh" "${BUILD_ARG}"
 

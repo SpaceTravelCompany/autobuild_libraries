@@ -20,6 +20,7 @@ All libraries in this project that depend on zlib are configured to use **zlib-n
 ### Image Libraries
 - **[libwebp](https://chromium.googlesource.com/webm/libwebp)**: WebP image encoding/decoding library.
 - **[plutovg](https://github.com/sammycage/plutovg)**: Tiny 2D vector graphics library in C.
+- **[libtess2](https://github.com/memononen/libtess2)**: Game and tools oriented refactored version of GLU tesselator.
 - **[libpng](https://github.com/pnggroup/libpng)**: PNG image format reference library.
 - **[libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo)**: High-performance JPEG codec library.
 - **[libjxl](https://github.com/libjxl/libjxl)**: JPEG XL image codec reference library.
