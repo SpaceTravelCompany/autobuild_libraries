@@ -55,3 +55,6 @@
 [submodule "libs/flac"]
 	path = libs/flac
 	url = https://github.com/xiph/flac
+[submodule "libs/libtess2"]
+	path = libs/libtess2
+	url = https://github.com/memononen/libtess2.git
